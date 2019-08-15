@@ -1,9 +1,10 @@
 import React, { Component } from "react";
-import {AppRegistry, View , Text ,StyleSheet, Button, Dimensions } from "react-native";
+import {AppRegistry, View , Text ,StyleSheet, color,Button, Dimensions , Alert } from "react-native";
 import {accelerometer} from "react-native-sensors";
 import { setUpdateIntervalForType, SensorTypes } from "react-native-sensors";
 import io from 'socket.io-client/dist/socket.io';//'socket.io-client';
 import AsyncStorage from '@react-native-community/async-storage';
+import Orientation from 'react-native-orientation';
 
 const responsiveWidth = Dimensions.get('screen').width;
 const responsiveHeight = Dimensions.get('screen').height;
@@ -22,12 +23,12 @@ export default class App extends Component {
       
   }
    async componentDidMount() {
+    Orientation.lockToLandscape();
     const ip = String(await AsyncStorage.getItem('@storage_Key'));
-    
-      var ipaddr = 'http://'+ ip + ':3000';
-      this.setState({data_in : ipaddr});
-
+    var ipaddr = 'http://'+ ip + ':3000';
+    this.setState({data_in : ipaddr});
     this.socket = io(this.state.data_in);
+
     setUpdateIntervalForType(SensorTypes.accelerometer, 120);
     accelerometer.subscribe(({ x, y, z }) => {
       this.setState({data : {x,y,z}})
@@ -57,11 +58,45 @@ export default class App extends Component {
         this.socket.emit("chat message" ,msg);
       }
       
-    });  
+    });
+    this.backHandler = BackHandler.addEventListener('hardwareBackPress', this.backtoPrevScreen);  
+    Orientation.addOrientationListener(this._orientationDidChange);
   }
+ 
+  _orientationDidChange = (orientation) => {
+    if (orientation === 'LANDSCAPE') {
+      // do something with landscape layout
+    } else {
+      // do something with portrait layout
+    }
+  }
+
+  componentWillUnmount() {
+    Orientation.getOrientation((err, orientation) => {
+      console.log(`Current Device Orientation: ${orientation}`);
+    });
+ 
+ 
+    // Remember to remove listener
+    Orientation.removeOrientationListener(this._orientationDidChange);
+  }
+
+  // componentWillUnmount() {
+  //   this.backHandler
+  // }
+
   backtoPrevScreen=()=>{
     this.socket.emit("chat message" ,"close");
     this.props.navigation.navigate('Home');
+    return true;
+  }
+
+  enter=()=>{
+    this.socket.emit("chat message" ,'47');
+    alert("enter pressed");
+  }
+  space=()=>{
+    this.socket.emit("chat message" ,'5E');
   }
   //<Text>{this.state.data_in }</Text>
   render() {  
@@ -71,9 +106,9 @@ export default class App extends Component {
         <Text style={styles.txt}>X : {this.state.data.x}</Text>
         <Text style={styles.txt}>Y : {this.state.data.y}</Text>
         <Text style={styles.txt}>Z : {this.state.data.z}</Text>
-        <Button 
-        title="BACK"
-          onPress={ this.backtoPrevScreen}/>
+        <Button  title="BACK"  onPress={ this.backtoPrevScreen}/>
+        <Button style={styles.btnEnter} title = "ENTER" onpress={this.enter}/>
+        <Button style={styles.btnSpace} title = "SPACE" onpress={this.enter}/>
       </View>
     );
   }
@@ -83,7 +118,7 @@ const styles=StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#F5FCFF',
+    backgroundColor: '#65365a',//'#F5FCFF',
   },
   input: {
     height: 40,
@@ -92,7 +127,8 @@ const styles=StyleSheet.create({
   },
   txt:{
     marginHorizontal: 20,
-    fontSize: 20
+    fontSize: 20,
+    color: '#c3cfef',
   },
   container: {
     flex: 1,
@@ -110,6 +146,24 @@ const styles=StyleSheet.create({
     color: '#333333',
     marginBottom: 5,
   },
+  btnEnter:{
+    backgroundColor: '#65365a',//'#F7F9F9',
+    color: '#060100',
+    //width: 0.5,
+    borderRadius: 8,
+  },
+  btnSpace:{
+    backgroundColor: '#F7F9F9',
+    borderColor: '#17A589',
+    borderWidth: 1,
+    borderRadius: 12,
+    color: '#17A589',
+    fontSize: 24,
+    fontWeight: 'bold',
+    overflow: 'hidden',
+    padding: 12,
+    textAlign:'center',
+  }
 })
 
 AppRegistry.registerComponent('App',()=> App)

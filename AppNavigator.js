@@ -13,6 +13,14 @@ import {
     Friends: { 
         screen: Friends
         },
+      },
+      {
+        headerMode: 'none',
+        navigationOptions: {
+          headerVisible: false,
+        }
+       }
+  )
     // Map: {
     //     screen: Map,
     //     navigationOptions: {
@@ -54,7 +62,6 @@ import {
     //       ),
     //     },
     //   },
-  });
   
 const AppNavigator = createAppContainer(rootstack);
   export default AppNavigator;
