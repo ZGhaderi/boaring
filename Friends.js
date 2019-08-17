@@ -38,22 +38,22 @@ export default class App extends Component {
       var horizontal = '';
       var msg ;
       if(item.y < -0.2){
-        vertical = 'w';//'ver is w';
+        vertical = 'w';//'ver is w'; 57
         msg = 'w';//87;
         this.socket.emit("chat message" ,msg);
       }
       if(item.y > 0.2){
-        vertical = 's';//'ver is s';
+        vertical = 's';//'ver is s'; 62
         msg = 's';//83;
         this.socket.emit("chat message" ,msg);
       }
       if(item.x > 0.2){
-        horizontal = 'a';//'hor is a';
+        horizontal = 'a';//'hor is a'; 61
         msg = 'a';//65;
         this.socket.emit("chat message" ,msg);
       }
       if(item.x < -0.2){
-        horizontal = 'd';//'hor is a';
+        horizontal = 'd';//'hor is a'; 63
         msg = 'd';//68;
         this.socket.emit("chat message" ,msg);
       }
