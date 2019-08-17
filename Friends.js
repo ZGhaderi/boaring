@@ -1,10 +1,11 @@
 import React, { Component } from "react";
-import {AppRegistry, View , Text ,StyleSheet, color,Button, Dimensions , Alert } from "react-native";
+import {AppRegistry, View , Text ,StyleSheet, ImageBackground,Image, Dimensions , Alert,TouchableOpacity } from "react-native";
 import {accelerometer} from "react-native-sensors";
 import { setUpdateIntervalForType, SensorTypes } from "react-native-sensors";
 import io from 'socket.io-client/dist/socket.io';//'socket.io-client';
 import AsyncStorage from '@react-native-community/async-storage';
 import Orientation from 'react-native-orientation';
+//import { TouchableOpacity } from "react-native-gesture-handler";
 
 const responsiveWidth = Dimensions.get('screen').width;
 const responsiveHeight = Dimensions.get('screen').height;
@@ -25,7 +26,7 @@ export default class App extends Component {
    async componentDidMount() {
     Orientation.lockToLandscape();
     const ip = String(await AsyncStorage.getItem('@storage_Key'));
-    var ipaddr = 'http://'+ ip + ':3000';
+    var ipaddr = 'http://'+ ip + ':7000';
     this.setState({data_in : ipaddr});
     this.socket = io(this.state.data_in);
 
@@ -39,22 +40,22 @@ export default class App extends Component {
       var msg ;
       if(item.y < -0.2){
         vertical = 'w';//'ver is w'; 57
-        msg = 'w';//87;
+        msg = 'up';//87;
         this.socket.emit("chat message" ,msg);
       }
       if(item.y > 0.2){
         vertical = 's';//'ver is s'; 62
-        msg = 's';//83;
+        msg = 'down';//83;
         this.socket.emit("chat message" ,msg);
       }
       if(item.x > 0.2){
         horizontal = 'a';//'hor is a'; 61
-        msg = 'a';//65;
+        msg = 'left';//65;
         this.socket.emit("chat message" ,msg);
       }
       if(item.x < -0.2){
         horizontal = 'd';//'hor is a'; 63
-        msg = 'd';//68;
+        msg = 'right';//68;
         this.socket.emit("chat message" ,msg);
       }
       
@@ -92,33 +93,111 @@ export default class App extends Component {
   }
 
   enter=()=>{
-    this.socket.emit("chat message" ,'47');
-    alert("enter pressed");
+    this.socket.emit("chat message" ,'enter');//47
+    //alert("enter pressed");
   }
   space=()=>{
-    this.socket.emit("chat message" ,'5E');
+    this.socket.emit("chat message" ,'space');//5E
+  }
+
+  btnx=()=>{
+    this.socket.emit("chat message" ,'x');
   }
   //<Text>{this.state.data_in }</Text>
+  /***
+   * <View style={styles.cont1}>
+          <Text>{this.state.data_in}</Text>
+          <Text style={styles.txt}>X : {this.state.data.x}</Text>
+          <Text style={styles.txt}>Y : {this.state.data.y}</Text>
+          <Text style={styles.txt}>Z : {this.state.data.z}</Text>
+        </View>
+   * <Button  title="BACK"  onPress={ this.backtoPrevScreen}/>
+          <Button  title = "ENTER" onPress={this.enter}/>       
+          <Button style={styles.btnSpace} title = "SPACE" onPress={this.space}/>
+   */
   render() {  
     return (
-      <View style={styles.cont}>
-        <Text>{this.state.data_in}</Text>
-        <Text style={styles.txt}>X : {this.state.data.x}</Text>
-        <Text style={styles.txt}>Y : {this.state.data.y}</Text>
-        <Text style={styles.txt}>Z : {this.state.data.z}</Text>
-        <Button  title="BACK"  onPress={ this.backtoPrevScreen}/>
-        <Button style={styles.btnEnter} title = "ENTER" onpress={this.enter}/>
-        <Button style={styles.btnSpace} title = "SPACE" onpress={this.enter}/>
+      
+      
+      <View style = {{flex : 1,flexDirection:"row",backgroundColor:"transparent"}}>
+        <ImageBackground source={require("./image/car3.jpg")} style={{flex:1,width:null,height:null}}>
+        <View style={styles.cont2}>
+          <View style={{flex:1,flexDirection:"row",justifyContent:"center"}}>
+            <View style={{flex:1,marginHorizontal:30,marginTop:50,justifyContent:"center",alignItems:"flex-start"}}>
+              <TouchableOpacity style={{justifyContent:"center",borderRadius:15,marginHorizontal:5,marginVertical:5}}>
+                <Image source={require("./image/x.png")} style={{height:70,width:70,resizeMode:"contain"}}></Image>
+              </TouchableOpacity>
+            </View>
+            <View style={{flex:1,marginHorizontal:30,marginTop:50,justifyContent:"center",alignItems:"flex-end"}}>
+            <TouchableOpacity style={{justifyContent:"center",borderRadius:15,marginHorizontal:5,marginVertical:5}}>
+                <Image source={require("./image/r.png")} style={{height:70,width:70,resizeMode:"contain"}}></Image>
+              </TouchableOpacity>
+            </View>
+          </View>
+
+          <View style={{flex:1,flexDirection:"column",alignItems:'center',justifyContent:"flex-end"}}>
+            <TouchableOpacity style={{justifyContent:"center",borderRadius:15,marginHorizontal:5,marginVertical:5}}>
+              <Image source={require("./image/up.png")} style={{height:70,width:70,resizeMode:"contain"}}></Image>
+            </TouchableOpacity>
+          </View>
+          
+          <View style={{flex:1,flexDirection:"row",justifyContent:"center"}}>
+              <TouchableOpacity style={{justifyContent:"center",borderRadius:15,marginHorizontal:5,marginVertical:5}}>
+                <Image source={require("./image/left.png")} style={{height:70,width:70,resizeMode:"contain"}}></Image>
+              </TouchableOpacity>
+              <TouchableOpacity style={{justifyContent:"center",borderRadius:15,marginHorizontal:5,marginVertical:5}}>
+                <Image source={require("./image/down.png")} style={{height:70,width:70,resizeMode:"contain"}}></Image>
+              </TouchableOpacity>
+              <TouchableOpacity style={{justifyContent:"center",borderRadius:15,marginHorizontal:5,marginVertical:5}}>
+                <Image source={require("./image/right.png")} style={{height:70,width:70,resizeMode:"contain"}}></Image>
+              </TouchableOpacity>
+          </View>
+
+          <View style={{flex:1,flexDirection:"row",justifyContent:"center"}}>
+            <View style={{flex:1,marginHorizontal:30,marginTop:50,justifyContent:"center",alignItems:"flex-start"}}>
+              <TouchableOpacity style={{justifyContent:"center",borderRadius:15,marginHorizontal:5,marginVertical:5}}>
+                <Image source={require("./image/shift.png")} style={{height:100,width:150,resizeMode:"contain"}}></Image>
+              </TouchableOpacity>
+            </View>
+            <View style={{flex:1,marginHorizontal:30,marginTop:50,justifyContent:"center",alignItems:"flex-end"}}>
+            <TouchableOpacity style={{justifyContent:"center",borderRadius:15,marginHorizontal:5,marginVertical:5}}>
+                <Image source={require("./image/shift.png")} style={{height:100,width:150,resizeMode:"contain"}}></Image>
+              </TouchableOpacity>
+            </View>
+          </View>
+
+          <View style={{flex:2,flexDirection:"row"}}>
+            <View style={{flex:1,justifyContent:"center"}}>
+              <TouchableOpacity style={{borderRadius:15,marginHorizontal:30}}>
+                <Image source={require("./image/ctrl.png")} style={{height:70,width:70,resizeMode:"contain"}}></Image>
+              </TouchableOpacity>
+            </View>
+            <View style={{flex:3,justifyContent:"center"}}>
+              <TouchableOpacity style={{justifyContent:"center",borderRadius:15,marginHorizontal:5,marginVertical:5,alignContent:"center"}}>
+                <Image source={require("./image/space.png")} style={{height:80,width:420,resizeMode:"contain"}}></Image>
+              </TouchableOpacity>
+            </View>
+            <View style={{flex:1,justifyContent:"center"}}>
+              <TouchableOpacity style={{borderRadius:15,marginHorizontal:30}}>
+                <Image source={require("./image/ctrl.png")} style={{height:70,width:70,resizeMode:"contain"}}></Image>
+              </TouchableOpacity>
+            </View>  
+          </View>
+        </View>
+      
+      </ImageBackground>
       </View>
     );
   }
 }
 const styles=StyleSheet.create({
-  cont:{
+  cont1:{
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#65365a',//'#F5FCFF',
+   // backgroundColor: '#F5FCFF',//'#F5FCFF',
+  },
+  cont2:{
+    flex: 2,
+  //backgroundColor: '#F5FCFF',//'#F5FCFF',
   },
   input: {
     height: 40,
@@ -127,8 +206,8 @@ const styles=StyleSheet.create({
   },
   txt:{
     marginHorizontal: 20,
-    fontSize: 20,
-    color: '#c3cfef',
+    fontSize: 15,
+    //color: '#c3cfef',
   },
   container: {
     flex: 1,
