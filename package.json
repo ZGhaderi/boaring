@@ -12,6 +12,8 @@
     "react": "16.8.6",
     "react-native": "0.60.4",
     "react-native-gesture-handler": "^1.3.0",
+    "react-native-gesture-responder": "^0.1.1",
+    "react-native-material-menu": "^0.6.7",
     "react-native-orientation": "^3.1.3",
     "react-native-sensors": "^5.3.0",
     "react-native-textinput-effects": "^0.5.1",

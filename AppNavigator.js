@@ -5,7 +5,8 @@ import {
   import {Icon} from 'react-native-vector-icons'
   import Home from './Home';
   import Friends from './Friends';
-
+  import mouse from './mouse';
+  
   const rootstack = createStackNavigator({
     Home: { 
         screen: Home ,
@@ -13,13 +14,15 @@ import {
     Friends: { 
         screen: Friends
         },
+    mouse: { 
+          screen: mouse
+          },
       },
-      {
-        headerMode: 'none',
-        navigationOptions: {
-          headerVisible: false,
-        }
-       }
+      // {
+      //   navigationOptions: {
+      //     headerVisible: false,
+      //   }
+      //  }
   )
     // Map: {
     //     screen: Map,
