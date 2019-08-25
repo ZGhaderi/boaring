@@ -31,20 +31,23 @@ export default class Home extends React.Component {
 
   render() {
     return (
-      <View style={{flex:1,justifyContent:"center",alignItems:"center"}}>
+      <View style={{flex:1,justifyContent:"center",alignItems:"center",backgroundColor:'#0b132b'}}>
         <View style={{flex:1,flexDirection:"column",justifyContent:"center",width:300}}>
           <Akira
             label={'IP ADDRESS'}
-            borderColor={'#a5d1cc'}
+            borderColor={'#6fffe9'}
             inputPadding={16}
-            labelHeight={24}
-            labelStyle={{ color: '#ac83c4' }}
+            labelHeight={24}  
+            labelStyle={{ color: '#6fffe9' }}
             onChangeText={(data_in)=>this.setState({data_in})} 
             onSubmitEditing={() => AsyncStorage.setItem('@storage_Key', this.state.data_in)}
             value={this.state.data_in}
           />
-          <TouchableOpacity style={styles.btn} onPress={() => this.props.navigation.navigate('Friends')}>
-            <Text>SUBMIT</Text>
+          <TouchableOpacity style={styles.btn} onPress={() => this.props.navigation.navigate('elementss')}>
+            <Text>Controller</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.btn} onPress={() => this.props.navigation.navigate('mouse')}>
+            <Text>Mouse</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -54,10 +57,10 @@ export default class Home extends React.Component {
     return {
         title: 'startPage',
         headerStyle: {
-          backgroundColor: '#16A085',
+          backgroundColor: '#6fffe9',
           barStyle: "light-content", // or directly
         },
-        headerTintColor: '#fff',
+        headerTintColor: '#0b132b',
         headerTitleStyle: {
           fontWeight: 'bold',
         },
@@ -115,7 +118,7 @@ export default class Home extends React.Component {
       borderWidth: 1
     },
     btn :{
-      backgroundColor: '#7F8C8D',//'#F7F9F9',
+      backgroundColor: '#5bc0be',//'#F7F9F9',
       color: '#7F8C8D',
       height : 45,
       width:WIDTH*(0.4),

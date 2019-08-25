@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
  
-import { StyleSheet, View, TouchableOpacity, Text,Dimensions, PanResponder} from 'react-native';
+import { StyleSheet, View, TouchableOpacity, Text,Dimensions, Button} from 'react-native';
 import {createResponder} from 'react-native-gesture-responder'
 import io from 'socket.io-client/dist/socket.io';//'socket.io-client';
 import Icon from "react-native-vector-icons/Ionicons";
+import AsyncStorage from "@react-native-community/async-storage";
 import Menu, { MenuItem, MenuDivider } from 'react-native-material-menu';
 
 const {height,width}=Dimensions.get('window');
@@ -25,15 +26,21 @@ export default class mouse extends Component
             prevdx: 0,
             prevdy: 0,
             counter: 0,
+            data_in: "",
         }
     }
-    componentDidMount(){
-        this.socket = io("http://192.168.43.136:8000");
-        msg = height +  ' ' + width;
-        this.socket.emit("width and hight" , msg);
-    this.socket.on("send",msg=>{
-      this.setState({rec:[...this.state.rec , msg]});
-    });
+    async componentDidMount(){
+      const ip = String(await AsyncStorage.getItem('@storage_Key'));
+      var ipaddr = 'http://'+ ip + ':8000';
+      this.setState({data_in : ipaddr});
+      //this.socket = io(this.state.data_in);
+      this.socket = io("http://192.168.43.136:8000");
+      msg = height +  ' ' + width;
+      this.socket.emit("width and hight" , msg);
+      // this.socket.on("send",msg=>{
+      //   this.setState({rec:[...this.state.rec , msg]});
+      // });
+      
     }
     componentWillMount()
     {
@@ -138,7 +145,7 @@ export default class mouse extends Component
         
         onResponderRelease: (event, gestureState) =>
         {
-            alert(gestureState.numberActiveTouches);
+            // alert(gestureState.numberActiveTouches);
             this.socket.emit("text" , "release" );
             this.setState({
                  
@@ -157,38 +164,43 @@ export default class mouse extends Component
         }
       });
     }
+    btnRight=()=>{
+      //alert("press");
+      this.socket.emit("click" , "rightClick" );
+    }
+
     _menu = null;
 
     setMenuRef = ref => {
       this._menu = ref;
     };
 
-
+    
+      
+     
     render()
     {
         return(
-            <View style = { styles.MainContainer }>
- 
-                <View style = { styles.childView }>   
- 
-                    <View style = {[ styles.point, { top: parseFloat( this.state.locationY), left: parseFloat( this.state.locationX)}]} />
- 
-                    <View style = {{ flex: 1, backgroundColor: 'transparent' }}  { ...this.gestureResponder} />
-
-                    
-                </View>
-                
+          <View style = { styles.MainContainer }>    
+             <View style={{backgroundColor:"#0b132b",justifyContent:"center"}}>  
+           <TouchableOpacity onPress={this.btnRight} style={{backgroundColor: '#6fffe9',alignItems:'stretch'}}><Text>press</Text></TouchableOpacity>
+           </View>
+           <View style = { styles.childView }>             
+              <View style = {[ styles.point, { top: parseFloat( this.state.locationY), left: parseFloat( this.state.locationX)}]} />
+              <View style = {{ flex: 1, backgroundColor: 'transparent' }}  { ...this.gestureResponder} /> 
             </View>
+            
+          </View> 
         );
     }
     static navigationOptions = ({ navigation }) => {
         return {
             title: 'Mouse',
             headerStyle: {
-              backgroundColor: '#16A085',
+              backgroundColor: '#6fffe9',
               barStyle: "light-content", // or directly
             },
-            headerTintColor: '#fff',
+            headerTintColor: '#0b132b',
             headerTitleStyle: {
               fontWeight: 'bold',
             },
@@ -239,13 +251,27 @@ const styles = StyleSheet.create(
     {
         flex: 1,
         paddingTop: ( Platform.OS === 'ios' ) ? 20 : 0,
-        backgroundColor: '#263238',
+        backgroundColor: '#0b132b',
+        flexDirection: "row-reverse",
     },
  
     childView:
     {
+        flex: 9,
+        backgroundColor: 'transparent',
+        overflow: 'hidden'
+    },
+    childView2:
+    {
         flex: 1,
-        backgroundColor: '#263238',
+        backgroundColor: 'transparent',
+        overflow: 'hidden'
+    },
+
+    btnView:
+    {
+        flex: 1,
+        backgroundColor: 'transparent',
         overflow: 'hidden'
     },
  
@@ -261,11 +287,11 @@ const styles = StyleSheet.create(
  
     point:
     {
-        height: 5,
-        width: 5,
+        height: 20,
+        width: 20,
         position: 'absolute',
-        //borderRadius: 15,
-        backgroundColor: '#FF3D00'
+        borderRadius: 15,
+        backgroundColor: '#6fffe9'
     }
 });
 

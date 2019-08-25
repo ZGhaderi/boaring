@@ -6,6 +6,7 @@ import {
   import Home from './Home';
   import Friends from './Friends';
   import mouse from './mouse';
+  import elements from './elements';
   
   const rootstack = createStackNavigator({
     Home: { 
@@ -17,6 +18,9 @@ import {
     mouse: { 
           screen: mouse
           },
+    elements: {
+        screen: elements
+          }, 
       },
       // {
       //   navigationOptions: {
@@ -24,47 +28,6 @@ import {
       //   }
       //  }
   )
-    // Map: {
-    //     screen: Map,
-    //     navigationOptions: {
-    //       title: 'Map',
-    //       headerStyle: {
-    //         backgroundColor: '#16A085',
-    //         barStyle: "light-content", // or directly
-    //       },
-    //       headerTintColor: '#fff',
-    //       headerTitleStyle: {
-    //         fontWeight: 'bold',
-    //       },
-    //       headerRight: (
-    //         <View style={{
-    //           flexDirection: "row-reverse",
-    //           }}>
-                
-    //         <Button
-    //          icon={<Icon name={'ios-menu'} size={25} color={'white'} 
-    //           style={{
-    //             paddingLeft: 5,
-    //             paddingRight: 5,
-    //           }}/>
-    //         }
-    //           onPress={() => alert('This is a button!')}
-    //           type="clear"
-    //         />
-    //         <Button
-    //          icon={<Icon name={'ios-person-add'} size={24} color={'white'}
-    //           style={{
-    //             paddingLeft: 5,
-    //             paddingRight: 5,
-    //           }}
-    //         />}
-    //           onPress={() => alert('This is a button!')}
-    //           type="clear"
-    //         />
-    //         </View>
-    //       ),
-    //     },
-    //   },
   
 const AppNavigator = createAppContainer(rootstack);
   export default AppNavigator;

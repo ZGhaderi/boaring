@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import {AppRegistry, View , StyleSheet, ImageBackground,Image, Dimensions , Alert,TouchableOpacity, Text } from "react-native";
+import {AppRegistry, BackHandler, View , StyleSheet, ImageBackground,Image, Dimensions , Alert,TouchableOpacity, Text } from "react-native";
 
 import {accelerometer} from "react-native-sensors";
 import { setUpdateIntervalForType, SensorTypes } from "react-native-sensors";
@@ -48,20 +48,23 @@ export default class App extends Component {
     const ip = String(await AsyncStorage.getItem('@storage_Key'));
     var ipaddr = 'http://'+ ip + ':8000';
     this.setState({data_in : ipaddr});
-    this.socket = io(this.state.data_in);
+    this.socket = io("http://192.168.43.136:8000");
+    //this.socket = io(this.state.data_in);
 
-    this.socket.on("send",msg=>{
-      this.setState({rec:[...this.state.rec , msg]});
-    });
+    // this.socket.on("send",msg=>{
+    //   this.setState({rec:[...this.state.rec , msg]});
+    // });
 
     setUpdateIntervalForType(SensorTypes.accelerometer, 50);
     accelerometer.subscribe(({ x, y, z }) => {
       this.setState({data : {x,y,z}})
     })
+    if(String(await AsyncStorage.getItem('@element') == 'accelerometer')){
     accelerometer.subscribe(item => {
       var vertical = '';
       var horizontal = '';
       var msg = [];
+      
       if(item.y < -2 && item.x > 2){
         vertical = 'w';//'ver is w'; 57
         msg = 'left';//87;up
@@ -129,6 +132,7 @@ export default class App extends Component {
       //   this.socket.emit("chat message" ,msg);
       // }
     });
+  }
     
     this.backHandler = BackHandler.addEventListener('hardwareBackPress', this.backtoPrevScreen);  
     Orientation.addOrientationListener(this._orientationDidChange);
@@ -143,6 +147,7 @@ export default class App extends Component {
   }
 
   componentWillUnmount() {
+    this.backHandler.remove();
     Orientation.getOrientation((err, orientation) => {
       console.log(`Current Device Orientation: ${orientation}`);
     });
@@ -164,168 +169,150 @@ export default class App extends Component {
     clearTimeout(this.timer);
   }
   btnX=()=>{
-    this.socket.emit("chat message" ,['x']);//88
+    this.socket.emit("chat message" ,'x');//88
     this.timer = setTimeout(this.btnX, 100);
   }
   btnR=()=>{                         
-    this.socket.emit("mouse location" ,['r']);//82
+    this.socket.emit("chat message" ,'r');//82
     //this.setState({number: this.state.number+1});
     this.timer = setTimeout(this.btnR, 100);
   }
   btnUp=()=>{
-    this.socket.emit("chat message" ,['up']);
+    this.socket.emit("chat message" ,'up');
     this.timer = setTimeout(this.btnUp, 100);
   }
   btnDown=()=>{
-    this.socket.emit("chat message" ,['down']);
+    this.socket.emit("chat message" ,'down');
     this.timer = setTimeout(this.btnDown, 100);
   }
   btnLeft=()=>{ 
-    this.socket.emit("chat message" ,['left']);
+    this.socket.emit("chat message" ,'left');
     this.timer = setTimeout(this.btnLeft, 100);
   }
   btnRight=()=>{
-    this.socket.emit("chat message" ,['right']);
+    this.socket.emit("chat message" ,'right');
     this.timer = setTimeout(this.btnRight, 100);
   }
   btnSpace=()=>{
-    this.socket.emit("chat message" ,['space']);//32
+    this.socket.emit("chat message" ,'space');//32
     this.timer = setTimeout(this.btnSpace, 100);
   }
   btnLeftShift=()=>{
-    this.socket.emit("chat message" ,['LSHIFT']);//160
+    this.socket.emit("chat message" ,'LSHIFT');//160
     this.timer = setTimeout(this.btnLeftShift, 100);
   }
   btnRightShift=()=>{
-    this.socket.emit("chat message" ,['RSHIFT']);//161
+    this.socket.emit("chat message" ,'right_shift');//161
     this.timer = setTimeout(this.btnRightShift, 100);
   }
   btnLeftCtrl=()=>{
-    this.socket.emit("chat message" ,['LCTRL']);//162
+    this.socket.emit("chat message" ,'LCTRL');//162
     this.timer = setTimeout(this.btnLeftCtrl, 100);
   }
   btnRightCtrl=()=>{
-    this.socket.emit("chat message" ,['RCTRL']);//163
+    this.socket.emit("chat message" ,'RCTRL');//163
     this.timer = setTimeout(this.btnRightCtrl, 100);
   }
-  //<Text>{this.state.data_in }</Text>
-  /***
-   * <View style={styles.consts1}>
-          <Text>{this.state.data_in}</Text>
-          <Text style={styles.txt}>X : {this.state.data.x}</Text>
-          <Text style={styles.txt}>Y : {this.state.data.y}</Text>
-          <Text style={styles.txt}>Z : {this.state.data.z}</Text>
-        </View>
-   * <Button  title="BACK"  onPress={ this.backtoPrevScreen}/>
-          <Button  title = "ENTER" onPress={this.enter}/>       
-          <Button style={styles.btnSpace} title = "SPACE" onPress={this.space}/>
-
-
-          <TouchableOpacity style={{justifyContent:"center",borderRadius:15,marginHorizontal:5,marginVertical:5}}>
-                <Text style={{backgroundColor:"white"}}>{this.state.rec}</Text>
-              </TouchableOpacity>
-   */
   _menu = null;
 
   setMenuRef = ref => {
     this._menu = ref;
   };
-  
+  //        <ImageBackground source={require("./image/car4.jpeg")} style={{flex:1,width:null,height:null}}>
+
   render() {  
     return (    
-      <View style = {{flex : 1,flexDirection:"row",backgroundColor:"transparent"}}>
-        <ImageBackground source={require("./image/car4.jpeg")} style={{flex:1,width:null,height:null}}>
+      <View style = {styles.mainContainer} >
         <View style={styles.cont2}>
-          <View style={{flex:1,flexDirection:"row",justifyContent:"center"}}>
-            <View style={{flex:1,marginHorizontal:30,marginTop:50,justifyContent:"center",alignItems:"flex-start"}}>
-              <TouchableOpacity style={{justifyContent:"center",borderRadius:15,marginHorizontal:5,marginVertical:5}} 
+          <View style={styles.firstFlex}>
+            <View style={styles.btnXview}>
+              <TouchableOpacity style={styles.btnXtouch} 
               onPressIn={this.btnX} onPressOut={this.stopTimer}>
-                <Image source={require("./image/x.png")} style={{height:70,width:70,resizeMode:"contain"}}></Image>
+                <Image source={require("./image/x.png")} style={styles.btnXimage}></Image>
               </TouchableOpacity>
             </View>
-            <View style={{flex:1,marginHorizontal:30,marginTop:50,justifyContent:"center",alignItems:"flex-end"}}>
+            <View style={styles.btnRview}>
             <TouchableOpacity 
-              style={{justifyContent:"center",borderRadius:15,marginHorizontal:5,marginVertical:5}} 
+              style={styles.btnRtouch} 
               onPressIn={this.btnR} onPressOut={this.stopTimer}>
-                <Image source={require("./image/r.png")} style={{height:70,width:70,resizeMode:"contain"}}></Image>
+                <Image source={require("./image/r.png")} style={styles.btnRimage}></Image>
               </TouchableOpacity>
             </View>
           </View>
-
-          <View style={{flex:1,flexDirection:"column",alignItems:'center',justifyContent:"flex-end"}}>
-            <TouchableOpacity style={{justifyContent:"center",borderRadius:15,marginHorizontal:5,marginVertical:5}}
+          <View style={styles.btnUPview}>
+            <TouchableOpacity style={styles.btnUPtouch}
             onPressIn={this.btnUp} onPressOut={this.stopTimer}>
-              <Image source={require("./image/up.png")} style={{height:70,width:70,resizeMode:"contain"}}></Image>
+              <Image source={require("./image/up.png")} style={styles.btnUPimage}></Image>
             </TouchableOpacity>
           </View>
           
-          <View style={{flex:1,flexDirection:"row",justifyContent:"center"}}>
-              <TouchableOpacity style={{justifyContent:"center",borderRadius:15,marginHorizontal:5,marginVertical:5}}
+          <View style={styles.arrowView}>
+              <TouchableOpacity style={styles.btnLEFTtouch}
               onPressIn={this.btnLeft} onPressOut={this.stopTimer}>
-                <Image source={require("./image/left.png")} style={{height:70,width:70,resizeMode:"contain"}}></Image>
+                <Image source={require("./image/left.png")} style={styles.btnLEFTimage}></Image>
               </TouchableOpacity>
-              <TouchableOpacity style={{justifyContent:"center",borderRadius:15,marginHorizontal:5,marginVertical:5}} 
+              <TouchableOpacity style={styles.btnLEFTtouch} 
               onPressIn={this.btnDown} onPressOut={this.stopTimer}>
-                <Image source={require("./image/down.png")} style={{height:70,width:70,resizeMode:"contain"}}></Image>
+                <Image source={require("./image/down.png")} style={styles.btnLEFTimage}></Image>
               </TouchableOpacity>
-              <TouchableOpacity style={{justifyContent:"center",borderRadius:15,marginHorizontal:5,marginVertical:5}} 
+              <TouchableOpacity style={styles.btnLEFTtouch} 
               onPressIn={this.btnRight} onPressOut={this.stopTimer}>
-                <Image source={require("./image/right.png")} style={{height:70,width:70,resizeMode:"contain"}}></Image>
+                <Image source={require("./image/right.png")} style={styles.btnLEFTimage}></Image>
               </TouchableOpacity>
           </View>
 
-          <View style={{flex:1,flexDirection:"row",justifyContent:"center"}}>
-            <View style={{flex:1,marginHorizontal:30,marginTop:50,justifyContent:"center",alignItems:"flex-start"}}>
-              <TouchableOpacity style={{justifyContent:"center",borderRadius:15,marginHorizontal:5,marginVertical:5}} 
+          <View style={styles.btnSHIFTview}>
+            <View style={styles.btnLeftShiftview}>
+              <TouchableOpacity style={styles.btnSHIFTtouch} 
               onPressIn={this.btnLeftShift} onPressOut={this.stopTimer}>
-                <Image source={require("./image/shift.png")} style={{height:100,width:150,resizeMode:"contain"}}></Image>
+                <Image source={require("./image/shift.png")} style={styles.btnSHIFTimage}></Image>
               </TouchableOpacity>
             </View>
-            <View style={{flex:1,marginHorizontal:30,marginTop:50,justifyContent:"center",alignItems:"flex-end"}}>
-            <TouchableOpacity style={{justifyContent:"center",borderRadius:15,marginHorizontal:5,marginVertical:5}} 
+            <View style={styles.btnRightShiftview}>
+            <TouchableOpacity style={styles.btnSHIFTtouch} 
             onPressIn={this.btnRightShift} onPressOut={this.stopTimer}>
-                <Image source={require("./image/shift.png")} style={{height:100,width:150,resizeMode:"contain"}}></Image>
+                <Image source={require("./image/shift.png")} style={styles.btnSHIFTimage}></Image>
               </TouchableOpacity>
             </View>
           </View>
 
-          <View style={{flex:2,flexDirection:"row"}}>
-            <View style={{flex:1,justifyContent:"center"}}>
-              <TouchableOpacity style={{borderRadius:15,marginHorizontal:30}} 
+          <View style={styles.lastView}>
+            <View style={styles.btnCTRLview}>
+              <TouchableOpacity style={styles.btnCTRLtouch} 
               onPressIn={this.btnLeftCtrl} onPressOut={this.stopTimer}>
-                <Image source={require("./image/ctrl.png")} style={{height:70,width:70,resizeMode:"contain"}}></Image>
+                <Image source={require("./image/ctrl.png")} style={styles.btnCTRLimage}></Image>
               </TouchableOpacity>
             </View>
-            <View style={{flex:3,justifyContent:"center"}}>
-              <TouchableOpacity style={{justifyContent:"center",borderRadius:15,marginHorizontal:5,marginVertical:5,alignContent:"center"}} 
+            <View style={styles.btnSPACEview}>
+              <TouchableOpacity style={styles.btnSPACEtouch} 
               onPressIn={this.btnSpace} onPressOut={this.stopTimer}>
-                <Image source={require("./image/space.png")} style={{height:80,width:420,resizeMode:"contain"}}></Image>
+                <Image source={require("./image/space.png")} style={styles.btnSPACEimage}></Image>
               </TouchableOpacity>
             </View>
-            <View style={{flex:1,justifyContent:"center"}}>
-              <TouchableOpacity style={{borderRadius:15,marginHorizontal:30}}>
-                <Image source={require("./image/ctrl.png")} style={{height:70,width:70,resizeMode:"contain"}} 
+            <View style={styles.btnCTRLview}>
+              <TouchableOpacity style={styles.btnCTRLtouch}>
+                <Image source={require("./image/ctrl.png")} style={styles.btnCTRLimage} 
                 onPressIn={this.btnRightCtrl} onPressOut={this.stopTimer}></Image>
               </TouchableOpacity>
             </View>  
           </View>
         </View>
       
-      </ImageBackground>
+      
       </View>
     );
   }
 
-
+//</ImageBackground>
 static navigationOptions = ({ navigation }) => {
   return {
       title: 'cotroller',
       headerStyle: {
         
-        backgroundColor: '#16A085',
+        backgroundColor: '#6fffe9',
         barStyle: "light-content", // or directly
       },
-      headerTintColor: '#fff',
+      headerTintColor: '#0b132b',
       headerTitleStyle: {
         fontWeight: 'bold',
       },
@@ -345,11 +332,13 @@ static navigationOptions = ({ navigation }) => {
                 this._menu.hide()
                 }} textStyle={{fontSize: 16}} disabled>Controller</MenuItem>
               <MenuItem onPress={() => {
-                this._menu.hide()
+                this._menu.hide()     
+                //this.socket.emit("chat message" ,"close");
                 navigation.navigate('Home')
                 }} textStyle={{color: '#000', fontSize: 16}}>startPage</MenuItem>
               <MenuItem  onPress={() =>{
                 this._menu.hide()
+                //this.socket.emit("chat message" ,"close");
                 navigation.navigate('mouse')
                 }} textStyle={{color: '#000',fontSize: 16}}>Mouse</MenuItem>
               
@@ -364,41 +353,157 @@ const styles=StyleSheet.create({
     flex: 1,
    // backgroundColor: '#F5FCFF',//'#F5FCFF',
   },
+  mainContainer:{
+    flex : 1,
+    flexDirection:"row",
+    backgroundColor:"#1c2541"
+  },
+  firstFlex:{
+    flex:1,
+    flexDirection:"row",
+    justifyContent:"center"
+  },
+  btnXview:{
+    flex:1,
+    marginHorizontal:30,
+    marginTop:50,
+    justifyContent:"center",
+    alignItems:"flex-start"
+  },
+  btnXtouch:{
+    justifyContent:"center",
+    borderRadius:15,
+    marginHorizontal:5,
+    marginVertical:5
+  },
+  btnXimage:{
+    height:70,
+    width:70,
+    resizeMode:"contain"
+  },
+  btnRview:{
+    flex:1,
+    marginHorizontal:30,
+    marginTop:50,
+    justifyContent:"center",
+    alignItems:"flex-end"
+  },
+  btnRtouch:{
+    justifyContent:"center",
+    borderRadius:15,
+    marginHorizontal:5,
+    marginVertical:5
+  },
+  btnRimage:{
+    height:70,
+    width:70,
+    resizeMode:"contain"
+  },
+  btnUPview:{
+    flex:1,
+    flexDirection:"column",
+    alignItems:'center',
+    justifyContent:"flex-end"
+  },
+  btnUPtouch:{
+    justifyContent:"center",
+    borderRadius:15,
+    marginHorizontal:5,
+    marginVertical:5
+  },
+  btnUPimage:{
+    height:70,
+    width:70,
+    resizeMode:"contain"
+  },
+  arrowView:{
+    flex:1,
+    flexDirection:"row",
+    justifyContent:"center"
+  },
+  btnLEFTtouch:{
+    justifyContent:"center",
+    borderRadius:15,
+    marginHorizontal:5,
+    marginVertical:5
+  },
+  btnLEFTimage:{
+    height:70,
+    width:70,
+    resizeMode:"contain"
+  },
+  btnSHIFTview:{
+    flex:1,
+    flexDirection:"row",
+    justifyContent:"center"
+  },
+  btnLeftShiftview:{
+    flex:1,
+    marginHorizontal:30,
+    marginTop:50,
+    justifyContent:"flex-end",
+    alignItems:"flex-start"
+  },
+  btnRightShiftview:{
+    flex:1,
+    marginHorizontal:30,
+    marginTop:50,
+    justifyContent:"flex-end",
+    alignItems:"flex-end"
+  },
+  btnSHIFTtouch:{
+    justifyContent:"center",
+    borderRadius:15,
+    marginHorizontal:5,
+    marginVertical:5
+  },
+  btnSHIFTimage:{
+    height:100,
+    width:150,
+    resizeMode:"contain"
+  },
+  lastView:{
+    flex:2,
+    flexDirection:"row"
+  },
+  btnCTRLview:{
+    flex:1,
+    justifyContent:"center"
+  },
+  btnSPACEview:{
+    flex:3,
+    justifyContent:"center"
+  },
+  btnCTRLtouch:{
+    borderRadius:15,
+    marginHorizontal:30
+  },
+  btnCTRLimage:{
+    height:70,
+    width:70,
+    resizeMode:"contain"
+  },
+  btnSPACEtouch:{
+    justifyContent:"center",
+    borderRadius:15,
+    marginHorizontal:5,
+    marginVertical:5,
+    alignContent:"center"
+  },
+  btnSPACEimage:{
+    height:80,
+    width:420,
+    resizeMode:"contain"
+  },
   cont2:{
     flex: 2,
   //backgroundColor: '#F5FCFF',//'#F5FCFF',
-  },
-  input: {
-    height: 40,
-    borderWidth: 2,
-    //padding: 40
-  },
-  txt:{
-    marginHorizontal: 20,
-    fontSize: 15,
-    //color: '#c3cfef',
   },
   container: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#F5FCFF',
-  },
-  welcome: {
-    fontSize: 20,
-    textAlign: 'center',
-    margin: 10,
-  },
-  instructions: {
-    textAlign: 'center',
-    color: '#333333',
-    marginBottom: 5,
-  },
-  btnEnter:{
-    backgroundColor: '#65365a',//'#F7F9F9',
-    color: '#060100',
-    //width: 0.5,
-    borderRadius: 8,
   },
   btnSpace:{
     backgroundColor: '#F7F9F9',
