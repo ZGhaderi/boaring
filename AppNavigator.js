@@ -7,21 +7,26 @@ import {
   import Friends from './Friends';
   import mouse from './mouse';
   import elements from './elements';
-  
+  import drag from './drag';
   const rootstack = createStackNavigator({
+    
     Home: { 
         screen: Home ,
         },
     Friends: { 
         screen: Friends
         },
-    mouse: { 
+        mouse: { 
           screen: mouse
           },
     elements: {
         screen: elements
           }, 
+          drag: {
+            screen: drag
+              },
       },
+    
       // {
       //   navigationOptions: {
       //     headerVisible: false,

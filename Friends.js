@@ -8,8 +8,7 @@ import Icon from "react-native-vector-icons/Ionicons";
 import AsyncStorage from "@react-native-community/async-storage";
 import Menu, { MenuItem, MenuDivider } from 'react-native-material-menu';
 import Orientation from 'react-native-orientation';
-import { thisTypeAnnotation } from "@babel/types";
-//import { TouchableOpacity } from "react-native-gesture-handler";
+//import { thisTypeAnnotation } from "@babel/types";
 
 const responsiveWidth = Dimensions.get('screen').width;
 const responsiveHeight = Dimensions.get('screen').height;
@@ -21,6 +20,7 @@ export default class App extends Component {
     this.state = { 
       data_in: "",
       rec:[],
+      element:"",
       data: {x: 0,
             y: 0,
             z: 0,
@@ -48,31 +48,50 @@ export default class App extends Component {
     const ip = String(await AsyncStorage.getItem('@storage_Key'));
     var ipaddr = 'http://'+ ip + ':8000';
     this.setState({data_in : ipaddr});
-    this.socket = io("http://192.168.43.136:8000");
-    //this.socket = io(this.state.data_in);
-
+    //this.socket = io("http://192.168.43.136:8000");
+    this.socket = io(this.state.data_in);
+    var flag ;//= true;
+    //this.setState({element : String(await AsyncStorage.getItem('element'))});
+    if(String(await AsyncStorage.getItem('arrowKey')) == "true" && String(await AsyncStorage.getItem('accelerometer')) == "false"){
+      this.socket.emit("here" ,"set flag to false");
+      flag = false;
+    }
+    else if(String(await AsyncStorage.getItem('accelerometer')) == "true" && String(await AsyncStorage.getItem('arrowKey')) == "false"){
+      this.socket.emit("here" ,"set flag to true");
+      flag = true;
+    }
+    
+   // this.socket.emit("rec" ,"common");
+    // if(this.state.element == 'accelerometer'){
+    //   this.socket.emit("rec" ,"accelerometer");
+    // }
+    // if(this.state.element == 'arrowKey'){
+    //   this.socket.emit("rec" ,"arrowkey");
+    // }
     // this.socket.on("send",msg=>{
     //   this.setState({rec:[...this.state.rec , msg]});
     // });
-
+    
     setUpdateIntervalForType(SensorTypes.accelerometer, 50);
     accelerometer.subscribe(({ x, y, z }) => {
       this.setState({data : {x,y,z}})
     })
-    if(String(await AsyncStorage.getItem('@element') == 'accelerometer')){
+  
     accelerometer.subscribe(item => {
       var vertical = '';
       var horizontal = '';
       var msg = [];
-      
-      if(item.y < -2 && item.x > 2){
+
+      this.socket.emit("rec",flag);
+       if(flag){
+      if(item.y < -2 && item.x > 2 ){//&& this.state.element === 'accelerometer'){
         vertical = 'w';//'ver is w'; 57
         msg = 'left';//87;up
         this.socket.emit("chat message" ,msg);
         msg = 'down';//87;up
         this.socket.emit("chat message" ,msg);
       }
-      if(item.y > 2 && item.x < -2){
+      if(item.y > 2 && item.x < -2 ){//&& this.state.element === 'accelerometer'){
         vertical = 's';//'ver is s'; 62
         // msg = ['right', 'up'];//83;down
         // this.socket.emit("chat message" ,msg);
@@ -81,7 +100,7 @@ export default class App extends Component {
         msg = 'up';//87;up
         this.socket.emit("chat message" ,msg);
       }
-      if(item.y > 2 && item.x > 2){
+      if(item.y > 2 && item.x > 2 ){//&& this.state.element === 'accelerometer'){
         horizontal = 'a';//'hor is a'; 61
         // msg = ['down','right'];//65;left
         // this.socket.emit("chat message" ,msg);
@@ -90,7 +109,7 @@ export default class App extends Component {
         msg = 'down';//87;up
         this.socket.emit("chat message" ,msg);
       }
-      if(item.y < -2 && item.x < -2){
+      if(item.y < -2 && item.x < -2 ){//&& this.state.element === 'accelerometer'){
         horizontal = 'd';//'hor is a'; 63
         // msg = ['up','left'];//68;right
         // this.socket.emit("chat message" ,msg);
@@ -99,21 +118,23 @@ export default class App extends Component {
         msg = 'up';//87;up
         this.socket.emit("chat message" ,msg);
       }
-      if(item.y < -2){
+      if(item.y < -2 ){//&& this.state.element === 'accelerometer'){
         msg = 'left';//87;up
         this.socket.emit("chat message" ,msg);
       }
-      if(item.y > 2){
+      if(item.y > 2 ){//&& this.state.element === 'accelerometer'){
         msg = 'right';//87;up
         this.socket.emit("chat message" ,msg);
       }
-      if(item.x < -2){
+      if(item.x < -2 ){//&& this.state.element === 'accelerometer'){
         msg = 'up';//87;up
         this.socket.emit("chat message" ,msg);
+        //this.socket.emit("rec" ,this.state.element);
       }
-      if(item.x > 2){
+      if(item.x > 2){// && this.state.element === 'accelerometer'){
         msg = 'down';//87;up
         this.socket.emit("chat message" ,msg);
+       // this.socket.emit("rec" ,element);
       }
       // if(item.y < -0.2){
       //   msg = 'left';//87;up
@@ -131,8 +152,10 @@ export default class App extends Component {
       //   msg = 'down';//87;up
       //   this.socket.emit("chat message" ,msg);
       // }
-    });
-  }
+    }
+  });
+  // }
+
     
     this.backHandler = BackHandler.addEventListener('hardwareBackPress', this.backtoPrevScreen);  
     Orientation.addOrientationListener(this._orientationDidChange);
@@ -148,6 +171,7 @@ export default class App extends Component {
 
   componentWillUnmount() {
     this.backHandler.remove();
+    this.socket.emit("chat message" ,"close");
     Orientation.getOrientation((err, orientation) => {
       console.log(`Current Device Orientation: ${orientation}`);
     });
@@ -161,6 +185,7 @@ export default class App extends Component {
   // }
 
   backtoPrevScreen=()=>{
+    //alert("back");
     this.socket.emit("chat message" ,"close");
     this.props.navigation.navigate('Home');
     return true;
@@ -169,6 +194,7 @@ export default class App extends Component {
     clearTimeout(this.timer);
   }
   btnX=()=>{
+    
     this.socket.emit("chat message" ,'x');//88
     this.timer = setTimeout(this.btnX, 100);
   }
@@ -215,7 +241,7 @@ export default class App extends Component {
   }
   _menu = null;
 
-  setMenuRef = ref => {
+  SsetMenuRef = ref => {
     this._menu = ref;
   };
   //        <ImageBackground source={require("./image/car4.jpeg")} style={{flex:1,width:null,height:null}}>
@@ -225,6 +251,7 @@ export default class App extends Component {
       <View style = {styles.mainContainer} >
         <View style={styles.cont2}>
           <View style={styles.firstFlex}>
+            <Text style={{color:'white'}}>{this.state.data_in}</Text>
             <View style={styles.btnXview}>
               <TouchableOpacity style={styles.btnXtouch} 
               onPressIn={this.btnX} onPressOut={this.stopTimer}>
@@ -290,11 +317,11 @@ export default class App extends Component {
               </TouchableOpacity>
             </View>
             <View style={styles.btnCTRLview}>
-              <TouchableOpacity style={styles.btnCTRLtouch}>
-                <Image source={require("./image/ctrl.png")} style={styles.btnCTRLimage} 
-                onPressIn={this.btnRightCtrl} onPressOut={this.stopTimer}></Image>
+              <TouchableOpacity style={styles.btnCTRLtouch} 
+              onPressIn={this.btnRightCtrl} onPressOut={this.stopTimer}>
+                <Image source={require("./image/ctrl.png")} style={styles.btnCTRLimage}></Image>
               </TouchableOpacity>
-            </View>  
+            </View>
           </View>
         </View>
       

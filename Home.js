@@ -13,6 +13,7 @@ export default class Home extends React.Component {
           data_in: "",
         };
       }
+      
     /**
      * <TextInput style={styles.txtinput}
             style={styles.input} 
@@ -43,7 +44,7 @@ export default class Home extends React.Component {
             onSubmitEditing={() => AsyncStorage.setItem('@storage_Key', this.state.data_in)}
             value={this.state.data_in}
           />
-          <TouchableOpacity style={styles.btn} onPress={() => this.props.navigation.navigate('elementss')}>
+          <TouchableOpacity style={styles.btn} onPress={() => this.props.navigation.navigate('elements')}>
             <Text>Controller</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.btn} onPress={() => this.props.navigation.navigate('mouse')}>
