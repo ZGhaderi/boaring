@@ -83,13 +83,17 @@ export default class App extends Component {
       var msg = [];
 
       this.socket.emit("rec",flag);
-       if(flag){
+      if(flag){
+        var pos = "";
       if(item.y < -2 && item.x > 2 ){//&& this.state.element === 'accelerometer'){
         vertical = 'w';//'ver is w'; 57
         msg = 'left';//87;up
         this.socket.emit("chat message" ,msg);
         msg = 'down';//87;up
         this.socket.emit("chat message" ,msg);
+        
+        pos = item.x.toFixed(2) + " " + item.y.toFixed(2);
+        this.socket.emit("position" ,pos);
       }
       if(item.y > 2 && item.x < -2 ){//&& this.state.element === 'accelerometer'){
         vertical = 's';//'ver is s'; 62
@@ -99,6 +103,9 @@ export default class App extends Component {
         this.socket.emit("chat message" ,msg);
         msg = 'up';//87;up
         this.socket.emit("chat message" ,msg);
+        
+        pos = item.x.toFixed(2) + " " + item.y.toFixed(2);
+        this.socket.emit("position" ,pos);
       }
       if(item.y > 2 && item.x > 2 ){//&& this.state.element === 'accelerometer'){
         horizontal = 'a';//'hor is a'; 61
@@ -108,6 +115,9 @@ export default class App extends Component {
         this.socket.emit("chat message" ,msg);
         msg = 'down';//87;up
         this.socket.emit("chat message" ,msg);
+        
+        pos = item.x.toFixed(2) + " " + item.y.toFixed(2);
+        this.socket.emit("position" ,pos);
       }
       if(item.y < -2 && item.x < -2 ){//&& this.state.element === 'accelerometer'){
         horizontal = 'd';//'hor is a'; 63
@@ -117,23 +127,38 @@ export default class App extends Component {
         this.socket.emit("chat message" ,msg);
         msg = 'up';//87;up
         this.socket.emit("chat message" ,msg);
+        
+        pos = item.x.toFixed(2) + " " + item.y.toFixed(2);
+        this.socket.emit("position" ,pos);
       }
       if(item.y < -2 ){//&& this.state.element === 'accelerometer'){
         msg = 'left';//87;up
         this.socket.emit("chat message" ,msg);
+        
+        pos = item.x.toFixed(2) + " " + item.y.toFixed(2);
+        this.socket.emit("position" ,pos);
       }
       if(item.y > 2 ){//&& this.state.element === 'accelerometer'){
         msg = 'right';//87;up
         this.socket.emit("chat message" ,msg);
+        
+        pos = item.x.toFixed(2) + " " + item.y.toFixed(2);
+        this.socket.emit("position" ,pos);
       }
       if(item.x < -2 ){//&& this.state.element === 'accelerometer'){
         msg = 'up';//87;up
         this.socket.emit("chat message" ,msg);
+        
+        pos = item.x.toFixed(2) + " " + item.y.toFixed(2);
+        this.socket.emit("position" ,pos);
         //this.socket.emit("rec" ,this.state.element);
       }
       if(item.x > 2){// && this.state.element === 'accelerometer'){
         msg = 'down';//87;up
         this.socket.emit("chat message" ,msg);
+        
+        pos = item.x.toFixed(2) + " " + item.y.toFixed(2);
+        this.socket.emit("position" ,pos);
        // this.socket.emit("rec" ,element);
       }
       // if(item.y < -0.2){

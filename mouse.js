@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
  
-import { StyleSheet, View, TouchableOpacity, Image,Dimensions, TextInput} from 'react-native';
+import { StyleSheet, View, BackHandler,TouchableOpacity, Image,Dimensions, TextInput} from 'react-native';
 import {createResponder} from 'react-native-gesture-responder'
 import io from 'socket.io-client/dist/socket.io';//'socket.io-client';
 import Icon from "react-native-vector-icons/Ionicons";
@@ -61,7 +61,9 @@ export default class mouse extends Component
       //   this.setState({rec:[...this.state.rec , msg]});
       // });
       
+      this.backHandler = BackHandler.addEventListener('hardwareBackPress', this.backtoPrevScreen);  
     }
+
     UNSAFE_componentWillMount()
     {
       var tap2 = false;
@@ -133,7 +135,7 @@ export default class mouse extends Component
                     this.setState({prevdy : disty});
                     this.setState({release: false});
                 }
-                
+                3
                 if(distx > -5 && distx < 5 && disty < 5 && disty > -5){
                     this.setState({counter: this.state.counter + 1});
                     //this.socket.emit("text" , "counter1" );
@@ -201,6 +203,18 @@ export default class mouse extends Component
         }
       });
     }
+    
+  componentWillUnmount() {
+    this.backHandler.remove();
+    this.socket.emit("chat message" ,"close");
+  }
+  
+  backtoPrevScreen=()=>{
+    //alert("back");
+    this.socket.emit("chat message" ,"close");
+    this.props.navigation.navigate('Home');
+    return true;
+  }
     stopTimer=()=>{
       clearTimeout(this.timer);
     }
@@ -360,7 +374,7 @@ export default class mouse extends Component
 
           </View>
             <View style={{flex:1,backgroundColor:"#0b132b",justifyContent:"space-between"}}>
-            <TouchableOpacity onPressIn={this.scrollUp} onPressOut={this.stopTimer} style={{flexDirection:"row",alignItems:'stretch',width:70,height:70}}>
+            <TouchableOpacity onPressIn={this.scrollUp} onPressOut={this.stopTimer} style={{flexDirection:"row",alignItems:'stretch'}}>
                 <AntDesign name="up" size={50} color={'#6fffe9'} style={{alignSelf:'center'}} />
             </TouchableOpacity>
             <TouchableOpacity onPressIn={this.scrollDown} onPressOut={this.stopTimer} style={{flexDirection:"row",alignItems:'stretch'}}>
@@ -401,11 +415,13 @@ export default class mouse extends Component
                       }} textStyle={{fontSize: 16}} disabled>Mouse</MenuItem>
                     <MenuItem onPress={() => {
                       this._menu.hide()
+                      //this.socket.emit("chat message" ,"close");
                       navigation.navigate('Home')
                       }} textStyle={{color: '#000', fontSize: 16}}>startPage</MenuItem>
                     
                     <MenuItem onPress={() =>{
                       this._menu.hide()
+                      //this.socket.emit("chat message" ,"close");
                       navigation.navigate('Friends')
                       }}  textStyle={{color: '#000', fontSize: 16}}>controller</MenuItem>
                 </Menu>
