@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View, Dimensions ,TouchableOpacity} from 'react-native';
+import { StyleSheet, Text, View, Dimensions ,TouchableOpacity,BackHandler} from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 import { Akira } from 'react-native-textinput-effects';
 import Icon from "react-native-vector-icons/Ionicons";
@@ -24,12 +24,28 @@ export default class Home extends React.Component {
             value={this.state.data_in}
         />
      */
+    componentDidMount(){
+      console.disableYellowBox = true;
+      this.backHandler = BackHandler.addEventListener('hardwareBackPress', this.backtoPrevScreen); 
+    }
+    componentWillUnmount() {
+      this.backHandler.remove();
+      //this.socket.emit("chat message" ,"close");
+      AsyncStorage.setItem('@storage_Key', " ");
+    }
+
     _menu = null;
 
     setMenuRef = ref => {
       this._menu = ref;
     };
-
+    backtoPrevScreen=()=>{
+      //alert("back");
+      //this.socket.emit("chat message" ,"close");
+      AsyncStorage.setItem('@storage_Key', " ");
+      this.props.navigation.navigate('Home');
+      return true;
+    }
   render() {
     return (
       <View style={{flex:1,justifyContent:"center",alignItems:"center",backgroundColor:'#0b132b'}}>
@@ -44,7 +60,7 @@ export default class Home extends React.Component {
             onSubmitEditing={() => AsyncStorage.setItem('@storage_Key', this.state.data_in)}
             value={this.state.data_in}
           />
-          <TouchableOpacity style={styles.btn} onPress={() => this.props.navigation.navigate('elements')}>
+          <TouchableOpacity style={styles.btn} onPress={() => this.props.navigation.navigate('games')}>
             <Text>Controller</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.btn} onPress={() => this.props.navigation.navigate('mouse')}>

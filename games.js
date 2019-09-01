@@ -9,40 +9,19 @@ export default class App extends Component {
             elements: "",
         }
     }
-    
-    arrowKeys=()=>{
-        this.setState({elements: "arrowkey"});
-        AsyncStorage.setItem('arrowKey', "true");
-        AsyncStorage.setItem('accelerometer', "false");
-        if(String(AsyncStorage.getItem('game')) == "packman"){
-            this.props.navigation.navigate('packman');
-        }
-        else{   
-            this.props.navigation.navigate('packman');
-        }
-    }
-    accelerometer=()=>{
-        this.setState({elements: "accelerometer"});
-        AsyncStorage.setItem('accelerometer', "true");
-        AsyncStorage.setItem('arrowKey', "false");
-        if(String(AsyncStorage.getItem('game')) == "packman"){
-            this.props.navigation.navigate('packman');
-        }
-        else{   
-            this.props.navigation.navigate('Friends');
-        }
+    pacman=()=>{
+        AsyncStorage.setItem('game', "packman");
+        this.props.navigation.navigate('elements');
     }
     render() {  
         return (   
             <View style={{flex:1,justifyContent:"center",alignItems:"center",backgroundColor:'#0b132b'}}>
                 <View style={{flex:1,flexDirection:"column",justifyContent:"center",width:300}}>
-                    <Text style={{color: '#5bc0be',fontSize:25}}>Do you want to use accelerometer?</Text>
-                <TouchableOpacity style={styles.btn} onPress={this.accelerometer}>
-                    <Text>Yes</Text>
+                    <Text style={{color: '#5bc0be',fontSize:25}}>Select game you want to play.</Text>
+                <TouchableOpacity style={styles.btn} onPress={this.pacman}>
+                    <Image source={require("./image/pac-man.jpg")} style={styles.btnCTRLimage}></Image>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.btn} onPress={this.arrowKeys}>
-                    <Text>No</Text>
-                </TouchableOpacity>
+                
                 </View>
             </View>
         )
@@ -69,14 +48,19 @@ const styles=StyleSheet.create({
      // backgroundColor: '#F5FCFF',//'#F5FCFF',
     },
     btn :{
-        backgroundColor: '#5bc0be',//'#F7F9F9',
-        color: '#7F8C8D',
-        height : 45,
-        width:WIDTH*(0.4),
+        backgroundColor: '#0b132b',//'#F7F9F9',
+        color: '#0b132b',
+        // height : 200,
+        // width:400,//WIDTH*(0.4),
         borderRadius: 8,
-        marginTop:10,
+        //marginTop:10,
         alignItems:"center",
         justifyContent: "center",
+      },
+      btnCTRLimage:{
+        height:150,
+        width:300,
+        resizeMode:"contain"
       },
 })
 

@@ -49,7 +49,9 @@ export default class mouse extends Component
         this.brightnessDown = this.brightnessDown.bind(this);
         this.stopTimer = this.stopTimer.bind(this);
     }
+    
     async componentDidMount(){
+      console.disableYellowBox = true;
       const ip = String(await AsyncStorage.getItem('@storage_Key'));
       var ipaddr = 'http://'+ ip + ':8000';
       this.setState({data_in : ipaddr});
@@ -207,11 +209,13 @@ export default class mouse extends Component
   componentWillUnmount() {
     this.backHandler.remove();
     this.socket.emit("chat message" ,"close");
+    //AsyncStorage.setItem('@storage_Key', " ");
   }
   
   backtoPrevScreen=()=>{
     //alert("back");
     this.socket.emit("chat message" ,"close");
+    //AsyncStorage.setItem('@storage_Key', " ");
     this.props.navigation.navigate('Home');
     return true;
   }
@@ -246,6 +250,10 @@ export default class mouse extends Component
     scrollDown=()=>{
       this.socket.emit("scroll" ,'down');
       this.timer = setTimeout(this.scrollDown, 100);
+    }
+    btnDelete=()=>{
+      this.socket.emit("click" ,'delete');
+      this.timer = setTimeout(this.volumx, 100);
     }
     volumx=()=>{
       this.socket.emit("volum" ,'x');
@@ -333,34 +341,38 @@ export default class mouse extends Component
                         style={{alignSelf:'center'}} />
                 </TouchableOpacity>
                 <TouchableOpacity onPressIn={this.btnLeft} onPressOut={this.stopTimer} style={{flexDirection:"row",marginRight:20,alignItems:'stretch'}}>
-                  <EntypoIcon name="angle-left" size={35} color={'#6fffe9'} 
+                  <AntDesign name="leftcircleo" size={35} color={'#6fffe9'} 
                         style={{alignSelf:'center'}} />
                 </TouchableOpacity>
                 <TouchableOpacity onPressIn={this.btnRight} onPressOut={this.stopTimer} style={{flexDirection:"row",marginRight:20,alignItems:'stretch'}}>
-                  <EntypoIcon name="angle-right" size={35} color={'#6fffe9'} 
+                  <AntDesign name="rightcircleo" size={35} color={'#6fffe9'} 
                         style={{alignSelf:'center'}} />
                 </TouchableOpacity>
                 <TouchableOpacity onPress={this.btnRightClick} style={{flexDirection:"row",marginRight:20,alignItems:'stretch'}}>
                   <MaterialCommunityIcons name="cursor-default-outline" size={35} color={'#6fffe9'} 
                         style={{alignSelf:'center'}} />
                 </TouchableOpacity>
-                <TouchableOpacity onPress={this.volumx} style={{flexDirection:"row",marginRight:20,alignItems:'stretch'}}>
+                <TouchableOpacity onPress={this.btnDelete} style={{flexDirection:"row",marginRight:20,alignItems:'stretch'}}>
+                  <AntDesign name="delete" size={35} color={'#6fffe9'} 
+                        style={{alignSelf:'center'}} />
+                </TouchableOpacity>
+                <TouchableOpacity onPressIn={this.volumx} onPressOut={this.stopTimer} style={{flexDirection:"row",marginRight:20,alignItems:'stretch'}}>
                   <Feather name="volume-x" size={35} color={'#6fffe9'} 
                         style={{alignSelf:'center'}} />
                 </TouchableOpacity>
-                <TouchableOpacity onPress={this.volumUp} style={{flexDirection:"row",marginRight:20,alignItems:'stretch'}}>
+                <TouchableOpacity onPressIn={this.volumUp} onPressOut={this.stopTimer} style={{flexDirection:"row",marginRight:20,alignItems:'stretch'}}>
                   <Feather name="volume-1" size={35} color={'#6fffe9'} 
                         style={{alignSelf:'center'}} />
                 </TouchableOpacity>
-                <TouchableOpacity onPress={this.volumDown} style={{flexDirection:"row",marginRight:20,alignItems:'stretch'}}>
+                <TouchableOpacity onPressIn={this.volumDown} onPressOut={this.stopTimer} style={{flexDirection:"row",marginRight:20,alignItems:'stretch'}}>
                   <Feather name="volume-2" size={35} color={'#6fffe9'} 
                         style={{alignSelf:'center'}} />
                 </TouchableOpacity>
-                <TouchableOpacity onPress={this.brightnessUp} style={{flexDirection:"row",marginRight:20,alignItems:'stretch'}}>
+                <TouchableOpacity onPressIn={this.brightnessUp} onPressOut={this.stopTimer} style={{flexDirection:"row",marginRight:20,alignItems:'stretch'}}>
                   <MaterialCommunityIcons name="brightness-5" size={35} color={'#6fffe9'} 
                         style={{alignSelf:'center'}} />
                 </TouchableOpacity>
-                <TouchableOpacity onPress={this.brightnessDown} style={{flexDirection:"row",marginRight:20,alignItems:'stretch'}}>
+                <TouchableOpacity onPressIn={this.brightnessDown} onPressOut={this.stopTimer} style={{flexDirection:"row",marginRight:20,alignItems:'stretch'}}>
                   <MaterialCommunityIcons name="brightness-7" size={35} color={'#6fffe9'} 
                         style={{alignSelf:'center'}} />
                 </TouchableOpacity>
@@ -422,7 +434,7 @@ export default class mouse extends Component
                     <MenuItem onPress={() =>{
                       this._menu.hide()
                       //this.socket.emit("chat message" ,"close");
-                      navigation.navigate('Friends')
+                      navigation.navigate('games')
                       }}  textStyle={{color: '#000', fontSize: 16}}>controller</MenuItem>
                 </Menu>
               </View>

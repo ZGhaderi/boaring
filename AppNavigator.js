@@ -8,23 +8,32 @@ import {
   import mouse from './mouse';
   import elements from './elements';
   import drag from './drag';
+  import packman from './packman'
+  import games from './games'
+  
   const rootstack = createStackNavigator({
-    
+    drag: { 
+      screen: drag ,
+      }, 
     Home: { 
         screen: Home ,
         },
     Friends: { 
         screen: Friends
         },
-        mouse: { 
-          screen: mouse
-          },
+    mouse: { 
+        screen: mouse
+        },
     elements: {
         screen: elements
-          }, 
-          drag: {
-            screen: drag
-              },
+        }, 
+    packman:{
+        screen: packman,
+        },
+    games: {
+        screen: games,
+        },
+           
       },
     
       // {
