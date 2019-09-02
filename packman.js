@@ -273,14 +273,14 @@ export default class App extends Component {
           </View>
           
           <View style={styles.arrowView}>
-              <TouchableOpacity style={styles.btnLEFTtouch}
-              onPressIn={this.btnLeft} onPressOut={this.stopTimer}>
-                <Image source={require("./image/left.png")} style={styles.btnLEFTimage}></Image>
-              </TouchableOpacity>
               <TouchableOpacity 
               style={styles.btnRtouch} 
               onPressIn={this.btnP} onPressOut={this.stopTimer}>
                 <Image source={require("./image/p.png")} style={styles.btnRimage}></Image>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.btnLEFTtouch}
+              onPressIn={this.btnLeft} onPressOut={this.stopTimer}>
+                <Image source={require("./image/left.png")} style={styles.btnLEFTimage}></Image>
               </TouchableOpacity>
               <TouchableOpacity 
               style={styles.btnRtouch} 
@@ -292,32 +292,39 @@ export default class App extends Component {
               onPress={this.btnM}>
                 <Image source={require("./image/m.png")} style={styles.btnRimage}></Image>
               </TouchableOpacity>
+              <TouchableOpacity style={styles.btnLEFTtouch} 
+              onPressIn={this.btnRight} onPressOut={this.stopTimer}>
+                <Image source={require("./image/right.png")} style={styles.btnLEFTimage}></Image>
+              </TouchableOpacity>
               <TouchableOpacity 
               style={styles.btnRtouch} 
               onPress={this.btnL}>
                 <Image source={require("./image/l.png")} style={styles.btnRimage}></Image>
               </TouchableOpacity>
-              <TouchableOpacity style={styles.btnLEFTtouch} 
-              onPressIn={this.btnRight} onPressOut={this.stopTimer}>
-                <Image source={require("./image/right.png")} style={styles.btnLEFTimage}></Image>
-              </TouchableOpacity>
           </View>
+
+        <View style={styles.btnSHIFTview}>
           <View style={styles.btnRview}>
               <TouchableOpacity style={styles.btnLEFTtouch} 
               onPressIn={this.btnDown} onPressOut={this.stopTimer}>
                 <Image source={require("./image/down.png")} style={styles.btnLEFTimage}></Image>
               </TouchableOpacity>
-              <TouchableOpacity style={styles.btnpacman}>
-                    <Image source={require("./image/pacman.png")} style={styles.btnPacmanimage}></Image>
-              </TouchableOpacity>
-            </View>
+          </View>
+          
         </View>
-      
+      </View>
       
       </View>
     );
   }
-
+/**
+ * <View style={styles.btnRview}>
+              
+              <TouchableOpacity style={styles.btnpacman}>
+                    <Image source={require("./image/pacman.png")} style={styles.btnPacmanimage}></Image>
+              </TouchableOpacity>
+            </View>
+ */
 //</ImageBackground>
 static navigationOptions = ({ navigation }) => {
   return {

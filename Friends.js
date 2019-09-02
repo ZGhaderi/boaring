@@ -8,12 +8,17 @@ import Icon from "react-native-vector-icons/Ionicons";
 import AsyncStorage from "@react-native-community/async-storage";
 import Menu, { MenuItem, MenuDivider } from 'react-native-material-menu';
 import Orientation from 'react-native-orientation';
-//import { thisTypeAnnotation } from "@babel/types";
 
 const responsiveWidth = Dimensions.get('screen').width;
 const responsiveHeight = Dimensions.get('screen').height;
 
-//const { navigation } = this.props;
+var newRender = [];
+var a = [];
+
+var firstLeft=true;
+var firstRight=true;
+var firstUp=true;
+var firstDown = true;
 export default class App extends Component {
   constructor(){
     super();
@@ -21,7 +26,8 @@ export default class App extends Component {
       data_in: "",
       rec:[],
       element:[],
-
+      count:0,
+      renderview: [],
       data: {x: 0,
             y: 0,
             z: 0,
@@ -31,14 +37,41 @@ export default class App extends Component {
     this.timer = null;
     this.btnA = this.btnA.bind(this);
     this.btnB = this.btnB.bind(this);
-    this.btnX = this.btnX.bind(this);
+    this.btnC = this.btnC.bind(this);
+    this.btnD = this.btnD.bind(this);
+    this.btnE = this.btnE.bind(this);
+    this.btnF = this.btnF.bind(this);
+    this.btnG = this.btnG.bind(this);
+    this.btnH = this.btnH.bind(this);
+    this.btnI = this.btnI.bind(this);
+    this.btnJ = this.btnJ.bind(this);
+    this.btnK = this.btnK.bind(this);
+    this.btnL = this.btnL.bind(this);
+    this.btnM = this.btnM.bind(this);
+    this.btnN = this.btnN.bind(this);
+    this.btnO = this.btnO.bind(this);
+    this.btnP = this.btnP.bind(this);
+    this.btnQ = this.btnQ.bind(this);
     this.btnR = this.btnR.bind(this);
+    this.btnS = this.btnS.bind(this);
+    this.btnT = this.btnT.bind(this);
+    this.btnU = this.btnU.bind(this);
+    this.btnV = this.btnV.bind(this);
+    this.btnW = this.btnW.bind(this);
+    this.btnX = this.btnX.bind(this);
+    this.btnY = this.btnY.bind(this);
+    this.btnZ = this.btnZ.bind(this);
     this.btnUp = this.btnUp.bind(this);
     this.btnLeft = this.btnLeft.bind(this);
     this.btnRight = this.btnRight.bind(this);
     this.btnDown = this.btnDown.bind(this);
     this.btnLeftShift = this.btnLeftShift.bind(this);
     this.btnRightShift = this.btnRightShift.bind(this);
+    this.btnEnter = this.btnEnter.bind(this);
+    this.btnBackspace = this.btnBackspace.bind(this);
+    this.btnDelete = this.btnDelete.bind(this);
+    this.btnAlt = this.btnAlt.bind(this);
+    this.btnEsc = this.btnEsc.bind(this);
     this.btnSpace = this.btnSpace.bind(this);
     this.btnLeftCtrl = this.btnLeftCtrl.bind(this);
     this.btnRightCtrl = this.btnRightCtrl.bind(this);
@@ -55,12 +88,11 @@ export default class App extends Component {
     this.socket = io("http://192.168.43.136:8000");
     //this.socket = io(this.state.data_in);
 
-    // this.setState({element:String(await AsyncStorage.getItem('elements'))});
-    // if(this.state.element.length){
-    //   this.socket.emit("input",this.state.element);
-    // }
-    var flag ;//= true;
-    //this.setState({element : String(await AsyncStorage.getItem('element'))});
+    this.setState({element:String(await AsyncStorage.getItem('elements'))});
+    if(this.state.element.length){
+      this.socket.emit("input",this.state.element);
+    }
+    var flag ;
     if(String(await AsyncStorage.getItem('arrowKey')) == "true" && String(await AsyncStorage.getItem('accelerometer')) == "false"){
       this.socket.emit("here" ,"set flag to false");
       flag = false;
@@ -69,43 +101,6 @@ export default class App extends Component {
       this.socket.emit("here" ,"set flag to true");
       flag = true;
     }
-    const { navigation } = this.props;
-    //Adding an event listner om focus
-    //So whenever the screen will have focus it will set the state to zero
-    this.focusListener = navigation.addListener('didFocus', () => {
-      if(this.props.navigation.state.params != null){
-        const str = JSON.stringify(this.props.navigation.state.params);
-        this.socket.emit("input",str);
-        var phone_no;
-        JSON.parse(str, (key,value) => {
-          var s = str.split("\"");
-          if(s.split("\"") == 'elements'){
-            var a = s.split("[");
-            //var a=JSON.stringify(this.state.element);
-            //a.push(value);
-            this.setState({element:a});
-            this.socket.emit("input",element);//JSON.stringify(this.state.element));
-          } 
-          else if(key == 'addRemove'){
-            this.socket.emit("input",value);
-          }
-          else{
-            //this.socket.emit("input",value);
-          }
-        })  
-        //this.afterNavigation()
-      }
-    });
-   // this.socket.emit("rec" ,"common");
-    // if(this.state.element == 'accelerometer'){
-    //   this.socket.emit("rec" ,"accelerometer");
-    // }
-    // if(this.state.element == 'arrowKey'){
-    //   this.socket.emit("rec" ,"arrowkey");
-    // }
-    // this.socket.on("send",msg=>{
-    //   this.setState({rec:[...this.state.rec , msg]});
-    // });
     
     setUpdateIntervalForType(SensorTypes.accelerometer, 50);
     accelerometer.subscribe(({ x, y, z }) => {
@@ -117,106 +112,432 @@ export default class App extends Component {
       var horizontal = '';
       var msg = [];
 
+
       this.socket.emit("rec",flag);
       if(flag){
         var pos = "";
-      if(item.y < -2 && item.x > 2 ){//&& this.state.element === 'accelerometer'){
-        vertical = 'w';//'ver is w'; 57
-        msg = 'left';//87;up
-        this.socket.emit("chat message" ,msg);
-        msg = 'down';//87;up
-        this.socket.emit("chat message" ,msg);
-        
         pos = item.x.toFixed(2) + " " + item.y.toFixed(2);
         this.socket.emit("position" ,pos);
+      if(item.y < -2 && item.x > 2 ){
+        if(firstDown){
+          firstDown = false;
+          msg = 'down';//87;up
+          this.socket.emit("toggledown" ,msg);
+        }
+        if(firstRight){
+          firstRight = false;
+          msg = 'left';//87;up
+          this.socket.emit("toggledown" ,msg);
+        }
       }
-      if(item.y > 2 && item.x < -2 ){//&& this.state.element === 'accelerometer'){
-        vertical = 's';//'ver is s'; 62
-        // msg = ['right', 'up'];//83;down
-        // this.socket.emit("chat message" ,msg);
+      if(item.y > 2 && item.x < -2 ){
         msg = 'right';//87;up
-        this.socket.emit("chat message" ,msg);
+        this.socket.emit("direction" ,msg);
         msg = 'up';//87;up
-        this.socket.emit("chat message" ,msg);
-        
-        pos = item.x.toFixed(2) + " " + item.y.toFixed(2);
-        this.socket.emit("position" ,pos);
+        this.socket.emit("direction" ,msg);
+        if(firstUp){
+          firstUp = false;
+          msg = 'up';//87;up
+          this.socket.emit("toggledown" ,msg);
+        }
+        if(firstLeft){
+          firstLeft = false;
+          msg = 'right';//87;up
+          this.socket.emit("toggledown" ,msg);
+        }
       }
-      if(item.y > 2 && item.x > 2 ){//&& this.state.element === 'accelerometer'){
-        horizontal = 'a';//'hor is a'; 61
-        // msg = ['down','right'];//65;left
-        // this.socket.emit("chat message" ,msg);
+      if(item.y > 2 && item.x > 2 ){
         msg = 'right';//87;up
-        this.socket.emit("chat message" ,msg);
+        this.socket.emit("direction" ,msg);
         msg = 'down';//87;up
-        this.socket.emit("chat message" ,msg);
-        
-        pos = item.x.toFixed(2) + " " + item.y.toFixed(2);
-        this.socket.emit("position" ,pos);
+        this.socket.emit("direction" ,msg);
+        if(firstDown){
+          firstDown = false;
+          msg = 'down';//87;up
+          this.socket.emit("toggledown" ,msg);
+        }
+        if(firstLeft){
+          firstLeft = false;
+          msg = 'right';//87;up
+          this.socket.emit("toggledown" ,msg);
+        }
       }
-      if(item.y < -2 && item.x < -2 ){//&& this.state.element === 'accelerometer'){
-        horizontal = 'd';//'hor is a'; 63
-        // msg = ['up','left'];//68;right
-        // this.socket.emit("chat message" ,msg);
+      if(item.y < -2 && item.x < -2 ){
         msg = 'left';//87;up
-        this.socket.emit("chat message" ,msg);
+        this.socket.emit("direction" ,msg);
         msg = 'up';//87;up
-        this.socket.emit("chat message" ,msg);
-        
-        pos = item.x.toFixed(2) + " " + item.y.toFixed(2);
-        this.socket.emit("position" ,pos);
+        this.socket.emit("direction" ,msg);
+        if(firstUp){
+          firstUp = false;
+          msg = 'up';//87;up
+          this.socket.emit("t  o  ggledown" ,msg);
+        }
+        if(firstRight){
+          firstRight = false;
+          msg = 'left';//87;up
+          this.socket.emit("toggledown" ,msg);
+        }
       }
-      if(item.y < -2 ){//&& this.state.element === 'accelerometer'){
+      if(item.y < -2 ){
         msg = 'left';//87;up
-        this.socket.emit("chat message" ,msg);
-        
-        pos = item.x.toFixed(2) + " " + item.y.toFixed(2);
-        this.socket.emit("position" ,pos);
+        this.socket.emit("direction" ,msg);
+        if(firstRight){
+          firstRight = false;
+          msg = 'left';//87;up
+          this.socket.emit("toggledown" ,msg);
+        }
       }
-      if(item.y > 2 ){//&& this.state.element === 'accelerometer'){
+      if(item.y > 2 ){
         msg = 'right';//87;up
-        this.socket.emit("chat message" ,msg);
-        
-        pos = item.x.toFixed(2) + " " + item.y.toFixed(2);
-        this.socket.emit("position" ,pos);
+        this.socket.emit("direction" ,msg);
+
+        if(firstLeft){
+          firstLeft = false;
+          msg = 'right';//87;up
+          this.socket.emit("input" ,"set firstLeft"+ firstLeft);
+          this.socket.emit("toggledown" ,msg);
+        }
       }
-      if(item.x < -2 ){//&& this.state.element === 'accelerometer'){
+      if(item.x < -2 ){
         msg = 'up';//87;up
-        this.socket.emit("chat message" ,msg);
-        
-        pos = item.x.toFixed(2) + " " + item.y.toFixed(2);
-        this.socket.emit("position" ,pos);
-        //this.socket.emit("rec" ,this.state.element);
+        this.socket.emit("direction" ,msg);
+        if(firstUp){
+          firstUp = false;
+          msg = 'up';//87;up
+          this.socket.emit("toggledown" ,msg);
+        }
       }
-      if(item.x > 2){// && this.state.element === 'accelerometer'){
+      if(item.x > 2){
         msg = 'down';//87;up
-        this.socket.emit("chat message" ,msg);
-        
-        pos = item.x.toFixed(2) + " " + item.y.toFixed(2);
-        this.socket.emit("position" ,pos);
-       // this.socket.emit("rec" ,element);
+        this.socket.emit("direction" ,msg);
+
+        if(firstDown){
+          firstDown = false;
+          msg = 'down';//87;up
+          this.socket.emit("toggledown" ,msg);
+        }
       }
-      // if(item.y < -0.2){
-      //   msg = 'left';//87;up
-      //   this.socket.emit("chat message" ,msg);
-      // }
-      // if(item.y > 0.2){
-      //   msg = 'right';//87;up
-      //   this.socket.emit("chat message" ,msg);
-      // }
-      // if(item.x < -0.2){
-      //   msg = 'up';//87;up
-      //   this.socket.emit("chat message" ,msg);
-      // }
-      // if(item.x > 0.2){
-      //   msg = 'down';//87;up
-      //   this.socket.emit("chat message" ,msg);
-      // }
+      if(item.y > -2 && item.y < 2 && item.x > -2 && item.x < 2){
+        this.socket.emit("input" ,firstLeft);
+        if(!firstLeft){
+          this.socket.emit("input" ,"omad left" + firstLeft);
+          firstLeft = true;
+          msg = 'right';
+          this.socket.emit("toggleup" ,msg);
+        }
+        if(!firstRight){
+        firstRight = true;
+        msg = 'left';//87;up
+        this.socket.emit("toggleup" ,msg);
+        }
+        if(!firstDown){
+          firstDown = true;
+          msg = 'down';//87;up
+          this.socket.emit("toggleup" ,msg);
+          }
+          if(!firstUp){
+          firstUp = true;
+          msg = 'up';//87;up
+          this.socket.emit("toggleup" ,msg);
+          }
+      }
     }
   });
-  // }
+ 
+ a = this.state.renderview;
 
-    
+    if(this.state.element.indexOf('a')){
+      this.setState({count:this.state.count + 1});
+//      var a = this.state.renderview;
+      a.push(<View style={styles.btnXview}>
+        <TouchableOpacity style={styles.btnRtouch} onPress={this.btnA} >
+            <Image source={require("./image/a.png")} style={styles.btnRimage}></Image>
+        </TouchableOpacity>
+        </View>);
+      this.setState({renderview: a});
+    }
+    if(this.state.element.indexOf('b')){
+      this.setState({count:this.state.count + 1});
+  //    var a = this.state.renderview;
+      a.push(<View style={styles.btnXview}>
+        <TouchableOpacity style={styles.btnRtouch} onPress={this.btnB} >
+            <Image source={require("./image/b.png")} style={styles.btnRimage}></Image>
+        </TouchableOpacity>
+        </View>);
+      this.setState({renderview: a});
+    }
+    if(this.state.element.indexOf('c')){
+      this.setState({count:this.state.count + 1});
+ //     var a = this.state.renderview;
+      a.push(<View style={styles.btnXview}>
+        <TouchableOpacity style={styles.btnRtouch} onPress={this.btnC} >
+            <Image source={require("./image/c.png")} style={styles.btnRimage}></Image>
+        </TouchableOpacity>
+        </View>);
+        this.setState({renderview: a});
+    }
+    if(this.state.element.indexOf('d')){
+      this.setState({count:this.state.count + 1});
+//      var a = this.state.renderview;
+      a.push(<View style={styles.btnXview}>
+        <TouchableOpacity style={styles.btnRtouch} onPress={this.btnD} >
+            <Image source={require("./image/d.png")} style={styles.btnRimage}></Image>
+        </TouchableOpacity>
+        </View>);
+        this.setState({renderview: a});
+    }
+    if(this.state.element.indexOf('e')){
+      this.setState({count:this.state.count + 1});
+      // var a = this.state.renderview;
+      a.push(
+            <View style={styles.btnXview}>
+            <TouchableOpacity style={styles.btnRtouch} onPress={this.btnE} >
+                <Image source={require("./image/e.png")} style={styles.btnRimage}></Image>
+            </TouchableOpacity>
+            </View>
+            );
+      this.setState({renderview: a});
+    }
+    if(this.state.element.indexOf('f')){
+      this.setState({count:this.state.count + 1});
+      // var a = this.state.renderview;
+      a.push( <View style={styles.btnXview}>
+        <TouchableOpacity style={styles.btnRtouch} onPress={this.btnF} >
+            <Image source={require("./image/f.png")} style={styles.btnRimage}></Image>
+        </TouchableOpacity>
+        </View>
+      );
+      this.setState({renderview: a});
+    }
+    if(this.state.element.indexOf('g')){
+      this.setState({count:this.state.count + 1});
+      // var a = this.state.renderview;
+      a.push(<View style={styles.btnXview}>
+        <TouchableOpacity style={styles.btnRtouch} onPress={this.btnG} >
+            <Image source={require("./image/g.png")} style={styles.btnRimage}></Image>
+        </TouchableOpacity>
+        </View>
+        
+      );
+      this.setState({renderview: a});
+    }
+    if(this.state.element.indexOf('h')){
+      this.setState({count:this.state.count + 1});
+      // var a = this.state.renderview;
+      a.push(<View style={styles.btnXview}>
+        <TouchableOpacity style={styles.btnRtouch} onPress={this.btnH} >
+            <Image source={require("./image/h.png")} style={styles.btnRimage}></Image>
+        </TouchableOpacity>
+        </View>         
+      );
+      this.setState({renderview: a});
+    }
+    if(this.state.element.indexOf('i')){
+      this.setState({count:this.state.count + 1});
+      // var a = this.state.renderview;
+      a.push(<View style={styles.btnXview}>
+        <TouchableOpacity style={styles.btnRtouch} onPress={this.btnI} >
+            <Image source={require("./image/i.png")} style={styles.btnRimage}></Image>
+        </TouchableOpacity>
+        </View>
+      );
+      this.setState({renderview: a});
+    }
+    if(this.state.element.indexOf('j')){
+      this.setState({count:this.state.count + 1});
+      // var a = this.state.renderview;
+      a.push(<View style={styles.btnXview}>
+        <TouchableOpacity style={styles.btnRtouch} onPress={this.btnJ} >
+            <Image source={require("./image/j.png")} style={styles.btnRimage}></Image>
+        </TouchableOpacity>
+        </View>
+               
+      );
+      this.setState({renderview: a});
+    }
+    if(this.state.element.indexOf('k')){
+      this.setState({count:this.state.count + 1});
+      // var a = this.state.renderview;
+      a.push(<View style={styles.btnXview}>
+        <TouchableOpacity style={styles.btnRtouch} onPress={this.btnK} >
+            <Image source={require("./image/k.png")} style={styles.btnRimage}></Image>
+        </TouchableOpacity>
+        </View>
+        
+      );
+      this.setState({renderview: a});
+    }
+    if(this.state.element.indexOf('l')){
+      // var a = this.state.renderview;
+      a.push(<View style={styles.btnXview}>
+        <TouchableOpacity style={styles.btnRtouch} onPress={this.btnL} >
+            <Image source={require("./image/l.png")} style={styles.btnRimage}></Image>
+        </TouchableOpacity>
+        </View>        
+      );
+      this.setState({renderview: a});
+    }
+    if(this.state.element.indexOf('m')){
+      // var a = this.state.renderview;
+      a.push(
+        <View style={styles.btnXview}>
+        <TouchableOpacity style={styles.btnRtouch} onPress={this.btnM} >
+            <Image source={require("./image/m.png")} style={styles.btnRimage}></Image>
+        </TouchableOpacity>
+        </View>        
+      );
+      this.setState({renderview: a});
+    }
+    if(this.state.element.indexOf('n')){
+      // var a = this.state.renderview;
+      a.push(
+        <View style={styles.btnXview}>
+        <TouchableOpacity style={styles.btnRtouch} onPress={this.btnN} >
+            <Image source={require("./image/n.png")} style={styles.btnRimage}></Image>
+        </TouchableOpacity>
+        </View>        
+      );
+      this.setState({renderview: a});
+    }
+    if(this.state.element.indexOf('o')){
+      // var a = this.state.renderview;
+      a.push(
+        <View style={styles.btnXview}>
+        <TouchableOpacity style={styles.btnRtouch} onPress={this.btnO} >
+            <Image source={require("./image/o.png")} style={styles.btnRimage}></Image>
+        </TouchableOpacity>
+        </View>        
+      );
+      this.setState({renderview: a});
+    }
+    if(this.state.element.indexOf('p')){
+      // var a = this.state.renderview;
+      a.push(
+        <View style={styles.btnXview}>
+        <TouchableOpacity style={styles.btnRtouch} onPress={this.btnP} >
+            <Image source={require("./image/p.png")} style={styles.btnRimage}></Image>
+        </TouchableOpacity>
+        </View>        
+      );
+      this.setState({renderview: a});
+
+    }
+    if(this.state.element.indexOf('q')){
+      // var a = this.state.renderview;
+      a.push(
+        <View style={styles.btnXview}>
+        <TouchableOpacity style={styles.btnRtouch} onPress={this.btnQ} >
+            <Image source={require("./image/q.png")} style={styles.btnRimage}></Image>
+        </TouchableOpacity>
+        </View>        
+      );      
+      this.setState({renderview: a});
+    }
+    if(this.state.element.indexOf('r')){
+      // var a = this.state.renderview;
+      a.push(
+        <View style={styles.btnXview}>
+        <TouchableOpacity style={styles.btnRtouch} onPress={this.btnR} >
+            <Image source={require("./image/r.png")} style={styles.btnRimage}></Image>
+        </TouchableOpacity>
+        </View>                 
+      );
+    }
+    if(this.state.element.indexOf('s')){
+      // var a = this.state.renderview;
+      a.push(<View style={styles.btnXview}>
+        <TouchableOpacity style={styles.btnRtouch} onPress={this.btnS} >
+            <Image source={require("./image/s.png")} style={styles.btnRimage}></Image>
+        </TouchableOpacity>
+        </View>        
+      );
+      this.setState({renderview: a});
+
+    }
+    if(this.state.element.indexOf('t')){
+      // var a = this.state.renderview;
+      a.push(
+        <View style={styles.btnXview}>
+        <TouchableOpacity style={styles.btnRtouch} onPress={this.btnT} >
+            <Image source={require("./image/t.png")} style={styles.btnRimage}></Image>
+        </TouchableOpacity>
+        </View>        
+      );
+      this.setState({renderview: a});
+
+    }
+    if(this.state.element.indexOf('u')){
+      // var a = this.state.renderview;
+      a.push(
+        <View style={styles.btnXview}>
+        <TouchableOpacity style={styles.btnRtouch} onPress={this.btnU} >
+            <Image source={require("./image/u.png")} style={styles.btnRimage}></Image>
+        </TouchableOpacity>
+        </View>        
+      );
+      this.setState({renderview: a});
+
+    }
+    if(this.state.element.indexOf('v')){
+      // var a = this.state.renderview;
+      a.push(
+        <View style={styles.btnXview}>
+        <TouchableOpacity style={styles.btnRtouch} onPress={this.btnV} >
+            <Image source={require("./image/v.png")} style={styles.btnRimage}></Image>
+        </TouchableOpacity>
+        </View>        
+      );
+      this.setState({renderview: a});
+
+    }
+    if(this.state.element.indexOf('w')){
+      // var a = this.state.renderview;
+      a.push(
+        <View style={styles.btnXview}>
+        <TouchableOpacity style={styles.btnRtouch} onPress={this.btnW} >
+            <Image source={require("./image/w.png")} style={styles.btnRimage}></Image>
+        </TouchableOpacity>
+        </View>        
+      );
+      this.setState({renderview: a});
+
+    }
+    if(this.state.element.indexOf('x')){
+      // var a = this.state.renderview;
+      a.push(
+        <View style={styles.btnXview}>
+        <TouchableOpacity style={styles.btnRtouch} onPress={this.btnX} >
+            <Image source={require("./image/x.png")} style={styles.btnRimage}></Image>
+        </TouchableOpacity>
+        </View>
+        
+      );
+      this.setState({renderview: a});
+    }
+    if(this.state.element.indexOf('y')){
+      // var a = this.state.renderview;
+      a.push(
+        <View style={styles.btnXview}>
+        <TouchableOpacity style={styles.btnRtouch} onPress={this.btnY} >
+            <Image source={require("./image/y.png")} style={styles.btnRimage}></Image>
+        </TouchableOpacity>
+        </View>        
+      );
+      this.setState({renderview: a});
+
+    }
+    if(this.state.element.indexOf('z')){
+      // var a = this.state.renderview;
+      a.push(
+        <View style={styles.btnXview}>
+        <TouchableOpacity style={styles.btnRtouch} onPress={this.btnZ} >
+            <Image source={require("./image/z.png")} style={styles.btnRimage}></Image>
+        </TouchableOpacity>
+        </View>      
+      );
+      this.setState({renderview: a});
+    }
+
     this.backHandler = BackHandler.addEventListener('hardwareBackPress', this.backtoPrevScreen);  
     Orientation.addOrientationListener(this._orientationDidChange);
   }
@@ -231,6 +552,9 @@ export default class App extends Component {
 
   componentWillUnmount() {
     this.backHandler.remove();
+    for(i=0;i< a.length;++i){
+      a.pop();
+    }
     this.socket.emit("chat message" ,"close");
     //AsyncStorage.setItem('@storage_Key', " ")
     Orientation.getOrientation((err, orientation) => {
@@ -247,6 +571,10 @@ export default class App extends Component {
 
   backtoPrevScreen=()=>{
     //alert("back");
+    
+    for(i=0;i< a.length;++i){
+      a.pop();
+    }
     this.socket.emit("chat message" ,"close");
     //AsyncStorage.setItem('@storage_Key'," ");
     this.props.navigation.navigate('Home');
@@ -257,133 +585,109 @@ export default class App extends Component {
   }
 
 
-  btnA=()=>{
-    this.socket.emit("chat message" ,'a');//88
-    this.timer = setTimeout(this.btnA, 100);
+btnA=()=>{
+  this.socket.emit("chat message" ,'a');//88
+  this.timer = setTimeout(this.btnA, 100);
 }
 btnB=()=>{
   this.socket.emit("chat message" ,'b');//88
   this.timer = setTimeout(this.btnB, 100);
 }
 btnC=()=>{
-    this.setState({elem : 'c'});
-    this.setState({element:[...this.state.elem]})
- //   this.props.navigation('Friends', this.state.element)
+  this.socket.emit("chat message" ,'c');//88
+  this.timer = setTimeout(this.btnA, 100);
 }
 btnD=()=>{
-    this.setState({elem : 'd'});
-    this.setState({element:[...this.state.elem]})
-   // this.props.navigation('Friends', this.state.element)
+  this.socket.emit("chat message" ,'d');//88
+  this.timer = setTimeout(this.btnA, 100);
 }
 btnE=()=>{
-    this.setState({elem : 'e'});
-    this.setState({element:[...this.state.elem]})
-    //this.props.navigation('Friends', this.state.element)
+  this.socket.emit("chat message" ,'e');//88
+  this.timer = setTimeout(this.btnA, 100);
 }
 btnF=()=>{
-    this.setState({elem : 'f'});
-    this.setState({element:[...this.state.elem]})
-    //this.props.navigation('Friends', this.state.element)
+  this.socket.emit("chat message" ,'f');//88
+  this.timer = setTimeout(this.btnA, 100);
 }
 btnG=()=>{
-    this.setState({elem : 'g'});
-    this.setState({element:[...this.state.elem]})
-   // this.props.navigation('Friends', this.state.element)
+  this.socket.emit("chat message" ,'g');//88
+  this.timer = setTimeout(this.btnA, 100);
 }
 btnH=()=>{
-    this.setState({elem : 'h'});
-    this.setState({element:[...this.state.elem]})
-    //this.props.navigation('Friends', this.state.element)
+  this.socket.emit("chat message" ,'h');//88
+  this.timer = setTimeout(this.btnA, 100);
 }
 btnI=()=>{
-    this.setState({elem : 'i'});
-    this.setState({element:[...this.state.elem]})
-    //navigate('Friends', {element})
+  this.socket.emit("chat message" ,'i');//88
+  this.timer = setTimeout(this.btnA, 100);
 }
 btnJ=()=>{
-    this.setState({elem : 'j'});
-    this.setState({element:[...this.state.elem]})
-    ///navigate('Friends', {element})
+  this.socket.emit("chat message" ,'j');//88
+  this.timer = setTimeout(this.btnA, 100);
 }
 btnK=()=>{
-    this.setState({elem : 'k'});
-    this.setState({element:[...this.state.elem]})
-    //navigate('Friends', {element})
+  this.socket.emit("chat message" ,'k');//88
+  this.timer = setTimeout(this.btnA, 100);
 }
 btnL=()=>{
-    this.setState({elem : 'l'});
-    this.setState({element:[...this.state.elem]})
-   // navigate('Friends', {element})
+  this.socket.emit("chat message" ,'l');//88
+  this.timer = setTimeout(this.btnA, 100);
 }
 btnM=()=>{
-    this.setState({elem : 'm'});
-    this.setState({element:[...this.state.elem]})
-    //navigate('Friends', {element})
+  this.socket.emit("chat message" ,'m');//88
+  this.timer = setTimeout(this.btnA, 100);
 }
 btnN=()=>{
-    this.setState({elem : 'n'});
-    this.setState({element:[...this.state.elem]})
-    //navigate('Friends', {element})
+  this.socket.emit("chat message" ,'n');//88
+  this.timer = setTimeout(this.btnA, 100);
 }
 btnO=()=>{
-    this.setState({elem : 'o'});
-    this.setState({element:[...this.state.elem]})
-    //navigate('Friends', {element})
+  this.socket.emit("chat message" ,'o');//88
+  this.timer = setTimeout(this.btnA, 100);
 }
 btnP=()=>{
-    this.setState({elem : 'p'});
-    this.setState({element:[...this.state.elem]})
-    //navigate('Friends', {element})
+  this.socket.emit("chat message" ,'p');//88
+  this.timer = setTimeout(this.btnA, 100);
 }
 btnQ=()=>{
-    this.setState({elem : 'q'});
-    this.setState({element:[...this.state.elem]})
-    //navigate('Friends', {element})
+  this.socket.emit("chat message" ,'q');//88
+  this.timer = setTimeout(this.btnA, 100);
 }
 btnR=()=>{
-    this.setState({elem : 'r'});
-    this.setState({element:[...this.state.elem]})
-    //navigate('Friends', {element})
+  this.socket.emit("chat message" ,'r');//88
+  this.timer = setTimeout(this.btnA, 100);
 }
 btnS=()=>{
-    this.setState({elem : 's'});
-    this.setState({element:[...this.state.elem]})
-    //navigate('Friends', {element})
+  this.socket.emit("chat message" ,'s');//88
+  this.timer = setTimeout(this.btnA, 100);
 }
 btnT=()=>{
-    this.setState({elem : 't'});
-    this.setState({element:[...this.state.elem]})
-    //navigate('Friends', {element})
+  this.socket.emit("chat message" ,'t');//88
+  this.timer = setTimeout(this.btnA, 100);
 }
 btnU=()=>{
-    this.setState({elem : 'u'});
-    this.setState({element:[...this.state.elem]})
-    //navigate('Friends', {element})
+  this.socket.emit("chat message" ,'u');//88
+  this.timer = setTimeout(this.btnA, 100);
 }
 btnV=()=>{
-    this.setState({elem : 'v'});
-    this.setState({element:[...this.state.elem]})
-    //navigate('Friends', {element})
+  this.socket.emit("chat message" ,'v');//88
+  this.timer = setTimeout(this.btnA, 100);
 }
 btnW=()=>{
-    this.setState({elem : 'w'});
-    this.setState({element:[...this.state.elem]})
-    //navigate('Friends', {element})
+  this.socket.emit("chat message" ,'w');//88
+  this.timer = setTimeout(this.btnA, 100);
 }
 btnX=()=>{
-    this.setState({elem : 'x'});
-    this.setState({element:[...this.state.elem]})
-    //navigate('Friends', {element})
+  this.socket.emit("chat message" ,'x');//88
+  this.timer = setTimeout(this.btnA, 100);
 }
 btnY=()=>{
-    this.setState({elem : 'y'});
-    this.setState({element:[...this.state.elem]})
-    //navigate('Friends', {element})
+  this.socket.emit("chat message" ,'y');//88
+  this.timer = setTimeout(this.btnA, 100);
 }
 btnZ=()=>{
-    this.setState({elem : 'z'});
-    this.setState({element:[...this.state.elem]})
-    //navigate('Friends', {element})
+  this.socket.emit("chat message" ,'z');//88
+  this.timer = setTimeout(this.btnA, 100);
 }
 
   btnUp=()=>{
@@ -423,29 +727,24 @@ btnZ=()=>{
     this.timer = setTimeout(this.btnRightCtrl, 100);
   }
 btnEnter=()=>{
-    this.setState({elem : 'enter'});
-    this.setState({element:[...this.state.elem]})
-    //navigate('Friends', {element})
+  this.socket.emit("chat message" ,'enter');//88
+  this.timer = setTimeout(this.btnA, 100);
 }
 btnDelete=()=>{
-    this.setState({elem : 'delete'});
-    this.setState({element:[...this.state.elem]})
-    //navigate('Friends', {element})
+  this.socket.emit("chat message" ,'delete');//88
+  this.timer = setTimeout(this.btnA, 100);
 }
 btnEsc=()=>{
-    this.setState({elem : 'escape'});
-    this.setState({element:[...this.state.elem]})
-    //navigate('Friends', {element})
+  this.socket.emit("chat message" ,'escape');//88
+  this.timer = setTimeout(this.btnA, 100);
 }
 btnAlt=()=>{
-    this.setState({elem : 'alt'});
-    this.setState({element:[...this.state.elem]})
-   // navigate('Friends', {element})
+  this.socket.emit("chat message" ,'alt');//88
+  this.timer = setTimeout(this.btnA, 100);
 }
 btnBackspace=()=>{
-    this.setState({elem : 'backspace'});
-    this.setState({element:[...this.state.elem]})
-    //navigate('Friends', {element})
+  this.socket.emit("chat message" ,'backspace');//88
+  this.timer = setTimeout(this.btnA, 100);
 }
   _menu = null;
 
@@ -453,7 +752,7 @@ btnBackspace=()=>{
     this._menu = ref;
   };
   //        <ImageBackground source={require("./image/car4.jpeg")} style={{flex:1,width:null,height:null}}>
-
+  
   render() { 
     
     // this.setState({element:[...this.props.navigation.state.params.elements]});
@@ -484,11 +783,8 @@ btnBackspace=()=>{
     //     }
     //   });
     
-
-    return (    
-      <View style = {styles.mainContainer} >
-        <View style={styles.cont2}>
-        <View style={styles.firstFlex}>
+    /**
+     * 
             <Text style={{color:'white'}}>{this.state.data_in}</Text>
             <View style={styles.btnXview}>
               <TouchableOpacity style={styles.btnXtouch} 
@@ -560,11 +856,55 @@ btnBackspace=()=>{
                 <Image source={require("./image/ctrl.png")} style={styles.btnCTRLimage}></Image>
               </TouchableOpacity>
             </View>
+     */
+    
+    return (    
+      <View style = {styles.mainContainer} >
+        <View style={styles.cont2}>
+        <View style={styles.firstFlex}>
+          {this.state.renderview}
           </View>
-        </View>      
+        
+        </View>
+        <Text style={{color:"white"}}>{this.state.element}</Text>    
+        <Text style={{color:"white"}}>{this.state.count}</Text>    
       </View>
     );
   }
+
+  Render_View(){ 
+    if(this.state.element.indexOf('a')){
+      this.socket.emit("input","renderview");
+      return(<View style={styles.btnXview}>
+          <TouchableOpacity style={styles.btnRtouch} onPress={this.btnA} >
+              <Image source={require("./image/a.png")} style={styles.btnRimage}></Image>
+          </TouchableOpacity>
+          </View>);
+    }
+  }
+    //   if(this.state.element.indexOf('b')){
+    //     newRender.push(<View style={styles.btnXview}>
+    //       <TouchableOpacity style={styles.btnRtouch} onPress={this.btnB} >
+    //           <Image source={require("./image/b.png")} style={styles.btnRimage}></Image>
+    //       </TouchableOpacity>
+    //       </View>);
+    //   }
+    //   if(this.state.element.indexOf('c')){
+    //     newRender.push(<View style={styles.btnXview}>
+    //       <TouchableOpacity style={styles.btnRtouch} onPress={this.btnC} >
+    //           <Image source={require("./image/c.png")} style={styles.btnRimage}></Image>
+    //       </TouchableOpacity>
+    //       </View>);
+    //   }
+    // }
+    // final_view(){
+    //   //for(i=0 ; i<newRender.length(); ++i){
+    //     return(
+    //       {newRender}
+    //     )
+    //   //}
+   // }
+  
 
 //</ImageBackground>
 static navigationOptions = ({ navigation }) => {

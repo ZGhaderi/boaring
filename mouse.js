@@ -253,19 +253,19 @@ export default class mouse extends Component
     }
     btnDelete=()=>{
       this.socket.emit("click" ,'delete');
-      this.timer = setTimeout(this.volumx, 100);
+      //this.timer = setTimeout(this.volumx, 100);
     }
     volumx=()=>{
       this.socket.emit("volum" ,'x');
-      this.timer = setTimeout(this.volumx, 100);
+      //this.timer = setTimeout(this.volumx, 100);
     }
     volumUp=()=>{
       this.socket.emit("volum" ,'up');
-      this.timer = setTimeout(this.volumUp, 100);
+      //this.timer = setTimeout(this.volumUp, 100);
     }
     volumDown=()=>{
       this.socket.emit("volum" ,'down');
-      this.timer = setTimeout(this.volumDown, 100);
+      //this.timer = setTimeout(this.volumDown, 100);
     }
     brightnessUp=()=>{
       this.socket.emit("brightness" ,'up');

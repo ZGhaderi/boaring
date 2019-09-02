@@ -271,9 +271,12 @@ btnRightShift=()=>{
 }
 btnPublish=()=>{
     //this.props.navigation.navigate('Map',{refresh : this.state.phone_no, addRemove: "add"});
-    // AsyncStorage.setItem('elements', this.state.element);
-    // this.props.navigation.navigate('Friends');
-    this.props.navigation.navigate('Friends',{elements : this.state.element,addRemove:"add"});
+    var a = [];
+    a.push(this.state.element);
+    AsyncStorage.setItem('elements', JSON.stringify(this.state.element));
+    
+    this.props.navigation.navigate('Friends');
+    //this.props.navigation.navigate('Friends',{elements : a,addRemove:"add"});
 }
 
 
@@ -633,6 +636,7 @@ const styles=StyleSheet.create({
   btnRtouch:{
     justifyContent:"center",
     borderRadius:15,
+    alignSelf:"center",
     marginHorizontal:5,
     marginVertical:5
   },
