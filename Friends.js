@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import {AppRegistry, BackHandler, View , StyleSheet, ScrollView,Image, Dimensions , Alert,TouchableOpacity, Text } from "react-native";
+import {AppRegistry, BackHandler, View , StyleSheet, ScrollView,Image, Animated,Dimensions , Alert,TouchableOpacity, Text } from "react-native";
 
 import {accelerometer} from "react-native-sensors";
 import { setUpdateIntervalForType, SensorTypes } from "react-native-sensors";
@@ -72,7 +72,7 @@ export default class App extends Component {
     this.btnDelete = this.btnDelete.bind(this);
     this.btnAlt = this.btnAlt.bind(this);
     this.btnEsc = this.btnEsc.bind(this);
-    this.btnSpace = this.btnSpace.bind(this);
+    //this.btnSpace = this.btnSpace.bind(this);
     this.btnLeftCtrl = this.btnLeftCtrl.bind(this);
     this.btnRightCtrl = this.btnRightCtrl.bind(this);
     this.stopTimer = this.stopTimer.bind(this);
@@ -85,7 +85,7 @@ export default class App extends Component {
     const ip = String(await AsyncStorage.getItem('@storage_Key'));
     var ipaddr = 'http://'+ ip + ':8000';
     this.setState({data_in : ipaddr});
-    this.socket = io("http://192.168.43.136:8000");
+    this.socket = io("http://192.168.1.5:8000");
     //this.socket = io(this.state.data_in);
 
     this.setState({element:String(await AsyncStorage.getItem('elements'))});
@@ -170,7 +170,7 @@ export default class App extends Component {
         if(firstUp){
           firstUp = false;
           msg = 'up';//87;up
-          this.socket.emit("t  o  ggledown" ,msg);
+          this.socket.emit("toggledown" ,msg);
         }
         if(firstRight){
           firstRight = false;
@@ -194,7 +194,7 @@ export default class App extends Component {
         if(firstLeft){
           firstLeft = false;
           msg = 'right';//87;up
-          this.socket.emit("input" ,"set firstLeft"+ firstLeft);
+          // this.socket.emit("input" ,"set firstLeft"+ firstLeft);
           this.socket.emit("toggledown" ,msg);
         }
       }
@@ -218,9 +218,9 @@ export default class App extends Component {
         }
       }
       if(item.y > -2 && item.y < 2 && item.x > -2 && item.x < 2){
-        this.socket.emit("input" ,firstLeft);
+       // this.socket.emit("input" ,firstLeft);
         if(!firstLeft){
-          this.socket.emit("input" ,"omad left" + firstLeft);
+          // this.socket.emit("input" ,"omad left" + firstLeft);
           firstLeft = true;
           msg = 'right';
           this.socket.emit("toggleup" ,msg);
@@ -244,300 +244,322 @@ export default class App extends Component {
     }
   });
  
- a = this.state.renderview;
-
-    if(this.state.element.indexOf('a')){
-      this.setState({count:this.state.count + 1});
-//      var a = this.state.renderview;
+  if(this.state.element.indexOf('"a"')>0){
+    a.push(<View style={styles.btnXview}>
+      <TouchableOpacity style={styles.btnRtouch} onPress={this.btnA} >
+          <Image source={require("./image/a.png")} style={styles.btnRimage}></Image>
+      </TouchableOpacity>
+      </View>);
+  }
+  if(this.state.element.indexOf('"b"')>0){
+    a.push(<View style={styles.btnXview}>
+      <TouchableOpacity style={styles.btnRtouch} onPress={this.btnB} >
+          <Image source={require("./image/b.png")} style={styles.btnRimage}></Image>
+      </TouchableOpacity>
+      </View>);
+  }
+  if(this.state.element.indexOf('"c"')>0){
+    a.push(<View style={styles.btnXview}>
+      <TouchableOpacity style={styles.btnRtouch} onPress={this.btnC} >
+          <Image source={require("./image/c.png")} style={styles.btnRimage}></Image>
+      </TouchableOpacity>
+      </View>);
+  }
+  if(this.state.element.indexOf('"d"')>0){
+    a.push(<View style={styles.btnXview}>
+      <TouchableOpacity style={styles.btnRtouch} onPress={this.btnD} >
+          <Image source={require("./image/d.png")} style={styles.btnRimage}></Image>
+      </TouchableOpacity>
+      </View>);
+  }
+  if(this.state.element.indexOf('"e"')>0){
+    a.push(
+          <View style={styles.btnXview}>
+          <TouchableOpacity style={styles.btnRtouch} onPress={this.btnE} >
+              <Image source={require("./image/e.png")} style={styles.btnRimage}></Image>
+          </TouchableOpacity>
+          </View>
+          );
+  }
+  if(this.state.element.indexOf('"f"')>0){
+    a.push( <View style={styles.btnXview}>
+      <TouchableOpacity style={styles.btnRtouch} onPress={this.btnF} >
+          <Image source={require("./image/f.png")} style={styles.btnRimage}></Image>
+      </TouchableOpacity>
+      </View>
+    );
+  }
+  if(this.state.element.indexOf('"g"')>0){
+    a.push(<View style={styles.btnXview}>
+      <TouchableOpacity style={styles.btnRtouch} onPress={this.btnG} >
+          <Image source={require("./image/g.png")} style={styles.btnRimage}></Image>
+      </TouchableOpacity>
+      </View>
+    );
+  }
+  if(this.state.element.indexOf('"h"')>0){
+    a.push(<View style={styles.btnXview}>
+      <TouchableOpacity style={styles.btnRtouch} onPress={this.btnH} >
+          <Image source={require("./image/h.png")} style={styles.btnRimage}></Image>
+      </TouchableOpacity>
+      </View>         
+    );
+  }
+  if(this.state.element.indexOf('"i"')>0){
+    a.push(<View style={styles.btnXview}>
+      <TouchableOpacity style={styles.btnRtouch} onPress={this.btnI} >
+          <Image source={require("./image/i.png")} style={styles.btnRimage}></Image>
+      </TouchableOpacity>
+      </View>
+    );
+  }
+  if(this.state.element.indexOf('"j"')>0){
+    a.push(<View style={styles.btnXview}>
+      <TouchableOpacity style={styles.btnRtouch} onPress={this.btnJ} >
+          <Image source={require("./image/j.png")} style={styles.btnRimage}></Image>
+      </TouchableOpacity>
+      </View>
+    );
+  }
+  if(this.state.element.indexOf('"k"')>0){
+    a.push(<View style={styles.btnXview}>
+      <TouchableOpacity style={styles.btnRtouch} onPress={this.btnK} >
+          <Image source={require("./image/k.png")} style={styles.btnRimage}></Image>
+      </TouchableOpacity>
+      </View>
+    );
+  }
+  if(this.state.element.indexOf('"l"')>0){
+    a.push(<View style={styles.btnXview}>
+      <TouchableOpacity style={styles.btnRtouch} onPress={this.btnL} >
+          <Image source={require("./image/l.png")} style={styles.btnRimage}></Image>
+      </TouchableOpacity>
+      </View>        
+    );
+  }
+  if(this.state.element.indexOf('"m"')>0){
+    a.push(
+      <View style={styles.btnXview}>
+      <TouchableOpacity style={styles.btnRtouch} onPress={this.btnM} >
+          <Image source={require("./image/m.png")} style={styles.btnRimage}></Image>
+      </TouchableOpacity>
+      </View>        
+    );
+  }
+  if(this.state.element.indexOf('"n"')>0){
+    a.push(
+      <View style={styles.btnXview}>
+      <TouchableOpacity style={styles.btnRtouch} onPress={this.btnN} >
+          <Image source={require("./image/n.png")} style={styles.btnRimage}></Image>
+      </TouchableOpacity>
+      </View>        
+    );
+  }
+  if(this.state.element.indexOf('"o"')>0){
+    a.push(
+      <View style={styles.btnXview}>
+      <TouchableOpacity style={styles.btnRtouch} onPress={this.btnO} >
+          <Image source={require("./image/o.png")} style={styles.btnRimage}></Image>
+      </TouchableOpacity>
+      </View>        
+    );
+  }
+  if(this.state.element.indexOf('"p"')>0){
+    a.push(
+      <View style={styles.btnXview}>
+      <TouchableOpacity style={styles.btnRtouch} onPress={this.btnP} >
+          <Image source={require("./image/p.png")} style={styles.btnRimage}></Image>
+      </TouchableOpacity>
+      </View>        
+    );
+  }
+  if(this.state.element.indexOf('"q"')>0){
+    a.push(
+      <View style={styles.btnXview}>
+      <TouchableOpacity style={styles.btnRtouch} onPress={this.btnQ} >
+          <Image source={require("./image/q.png")} style={styles.btnRimage}></Image>
+      </TouchableOpacity>
+      </View>        
+    );      
+  }
+  if(this.state.element.indexOf('"r"')>0){
+    a.push(
+      <View style={styles.btnXview}>
+      <TouchableOpacity style={styles.btnRtouch} onPress={this.btnR} >
+          <Image source={require("./image/r.png")} style={styles.btnRimage}></Image>
+      </TouchableOpacity>
+      </View>                 
+    );
+  }
+  if(this.state.element.indexOf('"s"')>0){
+    a.push(<View style={styles.btnXview}>
+      <TouchableOpacity style={styles.btnRtouch} onPress={this.btnS} >
+          <Image source={require("./image/s.png")} style={styles.btnRimage}></Image>
+      </TouchableOpacity>
+      </View>        
+    );
+  }
+  if(this.state.element.indexOf('"t"')>0){
+    a.push(
+      <View style={styles.btnXview}>
+      <TouchableOpacity style={styles.btnRtouch} onPress={this.btnT} >
+          <Image source={require("./image/t.png")} style={styles.btnRimage}></Image>
+      </TouchableOpacity>
+      </View>        
+    );
+  }
+  if(this.state.element.indexOf('"u"')>0){
+    a.push(
+      <View style={styles.btnXview}>
+      <TouchableOpacity style={styles.btnRtouch} onPress={this.btnU} >
+          <Image source={require("./image/u.png")} style={styles.btnRimage}></Image>
+      </TouchableOpacity>
+      </View>        
+    );
+  }
+  if(this.state.element.indexOf('"v"')>0){
+    a.push(
+      <View style={styles.btnXview}>
+      <TouchableOpacity style={styles.btnRtouch} onPress={this.btnV} >
+          <Image source={require("./image/v.png")} style={styles.btnRimage}></Image>
+      </TouchableOpacity>
+      </View>        
+    );
+  }
+  if(this.state.element.indexOf('"w"')>0){
+    a.push(
+      <View style={styles.btnXview}>
+      <TouchableOpacity style={styles.btnRtouch} onPress={this.btnW} >
+          <Image source={require("./image/w.png")} style={styles.btnRimage}></Image>
+      </TouchableOpacity>
+      </View>        
+    );
+  }
+  if(this.state.element.indexOf('"x"')>0){
+    a.push(
+      <View style={styles.btnXview}>
+      <TouchableOpacity style={styles.btnRtouch} onPress={this.btnX} >
+          <Image source={require("./image/x.png")} style={styles.btnRimage}></Image>
+      </TouchableOpacity>
+      </View>
+    );
+  }
+  if(this.state.element.indexOf('"y"')>0){
+    a.push(
+      <View style={styles.btnXview}>
+      <TouchableOpacity style={styles.btnRtouch} onPress={this.btnY} >
+          <Image source={require("./image/y.png")} style={styles.btnRimage}></Image>
+      </TouchableOpacity>
+      </View>        
+    );
+  }
+  if(this.state.element.indexOf('"z"')>0){
+    a.push(
+      <View style={styles.btnXview}>
+      <TouchableOpacity style={styles.btnRtouch} onPress={this.btnZ} >
+          <Image source={require("./image/z.png")} style={styles.btnRimage}></Image>
+      </TouchableOpacity>
+      </View>      
+    );
+  }
+  if(this.state.element.indexOf('RCTRL')>0){
+    a.push(<View style={styles.btnXview}>
+      <TouchableOpacity style={styles.btnRtouch} onPress={this.btnRightCtrl} >
+          <Image source={require("./image/ctrl.png")} style={styles.btnRimage}></Image>
+      </TouchableOpacity>
+      </View>);
+    }
+    if(this.state.element.indexOf('up')>0){
       a.push(<View style={styles.btnXview}>
-        <TouchableOpacity style={styles.btnRtouch} onPress={this.btnA} >
-            <Image source={require("./image/a.png")} style={styles.btnRimage}></Image>
+        <TouchableOpacity style={styles.btnRtouch} onPressIn={this.btnUp} onPressOut={this.btnUpT} >
+            <Image source={require("./image/up.png")} style={styles.btnRimage}></Image>
         </TouchableOpacity>
         </View>);
-      this.setState({renderview: a});
     }
-    if(this.state.element.indexOf('b')){
-      this.setState({count:this.state.count + 1});
-  //    var a = this.state.renderview;
+    if(this.state.element.indexOf('down')>0){
       a.push(<View style={styles.btnXview}>
-        <TouchableOpacity style={styles.btnRtouch} onPress={this.btnB} >
-            <Image source={require("./image/b.png")} style={styles.btnRimage}></Image>
+        <TouchableOpacity style={styles.btnRtouch} onPressIn={this.btnDown} onPressOut={this.btnDownT} >
+            <Image source={require("./image/down.png")} style={styles.btnRimage}></Image>
         </TouchableOpacity>
         </View>);
-      this.setState({renderview: a});
     }
-    if(this.state.element.indexOf('c')){
-      this.setState({count:this.state.count + 1});
- //     var a = this.state.renderview;
+    if(this.state.element.indexOf('left')>0){
       a.push(<View style={styles.btnXview}>
-        <TouchableOpacity style={styles.btnRtouch} onPress={this.btnC} >
-            <Image source={require("./image/c.png")} style={styles.btnRimage}></Image>
+        <TouchableOpacity style={styles.btnRtouch} onPressIn={this.btnLeft} onPressOut={this.btnLeftT} >
+            <Image source={require("./image/left.png")} style={styles.btnRimage}></Image>
         </TouchableOpacity>
         </View>);
-        this.setState({renderview: a});
     }
-    if(this.state.element.indexOf('d')){
-      this.setState({count:this.state.count + 1});
-//      var a = this.state.renderview;
+    if(this.state.element.indexOf('right')>0){
       a.push(<View style={styles.btnXview}>
-        <TouchableOpacity style={styles.btnRtouch} onPress={this.btnD} >
-            <Image source={require("./image/d.png")} style={styles.btnRimage}></Image>
+        <TouchableOpacity style={styles.btnRtouch} onPressIn={this.btnRight} onPressOut={this.btnRightT} >
+            <Image source={require("./image/right.png")} style={styles.btnRimage}></Image>
         </TouchableOpacity>
         </View>);
-        this.setState({renderview: a});
     }
-    if(this.state.element.indexOf('e')){
-      this.setState({count:this.state.count + 1});
-      // var a = this.state.renderview;
-      a.push(
-            <View style={styles.btnXview}>
-            <TouchableOpacity style={styles.btnRtouch} onPress={this.btnE} >
-                <Image source={require("./image/e.png")} style={styles.btnRimage}></Image>
-            </TouchableOpacity>
-            </View>
-            );
-      this.setState({renderview: a});
-    }
-    if(this.state.element.indexOf('f')){
-      this.setState({count:this.state.count + 1});
-      // var a = this.state.renderview;
-      a.push( <View style={styles.btnXview}>
-        <TouchableOpacity style={styles.btnRtouch} onPress={this.btnF} >
-            <Image source={require("./image/f.png")} style={styles.btnRimage}></Image>
-        </TouchableOpacity>
-        </View>
-      );
-      this.setState({renderview: a});
-    }
-    if(this.state.element.indexOf('g')){
-      this.setState({count:this.state.count + 1});
-      // var a = this.state.renderview;
+    if(this.state.element.indexOf('delete')>0){
       a.push(<View style={styles.btnXview}>
-        <TouchableOpacity style={styles.btnRtouch} onPress={this.btnG} >
-            <Image source={require("./image/g.png")} style={styles.btnRimage}></Image>
+        <TouchableOpacity style={styles.btnRtouch} onPressIn={this.btnDelete} onPressOut={this.btnDeleteT} >
+            <Image source={require("./image/delete.png")} style={styles.btnRimage}></Image>
         </TouchableOpacity>
-        </View>
-        
-      );
-      this.setState({renderview: a});
+        </View>);
     }
-    if(this.state.element.indexOf('h')){
-      this.setState({count:this.state.count + 1});
-      // var a = this.state.renderview;
+    if(this.state.element.indexOf('LCTRL')>0){
       a.push(<View style={styles.btnXview}>
-        <TouchableOpacity style={styles.btnRtouch} onPress={this.btnH} >
-            <Image source={require("./image/h.png")} style={styles.btnRimage}></Image>
+        <TouchableOpacity style={styles.btnRtouch} onPress={this.btnLeftCtrl} >
+            <Image source={require("./image/ctrl.png")} style={styles.btnRimage}></Image>
         </TouchableOpacity>
-        </View>         
-      );
-      this.setState({renderview: a});
+        </View>);
     }
-    if(this.state.element.indexOf('i')){
-      this.setState({count:this.state.count + 1});
-      // var a = this.state.renderview;
+    if(this.state.element.indexOf('LSHIFT')>0){
       a.push(<View style={styles.btnXview}>
-        <TouchableOpacity style={styles.btnRtouch} onPress={this.btnI} >
-            <Image source={require("./image/i.png")} style={styles.btnRimage}></Image>
+        <TouchableOpacity style={styles.btnRtouch} onPress={this.btnLeftShift} >
+            <Image source={require("./image/shift.png")} style={styles.btnSHIFTimage}></Image>
         </TouchableOpacity>
-        </View>
-      );
-      this.setState({renderview: a});
+        </View>);
     }
-    if(this.state.element.indexOf('j')){
-      this.setState({count:this.state.count + 1});
-      // var a = this.state.renderview;
+    if(this.state.element.indexOf('"space"')>0){
       a.push(<View style={styles.btnXview}>
-        <TouchableOpacity style={styles.btnRtouch} onPress={this.btnJ} >
-            <Image source={require("./image/j.png")} style={styles.btnRimage}></Image>
+        <TouchableOpacity style={styles.btnRtouch} onPressIn={this.btnSpace} onPressOut={this.btnSpaceT}>
+            <Image source={require("./image/space.png")} style={styles.btnSPACEimage}></Image>
         </TouchableOpacity>
-        </View>
-               
-      );
-      this.setState({renderview: a});
+        </View>);
     }
-    if(this.state.element.indexOf('k')){
-      this.setState({count:this.state.count + 1});
-      // var a = this.state.renderview;
+    if(this.state.element.indexOf('right_shift')>0){
       a.push(<View style={styles.btnXview}>
-        <TouchableOpacity style={styles.btnRtouch} onPress={this.btnK} >
-            <Image source={require("./image/k.png")} style={styles.btnRimage}></Image>
+        <TouchableOpacity style={styles.btnRtouch} onPress={this.btnLeftShift} >
+            <Image source={require("./image/shift.png")} style={styles.btnSHIFTimage}></Image>
         </TouchableOpacity>
-        </View>
-        
-      );
-      this.setState({renderview: a});
+        </View>);
     }
-    if(this.state.element.indexOf('l')){
-      // var a = this.state.renderview;
+    if(this.state.element.indexOf('escape')>0){
       a.push(<View style={styles.btnXview}>
-        <TouchableOpacity style={styles.btnRtouch} onPress={this.btnL} >
-            <Image source={require("./image/l.png")} style={styles.btnRimage}></Image>
+        <TouchableOpacity style={styles.btnRtouch} onPress={this.btnEsc} >
+            <Image source={require("./image/esc.png")} style={styles.btnRimage}></Image>
         </TouchableOpacity>
-        </View>        
-      );
-      this.setState({renderview: a});
+        </View>);
     }
-    if(this.state.element.indexOf('m')){
-      // var a = this.state.renderview;
-      a.push(
-        <View style={styles.btnXview}>
-        <TouchableOpacity style={styles.btnRtouch} onPress={this.btnM} >
-            <Image source={require("./image/m.png")} style={styles.btnRimage}></Image>
-        </TouchableOpacity>
-        </View>        
-      );
-      this.setState({renderview: a});
-    }
-    if(this.state.element.indexOf('n')){
-      // var a = this.state.renderview;
-      a.push(
-        <View style={styles.btnXview}>
-        <TouchableOpacity style={styles.btnRtouch} onPress={this.btnN} >
-            <Image source={require("./image/n.png")} style={styles.btnRimage}></Image>
-        </TouchableOpacity>
-        </View>        
-      );
-      this.setState({renderview: a});
-    }
-    if(this.state.element.indexOf('o')){
-      // var a = this.state.renderview;
-      a.push(
-        <View style={styles.btnXview}>
-        <TouchableOpacity style={styles.btnRtouch} onPress={this.btnO} >
-            <Image source={require("./image/o.png")} style={styles.btnRimage}></Image>
-        </TouchableOpacity>
-        </View>        
-      );
-      this.setState({renderview: a});
-    }
-    if(this.state.element.indexOf('p')){
-      // var a = this.state.renderview;
-      a.push(
-        <View style={styles.btnXview}>
-        <TouchableOpacity style={styles.btnRtouch} onPress={this.btnP} >
-            <Image source={require("./image/p.png")} style={styles.btnRimage}></Image>
-        </TouchableOpacity>
-        </View>        
-      );
-      this.setState({renderview: a});
-
-    }
-    if(this.state.element.indexOf('q')){
-      // var a = this.state.renderview;
-      a.push(
-        <View style={styles.btnXview}>
-        <TouchableOpacity style={styles.btnRtouch} onPress={this.btnQ} >
-            <Image source={require("./image/q.png")} style={styles.btnRimage}></Image>
-        </TouchableOpacity>
-        </View>        
-      );      
-      this.setState({renderview: a});
-    }
-    if(this.state.element.indexOf('r')){
-      // var a = this.state.renderview;
-      a.push(
-        <View style={styles.btnXview}>
-        <TouchableOpacity style={styles.btnRtouch} onPress={this.btnR} >
-            <Image source={require("./image/r.png")} style={styles.btnRimage}></Image>
-        </TouchableOpacity>
-        </View>                 
-      );
-    }
-    if(this.state.element.indexOf('s')){
-      // var a = this.state.renderview;
+    if(this.state.element.includes('backspace')){
       a.push(<View style={styles.btnXview}>
-        <TouchableOpacity style={styles.btnRtouch} onPress={this.btnS} >
-            <Image source={require("./image/s.png")} style={styles.btnRimage}></Image>
+        <TouchableOpacity style={styles.btnRtouch} onPressIn={this.btnBackspace} onPressOut={this.btnBackspaceT}>
+            <Image source={require("./image/backspace.png")} style={styles.btnSHIFTimage}></Image>
         </TouchableOpacity>
-        </View>        
-      );
-      this.setState({renderview: a});
-
+        </View>);
     }
-    if(this.state.element.indexOf('t')){
-      // var a = this.state.renderview;
-      a.push(
-        <View style={styles.btnXview}>
-        <TouchableOpacity style={styles.btnRtouch} onPress={this.btnT} >
-            <Image source={require("./image/t.png")} style={styles.btnRimage}></Image>
+    if(this.state.element.indexOf('enter')>0){
+      a.push(<View style={styles.btnXview}>
+        <TouchableOpacity style={styles.btnRtouch} onPress={this.btnEnter} >
+            <Image source={require("./image/enter.png")} style={styles.btnSHIFTimage}></Image>
         </TouchableOpacity>
-        </View>        
-      );
-      this.setState({renderview: a});
-
+        </View>);
     }
-    if(this.state.element.indexOf('u')){
-      // var a = this.state.renderview;
-      a.push(
-        <View style={styles.btnXview}>
-        <TouchableOpacity style={styles.btnRtouch} onPress={this.btnU} >
-            <Image source={require("./image/u.png")} style={styles.btnRimage}></Image>
+    if(this.state.element.indexOf('alt')>0){
+      a.push(<View style={styles.btnXview}>
+        <TouchableOpacity style={styles.btnRtouch} onPress={this.btnAlt} >
+            <Image source={require("./image/alt.png")} style={styles.btnRimage}></Image>
         </TouchableOpacity>
-        </View>        
-      );
-      this.setState({renderview: a});
-
+        </View>);
     }
-    if(this.state.element.indexOf('v')){
-      // var a = this.state.renderview;
-      a.push(
-        <View style={styles.btnXview}>
-        <TouchableOpacity style={styles.btnRtouch} onPress={this.btnV} >
-            <Image source={require("./image/v.png")} style={styles.btnRimage}></Image>
-        </TouchableOpacity>
-        </View>        
-      );
-      this.setState({renderview: a});
-
-    }
-    if(this.state.element.indexOf('w')){
-      // var a = this.state.renderview;
-      a.push(
-        <View style={styles.btnXview}>
-        <TouchableOpacity style={styles.btnRtouch} onPress={this.btnW} >
-            <Image source={require("./image/w.png")} style={styles.btnRimage}></Image>
-        </TouchableOpacity>
-        </View>        
-      );
-      this.setState({renderview: a});
-
-    }
-    if(this.state.element.indexOf('x')){
-      // var a = this.state.renderview;
-      a.push(
-        <View style={styles.btnXview}>
-        <TouchableOpacity style={styles.btnRtouch} onPress={this.btnX} >
-            <Image source={require("./image/x.png")} style={styles.btnRimage}></Image>
-        </TouchableOpacity>
-        </View>
-        
-      );
-      this.setState({renderview: a});
-    }
-    if(this.state.element.indexOf('y')){
-      // var a = this.state.renderview;
-      a.push(
-        <View style={styles.btnXview}>
-        <TouchableOpacity style={styles.btnRtouch} onPress={this.btnY} >
-            <Image source={require("./image/y.png")} style={styles.btnRimage}></Image>
-        </TouchableOpacity>
-        </View>        
-      );
-      this.setState({renderview: a});
-
-    }
-    if(this.state.element.indexOf('z')){
-      // var a = this.state.renderview;
-      a.push(
-        <View style={styles.btnXview}>
-        <TouchableOpacity style={styles.btnRtouch} onPress={this.btnZ} >
-            <Image source={require("./image/z.png")} style={styles.btnRimage}></Image>
-        </TouchableOpacity>
-        </View>      
-      );
-      this.setState({renderview: a});
-    }
-
     this.backHandler = BackHandler.addEventListener('hardwareBackPress', this.backtoPrevScreen);  
     Orientation.addOrientationListener(this._orientationDidChange);
   }
@@ -552,9 +574,7 @@ export default class App extends Component {
 
   componentWillUnmount() {
     this.backHandler.remove();
-    for(i=0;i< a.length;++i){
-      a.pop();
-    }
+    a = [];
     this.socket.emit("chat message" ,"close");
     //AsyncStorage.setItem('@storage_Key', " ")
     Orientation.getOrientation((err, orientation) => {
@@ -569,20 +589,20 @@ export default class App extends Component {
   //   this.backHandler
   // }
 
-  backtoPrevScreen=()=>{
-    //alert("back");
-    
-    for(i=0;i< a.length;++i){
-      a.pop();
-    }
-    this.socket.emit("chat message" ,"close");
-    //AsyncStorage.setItem('@storage_Key'," ");
-    this.props.navigation.navigate('Home');
-    return true;
-  }
-  stopTimer() {
-    clearTimeout(this.timer);
-  }
+backtoPrevScreen=()=>{
+  //alert("back");
+  a = [];
+  // for(i=0;i< a.length;++i){
+  //   a.pop();
+  // }
+  this.socket.emit("chat message" ,"close");
+  //AsyncStorage.setItem('@storage_Key'," ");
+  this.props.navigation.navigate('Home');
+  return true;
+}
+stopTimer() {
+  clearTimeout(this.timer);
+}
 
 
 btnA=()=>{
@@ -689,50 +709,61 @@ btnZ=()=>{
   this.socket.emit("chat message" ,'z');//88
   this.timer = setTimeout(this.btnA, 100);
 }
-
-  btnUp=()=>{
-    this.socket.emit("chat message" ,'up');
-    this.timer = setTimeout(this.btnUp, 100);
-  }
-  btnDown=()=>{
-    this.socket.emit("chat message" ,'down');
-    this.timer = setTimeout(this.btnDown, 100);
-  }
-  btnLeft=()=>{ 
-    this.socket.emit("chat message" ,'left');
-    this.timer = setTimeout(this.btnLeft, 100);
-  }
-  btnRight=()=>{
-    this.socket.emit("chat message" ,'right');
-    this.timer = setTimeout(this.btnRight, 100);
-  }
-  btnSpace=()=>{
-    this.socket.emit("chat message" ,'space');//32
-    this.timer = setTimeout(this.btnSpace, 100);
-  }
-  btnLeftShift=()=>{
-    this.socket.emit("chat message" ,'LSHIFT');//160
-    this.timer = setTimeout(this.btnLeftShift, 100);
-  }
-  btnRightShift=()=>{
-    this.socket.emit("chat message" ,'right_shift');//161
-    this.timer = setTimeout(this.btnRightShift, 100);
-  }
-  btnLeftCtrl=()=>{
-    this.socket.emit("chat message" ,'LCTRL');//162
-    this.timer = setTimeout(this.btnLeftCtrl, 100);
-  }
-  btnRightCtrl=()=>{
-    this.socket.emit("chat message" ,'RCTRL');//163
-    this.timer = setTimeout(this.btnRightCtrl, 100);
-  }
+btnUp=()=>{
+  this.socket.emit("toggledown" ,'up');
+}
+btnUpT=()=>{
+  this.socket.emit("toggleup" ,'up');
+}
+btnDown=()=>{
+  this.socket.emit("toggledown" ,'down');
+}
+btnDownT=()=>{
+  this.socket.emit("toggleup" ,'down');
+}
+btnLeft=()=>{ 
+  this.socket.emit("toggledown" ,'left');
+}
+btnLeftT=()=>{ 
+  this.socket.emit("toggleup" ,'left');
+}
+btnRight=()=>{
+  this.socket.emit("toggledown" ,'right');
+}
+btnRightT=()=>{
+  this.socket.emit("toggleup" ,'right');
+}
+btnSpace=()=>{
+  this.socket.emit("toggledown" ,'space');//32
+}
+btnSpaceT=()=>{
+  this.socket.emit("toggleup" ,'space');//32
+}
+btnLeftShift=()=>{
+  this.socket.emit("chat message" ,'LSHIFT');//160
+  this.timer = setTimeout(this.btnLeftShift, 100);
+}
+btnRightShift=()=>{
+  this.socket.emit("chat message" ,'right_shift');//161
+  this.timer = setTimeout(this.btnRightShift, 100);
+}
+btnLeftCtrl=()=>{
+  this.socket.emit("chat message" ,'LCTRL');//162
+  this.timer = setTimeout(this.btnLeftCtrl, 100);
+}
+btnRightCtrl=()=>{
+  this.socket.emit("chat message" ,'RCTRL');//163
+  this.timer = setTimeout(this.btnRightCtrl, 100);
+}
 btnEnter=()=>{
   this.socket.emit("chat message" ,'enter');//88
   this.timer = setTimeout(this.btnA, 100);
 }
 btnDelete=()=>{
-  this.socket.emit("chat message" ,'delete');//88
-  this.timer = setTimeout(this.btnA, 100);
+  this.socket.emit("toggledown" ,'delete');//88
+}
+btnDeleteT=()=>{
+  this.socket.emit("toggleup" ,'delete');//88
 }
 btnEsc=()=>{
   this.socket.emit("chat message" ,'escape');//88
@@ -743,15 +774,16 @@ btnAlt=()=>{
   this.timer = setTimeout(this.btnA, 100);
 }
 btnBackspace=()=>{
-  this.socket.emit("chat message" ,'backspace');//88
-  this.timer = setTimeout(this.btnA, 100);
+  this.socket.emit("toggledown" ,'backspace');//88
 }
-  _menu = null;
+btnBackspaceT=()=>{
+  this.socket.emit("toggleup" ,'backspace');//88
+}
+_menu = null;
 
-  SsetMenuRef = ref => {
-    this._menu = ref;
-  };
-  //        <ImageBackground source={require("./image/car4.jpeg")} style={{flex:1,width:null,height:null}}>
+setMenuRef = ref => {
+  this._menu = ref;
+};
   
   render() { 
     
@@ -856,57 +888,53 @@ btnBackspace=()=>{
                 <Image source={require("./image/ctrl.png")} style={styles.btnCTRLimage}></Image>
               </TouchableOpacity>
             </View>
-     */
-    
-    return (    
+
+
+            
       <View style = {styles.mainContainer} >
         <View style={styles.cont2}>
+          <ScrollView>
         <View style={styles.firstFlex}>
           {this.state.renderview}
           </View>
-        
+          </ScrollView>
         </View>
         <Text style={{color:"white"}}>{this.state.element}</Text>    
         <Text style={{color:"white"}}>{this.state.count}</Text>    
       </View>
+     */
+    var one=[],two=[],tree=[],four=[];
+    for(let i=0; i<a.length; ++i){
+      if(i<a.length/4)
+        one.push(a[i])
+      else if(i<2*a.length/4)
+        two.push(a[i]);
+      else if(i<3*a.length/4)
+        tree.push(a[i]);
+      else if(i<4*a.length/4)
+        four.push(a[i]);        
+    }
+    return (    
+      <View style = { styles.mainContainer }>
+        <View style={styles.cont2}>
+        <View style={styles.firstFlex}>
+          {one}
+        </View>
+        <View style={styles.firstFlex}>
+          {two}
+        </View>
+        <View style={styles.firstFlex}>
+          {tree}
+        </View>
+        <View style={styles.firstFlex}>
+          {four}
+        </View>
+        </View>
+      </View>
+
     );
   }
 
-  Render_View(){ 
-    if(this.state.element.indexOf('a')){
-      this.socket.emit("input","renderview");
-      return(<View style={styles.btnXview}>
-          <TouchableOpacity style={styles.btnRtouch} onPress={this.btnA} >
-              <Image source={require("./image/a.png")} style={styles.btnRimage}></Image>
-          </TouchableOpacity>
-          </View>);
-    }
-  }
-    //   if(this.state.element.indexOf('b')){
-    //     newRender.push(<View style={styles.btnXview}>
-    //       <TouchableOpacity style={styles.btnRtouch} onPress={this.btnB} >
-    //           <Image source={require("./image/b.png")} style={styles.btnRimage}></Image>
-    //       </TouchableOpacity>
-    //       </View>);
-    //   }
-    //   if(this.state.element.indexOf('c')){
-    //     newRender.push(<View style={styles.btnXview}>
-    //       <TouchableOpacity style={styles.btnRtouch} onPress={this.btnC} >
-    //           <Image source={require("./image/c.png")} style={styles.btnRimage}></Image>
-    //       </TouchableOpacity>
-    //       </View>);
-    //   }
-    // }
-    // final_view(){
-    //   //for(i=0 ; i<newRender.length(); ++i){
-    //     return(
-    //       {newRender}
-    //     )
-    //   //}
-   // }
-  
-
-//</ImageBackground>
 static navigationOptions = ({ navigation }) => {
   return {
       title: 'cotroller',
@@ -1094,8 +1122,8 @@ const styles=StyleSheet.create({
     alignContent:"center"
   },
   btnSPACEimage:{
-    height:80,
-    width:420,
+    height:50,
+    width:350,
     resizeMode:"contain"
   },
   cont2:{

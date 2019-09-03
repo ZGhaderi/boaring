@@ -274,7 +274,7 @@ btnPublish=()=>{
     var a = [];
     a.push(this.state.element);
     AsyncStorage.setItem('elements', JSON.stringify(this.state.element));
-    
+    this.setState({element:[]});
     this.props.navigation.navigate('Friends');
     //this.props.navigation.navigate('Friends',{elements : a,addRemove:"add"});
 }
@@ -472,31 +472,12 @@ btnPublish=()=>{
             </TouchableOpacity>
             </View>
             <View style={styles.btnXview}>
-            <TouchableOpacity style={styles.btnRtouch} onPress={this.btnLeftCtrl} >
+            <TouchableOpacity style={styles.btnRtouch} onPress={this.btnRightCtrl} >
                 <Image source={require("./image/ctrl.png")} style={styles.btnRimage}></Image>
             </TouchableOpacity>
             </View>
             </View>
-
-
-            <View style={styles.firstFlex}>
-            <View style={styles.btnXview}>
-            <TouchableOpacity style={styles.btnRtouch} onPress={this.btnLeftShift} >
-                <Image source={require("./image/shift.png")} style={styles.btnSHIFTimage}></Image>
-            </TouchableOpacity>
-            </View>
-            <View style={styles.btnXview}>
-            <TouchableOpacity style={styles.btnRtouch} onPress={this.btnSpace} >
-                <Image source={require("./image/space.png")} style={styles.btnSPACEimage}></Image>
-            </TouchableOpacity>
-            </View>
-            <View style={styles.btnXview}>
-            <TouchableOpacity style={styles.btnRtouch} onPress={this.btnLeftShift} >
-                <Image source={require("./image/shift.png")} style={styles.btnSHIFTimage}></Image>
-            </TouchableOpacity>
-            </View>
-            </View>
-
+            
             <View style={styles.firstFlex}>
             <View style={styles.btnXview}>
             <TouchableOpacity style={styles.btnRtouch} onPress={this.btnEsc} >
@@ -519,6 +500,25 @@ btnPublish=()=>{
             </TouchableOpacity>
             </View>
             </View>
+
+            <View style={styles.firstFlex}>
+            <View style={styles.btnXview}>
+            <TouchableOpacity style={styles.btnRtouch} onPress={this.btnLeftShift} >
+                <Image source={require("./image/shift.png")} style={styles.btnSHIFTimage}></Image>
+            </TouchableOpacity>
+            </View>
+            <View style={styles.btnXview}>
+            <TouchableOpacity style={styles.btnRtouch} onPress={this.btnSpace} >
+                <Image source={require("./image/space.png")} style={styles.btnSPACEimage}></Image>
+            </TouchableOpacity>
+            </View>
+            <View style={styles.btnXview}>
+            <TouchableOpacity style={styles.btnRtouch} onPress={this.btnRightShift} >
+                <Image source={require("./image/shift.png")} style={styles.btnSHIFTimage}></Image>
+            </TouchableOpacity>
+            </View>
+            </View>
+
             <View style={styles.firstFlex}>
                 <View style={styles.btnPublishview}>
                 <Text>{JSON.stringify(this.state.element)}</Text>

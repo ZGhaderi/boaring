@@ -1,31 +1,47 @@
 import React, { Component } from "react";
 import {AppRegistry, Button, View , StyleSheet, ImageBackground,Image, Dimensions , Alert,TouchableOpacity, Text } from "react-native";
 import AsyncStorage from '@react-native-community/async-storage';
+
+import io from 'socket.io-client/dist/socket.io';//'socket.io-client';
 const {width: WIDTH} = Dimensions.get("window");
 export default class App extends Component {
     constructor(){
         super();
         this.state = { 
             elements: "",
+            game:'',
         }
     }
-    
+    async componentDidMount(){
+        this.socket = io("http://192.168.1.5:8000");
+        this.setState({game:String(await AsyncStorage.getItem('game'))});
+        this.socket.emit("input",this.state.game);
+    }
     arrowKeys=()=>{
         this.setState({elements: "arrowkey"});
         AsyncStorage.setItem('arrowKey', "true");
         AsyncStorage.setItem('accelerometer', "false");
-        if(String(AsyncStorage.getItem('game')) == "packman"){
-            this.props.navigation.navigate('packman');
+        if(this.state.game== "packman"){
+            this.props.navigation.navigate('pacman');
         }
-        else{   
-            this.props.navigation.navigate('packman');
+        else if(this.state.game == "nfs"){
+            this.props.navigation.navigate('nfs');
         }
+        else if(this.state.game == "motorace"){
+            this.props.navigation.navigate('motorace');
+        }
+        else if(this.state.game == "hillcar"){
+            this.props.navigation.navigate('hillcar');
+        }
+        // else{   
+        //     this.props.navigation.navigate('packman');
+        // }
     }
     accelerometer=()=>{
         this.setState({elements: "accelerometer"});
         AsyncStorage.setItem('accelerometer', "true");
         AsyncStorage.setItem('arrowKey', "false");
-        if(String(AsyncStorage.getItem('game')) == "packman"){
+        if(this.state.game == "packman"){
             this.props.navigation.navigate('packman');
         }
         else{   
