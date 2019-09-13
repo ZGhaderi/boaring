@@ -34,49 +34,8 @@ export default class App extends Component {
           },     
       number:0,
     };
-    this.timer = null;
-    this.btnA = this.btnA.bind(this);
-    this.btnB = this.btnB.bind(this);
-    this.btnC = this.btnC.bind(this);
-    this.btnD = this.btnD.bind(this);
-    this.btnE = this.btnE.bind(this);
-    this.btnF = this.btnF.bind(this);
-    this.btnG = this.btnG.bind(this);
-    this.btnH = this.btnH.bind(this);
-    this.btnI = this.btnI.bind(this);
-    this.btnJ = this.btnJ.bind(this);
-    this.btnK = this.btnK.bind(this);
-    this.btnL = this.btnL.bind(this);
-    this.btnM = this.btnM.bind(this);
-    this.btnN = this.btnN.bind(this);
-    this.btnO = this.btnO.bind(this);
-    this.btnP = this.btnP.bind(this);
-    this.btnQ = this.btnQ.bind(this);
-    this.btnR = this.btnR.bind(this);
-    this.btnS = this.btnS.bind(this);
-    this.btnT = this.btnT.bind(this);
-    this.btnU = this.btnU.bind(this);
-    this.btnV = this.btnV.bind(this);
-    this.btnW = this.btnW.bind(this);
-    this.btnX = this.btnX.bind(this);
-    this.btnY = this.btnY.bind(this);
-    this.btnZ = this.btnZ.bind(this);
-    this.btnUp = this.btnUp.bind(this);
-    this.btnLeft = this.btnLeft.bind(this);
-    this.btnRight = this.btnRight.bind(this);
-    this.btnDown = this.btnDown.bind(this);
-    this.btnLeftShift = this.btnLeftShift.bind(this);
-    this.btnRightShift = this.btnRightShift.bind(this);
-    this.btnEnter = this.btnEnter.bind(this);
-    this.btnBackspace = this.btnBackspace.bind(this);
-    this.btnDelete = this.btnDelete.bind(this);
-    this.btnAlt = this.btnAlt.bind(this);
-    this.btnEsc = this.btnEsc.bind(this);
-    //this.btnSpace = this.btnSpace.bind(this);
-    this.btnLeftCtrl = this.btnLeftCtrl.bind(this);
-    this.btnRightCtrl = this.btnRightCtrl.bind(this);
-    this.stopTimer = this.stopTimer.bind(this);
- }
+  
+  }
  
 
    async componentDidMount() {
@@ -85,7 +44,7 @@ export default class App extends Component {
     const ip = String(await AsyncStorage.getItem('@storage_Key'));
     var ipaddr = 'http://'+ ip + ':8000';
     this.setState({data_in : ipaddr});
-    this.socket = io("http://192.168.1.5:8000");
+    this.socket = io("http://192.168.43.136:8000");
     //this.socket = io(this.state.data_in);
 
     this.setState({element:String(await AsyncStorage.getItem('elements'))});
@@ -108,8 +67,6 @@ export default class App extends Component {
     })
   
     accelerometer.subscribe(item => {
-      var vertical = '';
-      var horizontal = '';
       var msg = [];
 
 
@@ -121,123 +78,98 @@ export default class App extends Component {
       if(item.y < -2 && item.x > 2 ){
         if(firstDown){
           firstDown = false;
-          msg = 'down';//87;up
+          msg = 'down';   
           this.socket.emit("toggledown" ,msg);
         }
         if(firstRight){
           firstRight = false;
-          msg = 'left';//87;up
+          msg = 'left';   
           this.socket.emit("toggledown" ,msg);
         }
       }
       if(item.y > 2 && item.x < -2 ){
-        msg = 'right';//87;up
-        this.socket.emit("direction" ,msg);
-        msg = 'up';//87;up
-        this.socket.emit("direction" ,msg);
         if(firstUp){
           firstUp = false;
-          msg = 'up';//87;up
+          msg = 'up';   
           this.socket.emit("toggledown" ,msg);
         }
         if(firstLeft){
           firstLeft = false;
-          msg = 'right';//87;up
+          msg = 'right';   
           this.socket.emit("toggledown" ,msg);
         }
       }
       if(item.y > 2 && item.x > 2 ){
-        msg = 'right';//87;up
-        this.socket.emit("direction" ,msg);
-        msg = 'down';//87;up
-        this.socket.emit("direction" ,msg);
         if(firstDown){
           firstDown = false;
-          msg = 'down';//87;up
+          msg = 'down';   
           this.socket.emit("toggledown" ,msg);
         }
         if(firstLeft){
           firstLeft = false;
-          msg = 'right';//87;up
+          msg = 'right';   
           this.socket.emit("toggledown" ,msg);
         }
       }
       if(item.y < -2 && item.x < -2 ){
-        msg = 'left';//87;up
-        this.socket.emit("direction" ,msg);
-        msg = 'up';//87;up
-        this.socket.emit("direction" ,msg);
         if(firstUp){
           firstUp = false;
-          msg = 'up';//87;up
+          msg = 'up';   
           this.socket.emit("toggledown" ,msg);
         }
         if(firstRight){
           firstRight = false;
-          msg = 'left';//87;up
+          msg = 'left';   
           this.socket.emit("toggledown" ,msg);
         }
       }
       if(item.y < -2 ){
-        msg = 'left';//87;up
-        this.socket.emit("direction" ,msg);
         if(firstRight){
           firstRight = false;
-          msg = 'left';//87;up
+          msg = 'left';   
           this.socket.emit("toggledown" ,msg);
         }
       }
       if(item.y > 2 ){
-        msg = 'right';//87;up
-        this.socket.emit("direction" ,msg);
-
         if(firstLeft){
           firstLeft = false;
-          msg = 'right';//87;up
-          // this.socket.emit("input" ,"set firstLeft"+ firstLeft);
+          msg = 'right';   
           this.socket.emit("toggledown" ,msg);
         }
       }
       if(item.x < -2 ){
-        msg = 'up';//87;up
-        this.socket.emit("direction" ,msg);
         if(firstUp){
           firstUp = false;
-          msg = 'up';//87;up
+          msg = 'up';   
           this.socket.emit("toggledown" ,msg);
         }
       }
       if(item.x > 2){
-        msg = 'down';//87;up
-        this.socket.emit("direction" ,msg);
-
         if(firstDown){
           firstDown = false;
-          msg = 'down';//87;up
+          msg = 'down';   
           this.socket.emit("toggledown" ,msg);
         }
       }
       if(item.y > -2 && item.y < 2 && item.x > -2 && item.x < 2){
-       // this.socket.emit("input" ,firstLeft);
         if(!firstLeft){
-          // this.socket.emit("input" ,"omad left" + firstLeft);
           firstLeft = true;
           msg = 'right';
           this.socket.emit("toggleup" ,msg);
         }
         if(!firstRight){
         firstRight = true;
-        msg = 'left';//87;up
+        msg = 'left';
         this.socket.emit("toggleup" ,msg);
         }
         if(!firstDown){
           firstDown = true;
-          msg = 'down';//87;up
+          msg = 'down';
           this.socket.emit("toggleup" ,msg);
           }
           if(!firstUp){
           firstUp = true;
-          msg = 'up';//87;up
+          msg = 'up';
           this.socket.emit("toggleup" ,msg);
           }
       }
@@ -246,28 +178,28 @@ export default class App extends Component {
  
   if(this.state.element.indexOf('"a"')>0){
     a.push(<View style={styles.btnXview}>
-      <TouchableOpacity style={styles.btnRtouch} onPress={this.btnA} >
+      <TouchableOpacity style={styles.btnRtouch} onPressIn={this.btnA} onPressOut={this.btnAT} >
           <Image source={require("./image/a.png")} style={styles.btnRimage}></Image>
       </TouchableOpacity>
       </View>);
   }
   if(this.state.element.indexOf('"b"')>0){
     a.push(<View style={styles.btnXview}>
-      <TouchableOpacity style={styles.btnRtouch} onPress={this.btnB} >
+      <TouchableOpacity style={styles.btnRtouch}  onPressIn={this.btnB}  onPressOut={this.btnBT}>
           <Image source={require("./image/b.png")} style={styles.btnRimage}></Image>
       </TouchableOpacity>
       </View>);
   }
   if(this.state.element.indexOf('"c"')>0){
     a.push(<View style={styles.btnXview}>
-      <TouchableOpacity style={styles.btnRtouch} onPress={this.btnC} >
+      <TouchableOpacity style={styles.btnRtouch}  onPressIn={this.btnC}  onPressOut={this.btnCT}>
           <Image source={require("./image/c.png")} style={styles.btnRimage}></Image>
       </TouchableOpacity>
       </View>);
   }
   if(this.state.element.indexOf('"d"')>0){
     a.push(<View style={styles.btnXview}>
-      <TouchableOpacity style={styles.btnRtouch} onPress={this.btnD} >
+      <TouchableOpacity style={styles.btnRtouch}  onPressIn={this.btnD}  onPressOut={this.btnDT}>
           <Image source={require("./image/d.png")} style={styles.btnRimage}></Image>
       </TouchableOpacity>
       </View>);
@@ -275,7 +207,7 @@ export default class App extends Component {
   if(this.state.element.indexOf('"e"')>0){
     a.push(
           <View style={styles.btnXview}>
-          <TouchableOpacity style={styles.btnRtouch} onPress={this.btnE} >
+          <TouchableOpacity style={styles.btnRtouch}  onPressIn={this.btnE}  onPressOut={this.btnET}>
               <Image source={require("./image/e.png")} style={styles.btnRimage}></Image>
           </TouchableOpacity>
           </View>
@@ -283,7 +215,7 @@ export default class App extends Component {
   }
   if(this.state.element.indexOf('"f"')>0){
     a.push( <View style={styles.btnXview}>
-      <TouchableOpacity style={styles.btnRtouch} onPress={this.btnF} >
+      <TouchableOpacity style={styles.btnRtouch}  onPressIn={this.btnF}  onPressOut={this.btnFT}>
           <Image source={require("./image/f.png")} style={styles.btnRimage}></Image>
       </TouchableOpacity>
       </View>
@@ -291,7 +223,7 @@ export default class App extends Component {
   }
   if(this.state.element.indexOf('"g"')>0){
     a.push(<View style={styles.btnXview}>
-      <TouchableOpacity style={styles.btnRtouch} onPress={this.btnG} >
+      <TouchableOpacity style={styles.btnRtouch}  onPressIn={this.btnG}  onPressOut={this.btnGT}>
           <Image source={require("./image/g.png")} style={styles.btnRimage}></Image>
       </TouchableOpacity>
       </View>
@@ -299,7 +231,7 @@ export default class App extends Component {
   }
   if(this.state.element.indexOf('"h"')>0){
     a.push(<View style={styles.btnXview}>
-      <TouchableOpacity style={styles.btnRtouch} onPress={this.btnH} >
+      <TouchableOpacity style={styles.btnRtouch}  onPressIn={this.btnH}  onPressOut={this.btnHT}>
           <Image source={require("./image/h.png")} style={styles.btnRimage}></Image>
       </TouchableOpacity>
       </View>         
@@ -307,7 +239,7 @@ export default class App extends Component {
   }
   if(this.state.element.indexOf('"i"')>0){
     a.push(<View style={styles.btnXview}>
-      <TouchableOpacity style={styles.btnRtouch} onPress={this.btnI} >
+      <TouchableOpacity style={styles.btnRtouch}  onPressIn={this.btnI}  onPressOut={this.btnIT}>
           <Image source={require("./image/i.png")} style={styles.btnRimage}></Image>
       </TouchableOpacity>
       </View>
@@ -315,7 +247,7 @@ export default class App extends Component {
   }
   if(this.state.element.indexOf('"j"')>0){
     a.push(<View style={styles.btnXview}>
-      <TouchableOpacity style={styles.btnRtouch} onPress={this.btnJ} >
+      <TouchableOpacity style={styles.btnRtouch}  onPressIn={this.btnJ}  onPressOut={this.btnJT}>
           <Image source={require("./image/j.png")} style={styles.btnRimage}></Image>
       </TouchableOpacity>
       </View>
@@ -323,7 +255,7 @@ export default class App extends Component {
   }
   if(this.state.element.indexOf('"k"')>0){
     a.push(<View style={styles.btnXview}>
-      <TouchableOpacity style={styles.btnRtouch} onPress={this.btnK} >
+      <TouchableOpacity style={styles.btnRtouch}  onPressIn={this.btnK}  onPressOut={this.btnKT}>
           <Image source={require("./image/k.png")} style={styles.btnRimage}></Image>
       </TouchableOpacity>
       </View>
@@ -331,7 +263,7 @@ export default class App extends Component {
   }
   if(this.state.element.indexOf('"l"')>0){
     a.push(<View style={styles.btnXview}>
-      <TouchableOpacity style={styles.btnRtouch} onPress={this.btnL} >
+      <TouchableOpacity style={styles.btnRtouch}  onPressIn={this.btnL}  onPressOut={this.btnLT}>
           <Image source={require("./image/l.png")} style={styles.btnRimage}></Image>
       </TouchableOpacity>
       </View>        
@@ -340,7 +272,7 @@ export default class App extends Component {
   if(this.state.element.indexOf('"m"')>0){
     a.push(
       <View style={styles.btnXview}>
-      <TouchableOpacity style={styles.btnRtouch} onPress={this.btnM} >
+      <TouchableOpacity style={styles.btnRtouch}  onPressIn={this.btnM}  onPressOut={this.btnMT}>
           <Image source={require("./image/m.png")} style={styles.btnRimage}></Image>
       </TouchableOpacity>
       </View>        
@@ -349,7 +281,7 @@ export default class App extends Component {
   if(this.state.element.indexOf('"n"')>0){
     a.push(
       <View style={styles.btnXview}>
-      <TouchableOpacity style={styles.btnRtouch} onPress={this.btnN} >
+      <TouchableOpacity style={styles.btnRtouch}  onPressIn={this.btnN}  onPressOut={this.btnNT}>
           <Image source={require("./image/n.png")} style={styles.btnRimage}></Image>
       </TouchableOpacity>
       </View>        
@@ -358,7 +290,7 @@ export default class App extends Component {
   if(this.state.element.indexOf('"o"')>0){
     a.push(
       <View style={styles.btnXview}>
-      <TouchableOpacity style={styles.btnRtouch} onPress={this.btnO} >
+      <TouchableOpacity style={styles.btnRtouch}  onPressIn={this.btnO}  onPressOut={this.btnOT}>
           <Image source={require("./image/o.png")} style={styles.btnRimage}></Image>
       </TouchableOpacity>
       </View>        
@@ -367,7 +299,7 @@ export default class App extends Component {
   if(this.state.element.indexOf('"p"')>0){
     a.push(
       <View style={styles.btnXview}>
-      <TouchableOpacity style={styles.btnRtouch} onPress={this.btnP} >
+      <TouchableOpacity style={styles.btnRtouch}  onPressIn={this.btnP}  onPressOut={this.btnPT}>
           <Image source={require("./image/p.png")} style={styles.btnRimage}></Image>
       </TouchableOpacity>
       </View>        
@@ -376,7 +308,7 @@ export default class App extends Component {
   if(this.state.element.indexOf('"q"')>0){
     a.push(
       <View style={styles.btnXview}>
-      <TouchableOpacity style={styles.btnRtouch} onPress={this.btnQ} >
+      <TouchableOpacity style={styles.btnRtouch}  onPressIn={this.btnQ}  onPressOut={this.btnQT}>
           <Image source={require("./image/q.png")} style={styles.btnRimage}></Image>
       </TouchableOpacity>
       </View>        
@@ -385,7 +317,7 @@ export default class App extends Component {
   if(this.state.element.indexOf('"r"')>0){
     a.push(
       <View style={styles.btnXview}>
-      <TouchableOpacity style={styles.btnRtouch} onPress={this.btnR} >
+      <TouchableOpacity style={styles.btnRtouch}  onPressIn={this.btnR}  onPressOut={this.btnRT}>
           <Image source={require("./image/r.png")} style={styles.btnRimage}></Image>
       </TouchableOpacity>
       </View>                 
@@ -393,7 +325,7 @@ export default class App extends Component {
   }
   if(this.state.element.indexOf('"s"')>0){
     a.push(<View style={styles.btnXview}>
-      <TouchableOpacity style={styles.btnRtouch} onPress={this.btnS} >
+      <TouchableOpacity style={styles.btnRtouch}  onPressIn={this.btnS}  onPressOut={this.btnST}>
           <Image source={require("./image/s.png")} style={styles.btnRimage}></Image>
       </TouchableOpacity>
       </View>        
@@ -402,7 +334,7 @@ export default class App extends Component {
   if(this.state.element.indexOf('"t"')>0){
     a.push(
       <View style={styles.btnXview}>
-      <TouchableOpacity style={styles.btnRtouch} onPress={this.btnT} >
+      <TouchableOpacity style={styles.btnRtouch}  onPressIn={this.btnT}  onPressOut={this.btnTT}>
           <Image source={require("./image/t.png")} style={styles.btnRimage}></Image>
       </TouchableOpacity>
       </View>        
@@ -411,7 +343,7 @@ export default class App extends Component {
   if(this.state.element.indexOf('"u"')>0){
     a.push(
       <View style={styles.btnXview}>
-      <TouchableOpacity style={styles.btnRtouch} onPress={this.btnU} >
+      <TouchableOpacity style={styles.btnRtouch}  onPressIn={this.btnU}  onPressOut={this.btnUT}>
           <Image source={require("./image/u.png")} style={styles.btnRimage}></Image>
       </TouchableOpacity>
       </View>        
@@ -420,7 +352,7 @@ export default class App extends Component {
   if(this.state.element.indexOf('"v"')>0){
     a.push(
       <View style={styles.btnXview}>
-      <TouchableOpacity style={styles.btnRtouch} onPress={this.btnV} >
+      <TouchableOpacity style={styles.btnRtouch}  onPressIn={this.btnV}  onPressOut={this.btnVT}>
           <Image source={require("./image/v.png")} style={styles.btnRimage}></Image>
       </TouchableOpacity>
       </View>        
@@ -429,7 +361,7 @@ export default class App extends Component {
   if(this.state.element.indexOf('"w"')>0){
     a.push(
       <View style={styles.btnXview}>
-      <TouchableOpacity style={styles.btnRtouch} onPress={this.btnW} >
+      <TouchableOpacity style={styles.btnRtouch}  onPressIn={this.btnW}  onPressOut={this.btnWT}>
           <Image source={require("./image/w.png")} style={styles.btnRimage}></Image>
       </TouchableOpacity>
       </View>        
@@ -438,7 +370,7 @@ export default class App extends Component {
   if(this.state.element.indexOf('"x"')>0){
     a.push(
       <View style={styles.btnXview}>
-      <TouchableOpacity style={styles.btnRtouch} onPress={this.btnX} >
+      <TouchableOpacity style={styles.btnRtouch}  onPressIn={this.btnX}  onPressOut={this.btnXT}>
           <Image source={require("./image/x.png")} style={styles.btnRimage}></Image>
       </TouchableOpacity>
       </View>
@@ -447,7 +379,7 @@ export default class App extends Component {
   if(this.state.element.indexOf('"y"')>0){
     a.push(
       <View style={styles.btnXview}>
-      <TouchableOpacity style={styles.btnRtouch} onPress={this.btnY} >
+      <TouchableOpacity style={styles.btnRtouch}  onPressIn={this.btnY}  onPressOut={this.btnYT}>
           <Image source={require("./image/y.png")} style={styles.btnRimage}></Image>
       </TouchableOpacity>
       </View>        
@@ -456,7 +388,7 @@ export default class App extends Component {
   if(this.state.element.indexOf('"z"')>0){
     a.push(
       <View style={styles.btnXview}>
-      <TouchableOpacity style={styles.btnRtouch} onPress={this.btnZ} >
+      <TouchableOpacity style={styles.btnRtouch}  onPressIn={this.btnZ}  onPressOut={this.btnZT}>
           <Image source={require("./image/z.png")} style={styles.btnRimage}></Image>
       </TouchableOpacity>
       </View>      
@@ -464,21 +396,21 @@ export default class App extends Component {
   }
   if(this.state.element.indexOf('RCTRL')>0){
     a.push(<View style={styles.btnXview}>
-      <TouchableOpacity style={styles.btnRtouch} onPress={this.btnRightCtrl} >
+      <TouchableOpacity style={styles.btnRtouch}  onPressIn={this.btnRightCtrl}  onPressOut={this.btnRightCtrlT}>
           <Image source={require("./image/ctrl.png")} style={styles.btnRimage}></Image>
       </TouchableOpacity>
       </View>);
     }
     if(this.state.element.indexOf('up')>0){
       a.push(<View style={styles.btnXview}>
-        <TouchableOpacity style={styles.btnRtouch} onPressIn={this.btnUp} onPressOut={this.btnUpT} >
+        <TouchableOpacity style={styles.btnRtouch}  onPressIn={this.btnUp}  onPressOut={this.btnUpT} >
             <Image source={require("./image/up.png")} style={styles.btnRimage}></Image>
         </TouchableOpacity>
         </View>);
     }
     if(this.state.element.indexOf('down')>0){
       a.push(<View style={styles.btnXview}>
-        <TouchableOpacity style={styles.btnRtouch} onPressIn={this.btnDown} onPressOut={this.btnDownT} >
+        <TouchableOpacity style={styles.btnRtouch}  onPressIn={this.btnDown} onPressOut={this.btnDownT} >
             <Image source={require("./image/down.png")} style={styles.btnRimage}></Image>
         </TouchableOpacity>
         </View>);
@@ -506,14 +438,14 @@ export default class App extends Component {
     }
     if(this.state.element.indexOf('LCTRL')>0){
       a.push(<View style={styles.btnXview}>
-        <TouchableOpacity style={styles.btnRtouch} onPress={this.btnLeftCtrl} >
+        <TouchableOpacity style={styles.btnRtouch}  onPressIn={this.btnLeftCtrl}  onPressOut={this.btnLeftCtrlT}>
             <Image source={require("./image/ctrl.png")} style={styles.btnRimage}></Image>
         </TouchableOpacity>
         </View>);
     }
     if(this.state.element.indexOf('LSHIFT')>0){
       a.push(<View style={styles.btnXview}>
-        <TouchableOpacity style={styles.btnRtouch} onPress={this.btnLeftShift} >
+        <TouchableOpacity style={styles.btnRtouch}  onPressIn={this.btnLeftShift}  onPressOut={this.btnLeftShiftT}>
             <Image source={require("./image/shift.png")} style={styles.btnSHIFTimage}></Image>
         </TouchableOpacity>
         </View>);
@@ -527,14 +459,14 @@ export default class App extends Component {
     }
     if(this.state.element.indexOf('right_shift')>0){
       a.push(<View style={styles.btnXview}>
-        <TouchableOpacity style={styles.btnRtouch} onPress={this.btnLeftShift} >
+        <TouchableOpacity style={styles.btnRtouch}  onPressIn={this.btnRightShift}  onPressOut={this.btnRightShiftT}>
             <Image source={require("./image/shift.png")} style={styles.btnSHIFTimage}></Image>
         </TouchableOpacity>
         </View>);
     }
     if(this.state.element.indexOf('escape')>0){
       a.push(<View style={styles.btnXview}>
-        <TouchableOpacity style={styles.btnRtouch} onPress={this.btnEsc} >
+        <TouchableOpacity style={styles.btnRtouch}  onPressIn={this.btnEsc}  onPressOut={this.btnEscT}>
             <Image source={require("./image/esc.png")} style={styles.btnRimage}></Image>
         </TouchableOpacity>
         </View>);
@@ -548,14 +480,14 @@ export default class App extends Component {
     }
     if(this.state.element.indexOf('enter')>0){
       a.push(<View style={styles.btnXview}>
-        <TouchableOpacity style={styles.btnRtouch} onPress={this.btnEnter} >
+        <TouchableOpacity style={styles.btnRtouch}  onPressIn={this.btnEnter}  onPressOut={this.btnEnterT}>
             <Image source={require("./image/enter.png")} style={styles.btnSHIFTimage}></Image>
         </TouchableOpacity>
         </View>);
     }
     if(this.state.element.indexOf('alt')>0){
       a.push(<View style={styles.btnXview}>
-        <TouchableOpacity style={styles.btnRtouch} onPress={this.btnAlt} >
+        <TouchableOpacity style={styles.btnRtouch}  onPressIn={this.btnAlt}  onPressOut={this.btnAltT}>
             <Image source={require("./image/alt.png")} style={styles.btnRimage}></Image>
         </TouchableOpacity>
         </View>);
@@ -606,179 +538,249 @@ stopTimer() {
 
 
 btnA=()=>{
-  this.socket.emit("chat message" ,'a');//88
-  this.timer = setTimeout(this.btnA, 100);
+  this.socket.emit("toggledown" ,'a'); 
 }
 btnB=()=>{
-  this.socket.emit("chat message" ,'b');//88
-  this.timer = setTimeout(this.btnB, 100);
+  this.socket.emit("toggledown" ,'b'); 
 }
 btnC=()=>{
-  this.socket.emit("chat message" ,'c');//88
-  this.timer = setTimeout(this.btnA, 100);
+  this.socket.emit("toggledown" ,'c'); 
 }
 btnD=()=>{
-  this.socket.emit("chat message" ,'d');//88
-  this.timer = setTimeout(this.btnA, 100);
+  this.socket.emit("toggledown" ,'d'); 
 }
 btnE=()=>{
-  this.socket.emit("chat message" ,'e');//88
-  this.timer = setTimeout(this.btnA, 100);
+  this.socket.emit("toggledown" ,'e'); 
 }
 btnF=()=>{
-  this.socket.emit("chat message" ,'f');//88
-  this.timer = setTimeout(this.btnA, 100);
+  this.socket.emit("toggledown" ,'f'); 
 }
 btnG=()=>{
-  this.socket.emit("chat message" ,'g');//88
-  this.timer = setTimeout(this.btnA, 100);
+  this.socket.emit("toggledown" ,'g'); 
 }
 btnH=()=>{
-  this.socket.emit("chat message" ,'h');//88
-  this.timer = setTimeout(this.btnA, 100);
+  this.socket.emit("toggledown" ,'h'); 
 }
 btnI=()=>{
-  this.socket.emit("chat message" ,'i');//88
-  this.timer = setTimeout(this.btnA, 100);
+  this.socket.emit("toggledown" ,'i'); 
 }
 btnJ=()=>{
-  this.socket.emit("chat message" ,'j');//88
-  this.timer = setTimeout(this.btnA, 100);
+  this.socket.emit("toggledown" ,'j'); 
 }
 btnK=()=>{
-  this.socket.emit("chat message" ,'k');//88
-  this.timer = setTimeout(this.btnA, 100);
+  this.socket.emit("toggledown" ,'k'); 
 }
 btnL=()=>{
-  this.socket.emit("chat message" ,'l');//88
-  this.timer = setTimeout(this.btnA, 100);
+  this.socket.emit("toggledown" ,'l'); 
 }
 btnM=()=>{
-  this.socket.emit("chat message" ,'m');//88
-  this.timer = setTimeout(this.btnA, 100);
+  this.socket.emit("toggledown" ,'m'); 
 }
 btnN=()=>{
-  this.socket.emit("chat message" ,'n');//88
-  this.timer = setTimeout(this.btnA, 100);
+  this.socket.emit("toggledown" ,'n'); 
 }
 btnO=()=>{
-  this.socket.emit("chat message" ,'o');//88
-  this.timer = setTimeout(this.btnA, 100);
+  this.socket.emit("toggledown" ,'o'); 
 }
 btnP=()=>{
-  this.socket.emit("chat message" ,'p');//88
-  this.timer = setTimeout(this.btnA, 100);
+  this.socket.emit("toggledown" ,'p'); 
 }
 btnQ=()=>{
-  this.socket.emit("chat message" ,'q');//88
-  this.timer = setTimeout(this.btnA, 100);
+  this.socket.emit("toggledown" ,'q'); 
 }
 btnR=()=>{
-  this.socket.emit("chat message" ,'r');//88
-  this.timer = setTimeout(this.btnA, 100);
+  this.socket.emit("toggledown" ,'r'); 
 }
 btnS=()=>{
-  this.socket.emit("chat message" ,'s');//88
-  this.timer = setTimeout(this.btnA, 100);
+  this.socket.emit("toggledown" ,'s'); 
 }
 btnT=()=>{
-  this.socket.emit("chat message" ,'t');//88
-  this.timer = setTimeout(this.btnA, 100);
+  this.socket.emit("toggledown" ,'t'); 
 }
 btnU=()=>{
-  this.socket.emit("chat message" ,'u');//88
-  this.timer = setTimeout(this.btnA, 100);
+  this.socket.emit("toggledown" ,'u'); 
 }
 btnV=()=>{
-  this.socket.emit("chat message" ,'v');//88
-  this.timer = setTimeout(this.btnA, 100);
+  this.socket.emit("toggledown" ,'v'); 
 }
 btnW=()=>{
-  this.socket.emit("chat message" ,'w');//88
-  this.timer = setTimeout(this.btnA, 100);
+  this.socket.emit("toggledown" ,'w'); 
 }
 btnX=()=>{
-  this.socket.emit("chat message" ,'x');//88
-  this.timer = setTimeout(this.btnA, 100);
+  this.socket.emit("toggledown" ,'x'); 
 }
 btnY=()=>{
-  this.socket.emit("chat message" ,'y');//88
-  this.timer = setTimeout(this.btnA, 100);
+  this.socket.emit("toggledown" ,'y'); 
 }
 btnZ=()=>{
-  this.socket.emit("chat message" ,'z');//88
-  this.timer = setTimeout(this.btnA, 100);
+  this.socket.emit("toggledown" ,'z'); 
 }
 btnUp=()=>{
   this.socket.emit("toggledown" ,'up');
 }
-btnUpT=()=>{
-  this.socket.emit("toggleup" ,'up');
-}
 btnDown=()=>{
   this.socket.emit("toggledown" ,'down');
-}
-btnDownT=()=>{
-  this.socket.emit("toggleup" ,'down');
 }
 btnLeft=()=>{ 
   this.socket.emit("toggledown" ,'left');
 }
-btnLeftT=()=>{ 
-  this.socket.emit("toggleup" ,'left');
-}
 btnRight=()=>{
   this.socket.emit("toggledown" ,'right');
+}
+btnSpace=()=>{
+  this.socket.emit("toggledown" ,'space');
+}
+btnLeftShift=()=>{
+  this.socket.emit("toggledown" ,'LSHIFT');
+}
+btnRightShift=()=>{
+  this.socket.emit("toggledown" ,'right_shift');
+}
+btnLeftCtrl=()=>{
+  this.socket.emit("toggledown" ,'LCTRL');
+}
+btnRightCtrl=()=>{
+  this.socket.emit("toggledown" ,'RCTRL');
+}
+btnEnter=()=>{
+  this.socket.emit("toggledown" ,'enter'); 
+}
+btnDelete=()=>{
+  this.socket.emit("toggledown" ,'delete'); 
+}
+btnEsc=()=>{
+  this.socket.emit("toggledown" ,'escape'); 
+}
+btnAlt=()=>{
+  this.socket.emit("toggledown" ,'alt'); 
+}
+btnBackspace=()=>{
+  this.socket.emit("toggledown" ,'backspace'); 
+}
+
+
+btnUpT=()=>{
+  this.socket.emit("toggleup" ,'up');
+}
+btnDownT=()=>{
+  this.socket.emit("toggleup" ,'down');
+}
+btnLeftT=()=>{ 
+  this.socket.emit("toggleup" ,'left');
 }
 btnRightT=()=>{
   this.socket.emit("toggleup" ,'right');
 }
-btnSpace=()=>{
-  this.socket.emit("toggledown" ,'space');//32
-}
 btnSpaceT=()=>{
-  this.socket.emit("toggleup" ,'space');//32
-}
-btnLeftShift=()=>{
-  this.socket.emit("chat message" ,'LSHIFT');//160
-  this.timer = setTimeout(this.btnLeftShift, 100);
-}
-btnRightShift=()=>{
-  this.socket.emit("chat message" ,'right_shift');//161
-  this.timer = setTimeout(this.btnRightShift, 100);
-}
-btnLeftCtrl=()=>{
-  this.socket.emit("chat message" ,'LCTRL');//162
-  this.timer = setTimeout(this.btnLeftCtrl, 100);
-}
-btnRightCtrl=()=>{
-  this.socket.emit("chat message" ,'RCTRL');//163
-  this.timer = setTimeout(this.btnRightCtrl, 100);
-}
-btnEnter=()=>{
-  this.socket.emit("chat message" ,'enter');//88
-  this.timer = setTimeout(this.btnA, 100);
-}
-btnDelete=()=>{
-  this.socket.emit("toggledown" ,'delete');//88
+  this.socket.emit("toggleup" ,'space');
 }
 btnDeleteT=()=>{
-  this.socket.emit("toggleup" ,'delete');//88
-}
-btnEsc=()=>{
-  this.socket.emit("chat message" ,'escape');//88
-  this.timer = setTimeout(this.btnA, 100);
-}
-btnAlt=()=>{
-  this.socket.emit("chat message" ,'alt');//88
-  this.timer = setTimeout(this.btnA, 100);
-}
-btnBackspace=()=>{
-  this.socket.emit("toggledown" ,'backspace');//88
+  this.socket.emit("toggleup" ,'delete'); 
 }
 btnBackspaceT=()=>{
-  this.socket.emit("toggleup" ,'backspace');//88
+  this.socket.emit("toggleup" ,'backspace'); 
 }
+
+btnAT=()=>{
+  this.socket.emit("toggleup" ,'a'); 
+}
+btnBT=()=>{
+  this.socket.emit("toggleup" ,'b'); 
+}
+btnCT=()=>{
+  this.socket.emit("toggleup" ,'c'); 
+}
+btnDT=()=>{
+  this.socket.emit("toggleup" ,'d'); 
+}
+btnET=()=>{
+  this.socket.emit("toggleup" ,'e'); 
+}
+btnFT=()=>{
+  this.socket.emit("toggleup" ,'f'); 
+}
+btnGT=()=>{
+  this.socket.emit("toggleup" ,'g'); 
+}
+btnHT=()=>{
+  this.socket.emit("toggleup" ,'h'); 
+}
+btnIT=()=>{
+  this.socket.emit("toggleup" ,'i'); 
+}
+btnJT=()=>{
+  this.socket.emit("toggleup" ,'j'); 
+}
+btnKT=()=>{
+  this.socket.emit("toggleup" ,'k'); 
+}
+btnLT=()=>{
+  this.socket.emit("toggleup" ,'l'); 
+}
+btnMT=()=>{
+  this.socket.emit("toggleup" ,'m'); 
+}
+btnNT=()=>{
+  this.socket.emit("toggleup" ,'n'); 
+}
+btnOT=()=>{
+  this.socket.emit("toggleup" ,'o'); 
+}
+btnPT=()=>{
+  this.socket.emit("toggleup" ,'p'); 
+}
+btnQT=()=>{
+  this.socket.emit("toggleup" ,'q'); 
+}
+btnRT=()=>{
+  this.socket.emit("toggleup" ,'r'); 
+}
+btnST=()=>{
+  this.socket.emit("toggleup" ,'s'); 
+}
+btnTT=()=>{
+  this.socket.emit("toggleup" ,'t'); 
+}
+btnUT=()=>{
+  this.socket.emit("toggleup" ,'u'); 
+}
+btnVT=()=>{
+  this.socket.emit("toggleup" ,'v'); 
+}
+btnWT=()=>{
+  this.socket.emit("toggleup" ,'w'); 
+}
+btnXT=()=>{
+  this.socket.emit("toggleup" ,'x'); 
+}
+btnYT=()=>{
+  this.socket.emit("toggleup" ,'y'); 
+}
+btnZT=()=>{
+  this.socket.emit("toggleup" ,'z'); 
+}
+btnLeftShiftT=()=>{
+  this.socket.emit("toggleup" ,'LSHIFT');
+}
+btnRightShiftT=()=>{
+  this.socket.emit("toggleup" ,'right_shift');
+}
+btnLeftCtrlT=()=>{
+  this.socket.emit("toggleup" ,'LCTRL');
+}
+btnRightCtrlT=()=>{
+  this.socket.emit("toggleup" ,'RCTRL');
+}
+btnEnterT=()=>{
+  this.socket.emit("toggleup" ,'enter'); 
+}
+btnEscT=()=>{
+  this.socket.emit("toggleup" ,'escape'); 
+}
+btnAltT=()=>{
+  this.socket.emit("toggleup" ,'alt'); 
+}
+
 _menu = null;
 
 setMenuRef = ref => {
@@ -786,123 +788,6 @@ setMenuRef = ref => {
 };
   
   render() { 
-    
-    // this.setState({element:[...this.props.navigation.state.params.elements]});
-    // //let Render_View = this.state.element.=>{
-    //   // this.socket.emit('input',this.state.element);
-    //   let Render_A = this.state.element.map((item,key)=>{
-    //     if(( key ) == 'a')
-    //     {
-    //         return(
-    //           <View style={styles.btnXview}>
-    //           <TouchableOpacity style={styles.btnRtouch} onPress={this.btnA} >
-    //               <Image source={require("./image/a.png")} style={styles.btnRimage}></Image>
-    //           </TouchableOpacity>
-    //           </View> 
-    //       );
-    //     }
-    //   });
-    //   let Render_B = this.state.element.map((item,key)=>{
-    //     if(( key ) == 'b')
-    //     {
-    //         return(
-    //           <View style={styles.btnXview}>
-    //           <TouchableOpacity style={styles.btnRtouch} onPress={this.btnA} >
-    //               <Image source={require("./image/b.png")} style={styles.btnRimage}></Image>
-    //           </TouchableOpacity>
-    //           </View> 
-    //       );
-    //     }
-    //   });
-    
-    /**
-     * 
-            <Text style={{color:'white'}}>{this.state.data_in}</Text>
-            <View style={styles.btnXview}>
-              <TouchableOpacity style={styles.btnXtouch} 
-              onPressIn={this.btnX} onPressOut={this.stopTimer}>
-                <Image source={require("./image/x.png")} style={styles.btnXimage}></Image>
-              </TouchableOpacity>
-            </View>
-            <View style={styles.btnRview}>
-            <TouchableOpacity 
-              style={styles.btnRtouch} 
-              onPressIn={this.btnR} onPressOut={this.stopTimer}>
-                <Image source={require("./image/r.png")} style={styles.btnRimage}></Image>
-              </TouchableOpacity>
-            </View>
-          </View>
-          <View style={styles.btnUPview}>
-            <TouchableOpacity style={styles.btnUPtouch}
-            onPressIn={this.btnUp} onPressOut={this.stopTimer}>
-              <Image source={require("./image/up.png")} style={styles.btnUPimage}></Image>
-            </TouchableOpacity>
-          </View>
-          
-          <View style={styles.arrowView}>
-              <TouchableOpacity style={styles.btnLEFTtouch}
-              onPressIn={this.btnLeft} onPressOut={this.stopTimer}>
-                <Image source={require("./image/left.png")} style={styles.btnLEFTimage}></Image>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.btnLEFTtouch} 
-              onPressIn={this.btnDown} onPressOut={this.stopTimer}>
-                <Image source={require("./image/down.png")} style={styles.btnLEFTimage}></Image>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.btnLEFTtouch} 
-              onPressIn={this.btnRight} onPressOut={this.stopTimer}>
-                <Image source={require("./image/right.png")} style={styles.btnLEFTimage}></Image>
-              </TouchableOpacity>
-          </View>
-
-          <View style={styles.btnSHIFTview}>
-            <View style={styles.btnLeftShiftview}>
-              <TouchableOpacity style={styles.btnSHIFTtouch} 
-              onPressIn={this.btnLeftShift} onPressOut={this.stopTimer}>
-                <Image source={require("./image/shift.png")} style={styles.btnSHIFTimage}></Image>
-              </TouchableOpacity>
-            </View>
-            <View style={styles.btnRightShiftview}>
-            <TouchableOpacity style={styles.btnSHIFTtouch} 
-            onPressIn={this.btnRightShift} onPressOut={this.stopTimer}>
-                <Image source={require("./image/shift.png")} style={styles.btnSHIFTimage}></Image>
-              </TouchableOpacity>
-            </View>
-          </View>
-
-          <View style={styles.lastView}>
-            <View style={styles.btnCTRLview}>
-              <TouchableOpacity style={styles.btnCTRLtouch} 
-              onPressIn={this.btnLeftCtrl} onPressOut={this.stopTimer}>
-                <Image source={require("./image/ctrl.png")} style={styles.btnCTRLimage}></Image>
-              </TouchableOpacity>
-            </View>
-            <View style={styles.btnSPACEview}>
-              <TouchableOpacity style={styles.btnSPACEtouch} 
-              onPressIn={this.btnSpace} onPressOut={this.stopTimer}>
-                <Image source={require("./image/space.png")} style={styles.btnSPACEimage}></Image>
-              </TouchableOpacity>
-            </View>
-            <View style={styles.btnCTRLview}>
-              <TouchableOpacity style={styles.btnCTRLtouch} 
-              onPressIn={this.btnRightCtrl} onPressOut={this.stopTimer}>
-                <Image source={require("./image/ctrl.png")} style={styles.btnCTRLimage}></Image>
-              </TouchableOpacity>
-            </View>
-
-
-            
-      <View style = {styles.mainContainer} >
-        <View style={styles.cont2}>
-          <ScrollView>
-        <View style={styles.firstFlex}>
-          {this.state.renderview}
-          </View>
-          </ScrollView>
-        </View>
-        <Text style={{color:"white"}}>{this.state.element}</Text>    
-        <Text style={{color:"white"}}>{this.state.count}</Text>    
-      </View>
-     */
     var one=[],two=[],tree=[],four=[];
     for(let i=0; i<a.length; ++i){
       if(i<a.length/4)
@@ -964,12 +849,10 @@ static navigationOptions = ({ navigation }) => {
                 }} textStyle={{fontSize: 16}} disabled>Controller</MenuItem>
               <MenuItem onPress={() => {
                 this._menu.hide()     
-                //this.socket.emit("chat message" ,"close");
                 navigation.navigate('Home')
                 }} textStyle={{color: '#000', fontSize: 16}}>startPage</MenuItem>
               <MenuItem  onPress={() =>{
                 this._menu.hide()
-                //this.socket.emit("chat message" ,"close");
                 navigation.navigate('mouse')
                 }} textStyle={{color: '#000',fontSize: 16}}>Mouse</MenuItem>
               
@@ -982,7 +865,6 @@ static navigationOptions = ({ navigation }) => {
 const styles=StyleSheet.create({
   cont1:{
     flex: 1,
-   // backgroundColor: '#F5FCFF',//'#F5FCFF',
   },
   mainContainer:{
     flex : 1,

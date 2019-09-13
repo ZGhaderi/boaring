@@ -1,8 +1,6 @@
 import React, { Component } from "react";
 import {AppRegistry, Button, View , StyleSheet, ImageBackground,Image, Dimensions , Alert,TouchableOpacity, Text } from "react-native";
 import AsyncStorage from '@react-native-community/async-storage';
-
-import io from 'socket.io-client/dist/socket.io';//'socket.io-client';
 const {width: WIDTH} = Dimensions.get("window");
 export default class App extends Component {
     constructor(){
@@ -13,16 +11,15 @@ export default class App extends Component {
         }
     }
     async componentDidMount(){
-        this.socket = io("http://192.168.1.5:8000");
+        console.disableYellowBox = true;
         this.setState({game:String(await AsyncStorage.getItem('game'))});
-        this.socket.emit("input",this.state.game);
     }
     arrowKeys=()=>{
         this.setState({elements: "arrowkey"});
         AsyncStorage.setItem('arrowKey', "true");
         AsyncStorage.setItem('accelerometer', "false");
         if(this.state.game== "packman"){
-            this.props.navigation.navigate('pacman');
+            this.props.navigation.navigate('packman');
         }
         else if(this.state.game == "nfs"){
             this.props.navigation.navigate('nfs');
@@ -33,6 +30,9 @@ export default class App extends Component {
         else if(this.state.game == "hillcar"){
             this.props.navigation.navigate('hillcar');
         }
+        else if(this.state.game == "another"){
+            this.props.navigation.navigate('Friends');
+        }
         // else{   
         //     this.props.navigation.navigate('packman');
         // }
@@ -41,10 +41,19 @@ export default class App extends Component {
         this.setState({elements: "accelerometer"});
         AsyncStorage.setItem('accelerometer', "true");
         AsyncStorage.setItem('arrowKey', "false");
-        if(this.state.game == "packman"){
+        if(this.state.game== "packman"){
             this.props.navigation.navigate('packman');
         }
-        else{   
+        else if(this.state.game == "nfs"){
+            this.props.navigation.navigate('nfs');
+        }
+        else if(this.state.game == "motorace"){
+            this.props.navigation.navigate('motorace');
+        }
+        else if(this.state.game == "hillcar"){
+            this.props.navigation.navigate('hillcar');
+        }
+        else if(this.state.game == "another"){
             this.props.navigation.navigate('Friends');
         }
     }

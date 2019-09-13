@@ -14,21 +14,21 @@ import {
   import hillcar from'./hillcar'
   import nfs from'./nfs'
 
-  const rootstack = createStackNavigator({
-    games: {
-      screen: games,
-      },
+  const rootstack = createStackNavigator({    
+    Home: { 
+      screen: Home ,
+      },   
     drag: { 
       screen: drag ,
       }, 
-    Home: { 
-        screen: Home ,
-        },
+    mouse: { 
+      screen: mouse
+      },
+    games: {
+      screen: games,
+      },
     Friends: { 
         screen: Friends
-        },
-    mouse: { 
-        screen: mouse
         },
     elements: {
         screen: elements
@@ -45,6 +45,8 @@ import {
     nfs:{
       screen: nfs,
         },
+    
+    
   
            
       },

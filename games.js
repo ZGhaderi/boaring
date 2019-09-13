@@ -25,13 +25,41 @@ export default class App extends Component {
         AsyncStorage.setItem('game', "motorace");
         this.props.navigation.navigate('elements');
     }
+    another=()=>{
+        AsyncStorage.setItem('game', "another");
+        this.props.navigation.navigate('drag');
+    }
     render() {  
         return (   
-        <View style = {styles.mainContainer} >
+          <View style={{flex:1,justifyContent:"center",alignItems:"center",backgroundColor:'#0b132b'}}>
+          <View style={{flex:1,flexDirection:"column",justifyContent:"center",width:300}}>
+              <Text style={{color: '#5bc0be',fontSize:25}}>Select game you want to play.</Text>
+          <TouchableOpacity style={styles.btn} onPress={this.nfs}>
+              <Text>Need for Speed</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.btn} onPress={this.hillCar}>
+              <Text>Hill Climb car</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.btn} onPress={this.pacman}>
+              <Text>Pac-man</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.btn} onPress={this.motorace}>
+              <Text>Moto Racing</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.btn} onPress={this.another}>
+              <Text>Another Games</Text>
+          </TouchableOpacity>
+          </View>
+          </View>
+           
+        )
+    }
+    /**
+     * <View style = {styles.mainContainer} >
             <View style={styles.cont2}>
                 <View style={styles.firstFlex}>
                 <Text style={{color: '#5bc0be',fontSize:25}}>Select game you want to play.</Text>
-                <TouchableOpacity style={styles.btn} onPress={this.pacman}>
+                <TouchableOpacity style={styles.btn} onPress={this.another}>
                 <Text style={{color: '#5bc0be',fontSize:25}}>Another game</Text>
                 </TouchableOpacity>
                 </View>
@@ -70,9 +98,7 @@ export default class App extends Component {
                     
             </View>   
       </View>
-           
-        )
-    }
+     */
     /* <View style={{flex:1,justifyContent:"center",alignItems:"center",backgroundColor:'#0b132b'}}>
                 <View style={{flex:1,flexDirection:"column",justifyContent:"center",width:300}}>
                     <Text style={{color: '#5bc0be',fontSize:25}}>Select game you want to play.</Text>
@@ -103,12 +129,15 @@ const styles=StyleSheet.create({
      // backgroundColor: '#F5FCFF',//'#F5FCFF',
     },
     btn :{
-        backgroundColor: '#1c2541',//'#F7F9F9',
-        color: '#0b132b',
-        borderRadius: 8,
-        alignItems:"center",
-        justifyContent: "center",
-      },
+      backgroundColor: '#5bc0be',//'#F7F9F9',
+      color: '#7F8C8D',
+      height : 45,
+      width:WIDTH*(0.4),
+      borderRadius: 8,
+      marginTop:10,
+      alignItems:"center",
+      justifyContent: "center",
+    },
       btnCTRLimage:{
         height:150,
         width:300,
@@ -124,12 +153,12 @@ const styles=StyleSheet.create({
       firstFlex:{
         flex:1,
         flexDirection:"row",
-        justifyContent:"space-between"
+        justifyContent:"space-between",
       },
       colFlex:{
         flex:1,
         flexDirection:"column",
-        justifyContent:"space-between"
+        justifyContent:"space-between",
       },
       cont2:{
         flex: 1,

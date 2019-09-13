@@ -55,14 +55,10 @@ export default class mouse extends Component
       const ip = String(await AsyncStorage.getItem('@storage_Key'));
       var ipaddr = 'http://'+ ip + ':8000';
       this.setState({data_in : ipaddr});
-      this.socket = io(this.state.data_in);
-      //this.socket = io("http://192.168.43.136:8000");
+      //this.socket = io(this.state.data_in);
+      this.socket = io("http://192.168.43.136:8000");
       msg = height +  ' ' + width;
       this.socket.emit("width and hight" , msg);
-      // this.socket.on("send",msg=>{
-      //   this.setState({rec:[...this.state.rec , msg]});
-      // });
-      
       this.backHandler = BackHandler.addEventListener('hardwareBackPress', this.backtoPrevScreen);  
     }
 
@@ -114,22 +110,9 @@ export default class mouse extends Component
               locationY: event.nativeEvent.locationY.toFixed(2) ,
               
           });
-            // if(this.state.release == true){
-            //     this.setState({initx : this.state.locationX});
-            //     this.setState({inity : this.state.locationY});
-            //     this.setState({release : false});
-            // }
-            // this.setState({
-                 
-            //     locationX: event.nativeEvent.locationX.toFixed(2), 
-                
-            //     locationY: event.nativeEvent.locationY.toFixed(2) ,
-            // });
-            
             var distx = gestureState.dx;
             var disty = gestureState.dy;
             if(this.state.release == true){
-                //this.socket.emit("text" , "true" );
                 if(distx != 0 || disty != 0){
                     msg = String(distx) + ' ' +String(disty);
                     this.socket.emit("mouse location" , msg );
@@ -137,39 +120,26 @@ export default class mouse extends Component
                     this.setState({prevdy : disty});
                     this.setState({release: false});
                 }
-                3
+                
                 if(distx > -5 && distx < 5 && disty < 5 && disty > -5){
                     this.setState({counter: this.state.counter + 1});
-                    //this.socket.emit("text" , "counter1" );
                 }
                 if(gestureState.singleTapUp){
                     this.socket.emit("text" , "click" );
                     
                 }
-                //alert(JSON.stringify( gestureState));
             }    
             else{
                 if(distx-this.state.prevdx != 0 || disty-this.state.prevdy != 0){
                     msg = String(distx - this.state.prevdx) + ' ' + String(disty - this.state.prevdy);
                     this.socket.emit("mouse location" , msg );
-                    this.setState({prevdx : distx});// - this.state.prevdx});
-                    this.setState({prevdy : disty});// - this.state.prevdy});
+                    this.setState({prevdx : distx});
+                    this.setState({prevdy : disty});
                 }
                  if(distx - this.state.prevdx > -5 && distx - this.state.prevdx <5 && disty - this.state.prevdy <5 && disty - this.state.prevdy > -5){
                     this.setState({counter: this.state.counter + 1});
-                   // this.socket.emit("text" , "counter2" );
                 }
             }
-
-            // var distx = gestureState.dx;//this.state.locationX - this.state.initx;
-            // var disty = gestureState.dy;//this.state.locationY - this.state.inity;
-            // this.setState({initx: this.state.locationX , inity : this.state.locationY});
-            // if(distx != 0 || disty != 0){
-            //     msg = String(distx) + ' ' +String(disty);
-            //     this.socket.emit("mouse location" , msg );
-            // }
-            //msg = event.nativeEvent.locationX.toFixed(2) + " " + event.nativeEvent.locationY.toFixed(2);
-            //this.socket.emit("mouse location" , msg );
             return true;
           },
           onResponderSingleTapConfirmed: (evt, gestureState) => {
@@ -184,7 +154,6 @@ export default class mouse extends Component
               this.socket.emit("release" , "release" );
               tap2 = false;
             }
-            // alert(gestureState.numberActiveTouches);
             this.socket.emit("text" , "release" );
             this.setState({
                  
@@ -199,9 +168,6 @@ export default class mouse extends Component
                 this.socket.emit("click" , "doubleTap" );
                 this.socket.emit("text" , "doubleTap" );
             }
-                //this.socket.emit("click" , "click" );
-            
-            
         }
       });
     }
@@ -209,13 +175,10 @@ export default class mouse extends Component
   componentWillUnmount() {
     this.backHandler.remove();
     this.socket.emit("chat message" ,"close");
-    //AsyncStorage.setItem('@storage_Key', " ");
   }
   
   backtoPrevScreen=()=>{
-    //alert("back");
     this.socket.emit("chat message" ,"close");
-    //AsyncStorage.setItem('@storage_Key', " ");
     this.props.navigation.navigate('Home');
     return true;
   }
@@ -223,7 +186,6 @@ export default class mouse extends Component
       clearTimeout(this.timer);
     }
     btnRightClick=()=>{
-      //alert("press");
       this.socket.emit("click" , "rightClick" );
     }
     btnLeft=()=>{
@@ -240,6 +202,9 @@ export default class mouse extends Component
     btnShutdown=()=>{
       this.socket.emit("click" , "shutdown" );
     }
+    btnSleep=()=>{
+      this.socket.emit("click" , "sleep" );
+    }
     txtinput=()=>{
       this.socket.emit("input" ,  );
     }
@@ -253,19 +218,27 @@ export default class mouse extends Component
     }
     btnDelete=()=>{
       this.socket.emit("click" ,'delete');
-      //this.timer = setTimeout(this.volumx, 100);
+    }
+    folder=()=>{
+      this.socket.emit("click" ,'folder');
+    }
+    chrome=()=>{
+      this.socket.emit("click" ,'chrome');
+    }
+    close=()=>{
+      this.socket.emit("click" ,'close');
+    }
+    enter=()=>{
+      this.socket.emit("click" ,'enter');
     }
     volumx=()=>{
       this.socket.emit("volum" ,'x');
-      //this.timer = setTimeout(this.volumx, 100);
     }
     volumUp=()=>{
       this.socket.emit("volum" ,'up');
-      //this.timer = setTimeout(this.volumUp, 100);
     }
     volumDown=()=>{
       this.socket.emit("volum" ,'down');
-      //this.timer = setTimeout(this.volumDown, 100);
     }
     brightnessUp=()=>{
       this.socket.emit("brightness" ,'up');
@@ -281,48 +254,6 @@ export default class mouse extends Component
       this._menu = ref;
     };
 
-      /**
-       * <View style = { styles.MainContainer }>    
-              
-              <View style = { styles.childView }>             
-                <View style = {[ styles.point, { top: parseFloat( this.state.locationY), left: parseFloat( this.state.locationX)}]} />
-                <View style = {{ flex: 1, backgroundColor: 'transparent' }}  { ...this.gestureResponder} /> 
-              </View>
-              <View style={{flex: 1, flexDirection:"row",backgroundColor:"#0b132b"}}>  
-                <TouchableOpacity onPress={this.btnShutdown} style={{flexDirection:"row",marginRight:20,alignItems:'stretch'}}>
-                  <Icon name="power-settings-new" size={50} color={'#6fffe9'} 
-                        style={{alignSelf:'center'}} />
-                </TouchableOpacity>
-                <TouchableOpacity onPress={this.btnRestart} style={{flexDirection:"row",marginRight:20,alignItems:'stretch'}}>
-                  <Icon name="restart" size={50} color={'#6fffe9'} 
-                        style={{alignSelf:'center'}} />
-                </TouchableOpacity>
-                <TouchableOpacity onPress={this.btnLeft} style={{flexDirection:"row",marginRight:20,alignItems:'stretch'}}>
-                  <Icon name="angle-left" size={50} color={'#6fffe9'} 
-                        style={{alignSelf:'center'}} />
-                </TouchableOpacity>
-                <TouchableOpacity onPress={this.btnRight} style={{flexDirection:"row",marginRight:20,alignItems:'stretch'}}>
-                  <Icon name="angle-right" size={50} color={'#6fffe9'} 
-                        style={{alignSelf:'center'}} />
-                </TouchableOpacity>
-                <TouchableOpacity onPress={this.btnRightClick} style={{flexDirection:"row",marginRight:20,alignItems:'stretch'}}>
-                  <Icon name="cursor-pointer" size={50} color={'#6fffe9'} 
-                        style={{alignSelf:'center'}} />
-                </TouchableOpacity>
-               
-                <TextInput style={{flexDirection:"row",marginRight:20,alignItems:'stretch',height: 40,backgroundColor: 'azure', fontSize: 20}}  
-                    placeholder="Type here!"  
-                    onChangeText={(inputtxt)=>this.setState({inputtxt})}  
-                    onSubmitEditing={() => this.socket.emit("input" ,this.state.inputtxt)}
-                    value={this.state.inputtxt}/>
-              </View>
-
-          </View>
-          
-        
-       */
-      
-     //resizeMode='contain'
     render()
     {
         return(
@@ -338,6 +269,22 @@ export default class mouse extends Component
                 </TouchableOpacity>
                 <TouchableOpacity onPress={this.btnRestart} style={{flexDirection:"row",marginRight:20,alignItems:'stretch'}}>
                   <Icon name="ios-refresh" size={35} color={'#6fffe9'} 
+                        style={{alignSelf:'center'}} />
+                </TouchableOpacity>
+                <TouchableOpacity onPress={this.btnSleep} style={{flexDirection:"row",marginRight:20,alignItems:'stretch'}}>
+                  <MaterialCommunityIcons name="power-sleep" size={35} color={'#6fffe9'} 
+                        style={{alignSelf:'center'}} />
+                </TouchableOpacity>
+                <TouchableOpacity onPressIn={this.folder} onPressOut={this.stopTimer} style={{flexDirection:"row",marginRight:20,alignItems:'stretch'}}>
+                  <EntypoIcon name="folder" size={35} color={'#6fffe9'} 
+                        style={{alignSelf:'center'}} />
+                </TouchableOpacity>
+                <TouchableOpacity onPressIn={this.chrome} onPressOut={this.stopTimer} style={{flexDirection:"row",marginRight:20,alignItems:'stretch'}}>
+                  <AntDesign name="chrome" size={35} color={'#6fffe9'} 
+                        style={{alignSelf:'center'}} />
+                </TouchableOpacity>
+                <TouchableOpacity onPressIn={this.volumx} onPressOut={this.stopTimer} style={{flexDirection:"row",marginRight:20,alignItems:'stretch'}}>
+                  <Feather name="volume-x" size={35} color={'#6fffe9'} 
                         style={{alignSelf:'center'}} />
                 </TouchableOpacity>
                 <TouchableOpacity onPressIn={this.btnLeft} onPressOut={this.stopTimer} style={{flexDirection:"row",marginRight:20,alignItems:'stretch'}}>
@@ -356,27 +303,14 @@ export default class mouse extends Component
                   <AntDesign name="delete" size={35} color={'#6fffe9'} 
                         style={{alignSelf:'center'}} />
                 </TouchableOpacity>
-                <TouchableOpacity onPressIn={this.volumx} onPressOut={this.stopTimer} style={{flexDirection:"row",marginRight:20,alignItems:'stretch'}}>
-                  <Feather name="volume-x" size={35} color={'#6fffe9'} 
+                <TouchableOpacity onPressIn={this.enter} onPressOut={this.stopTimer} style={{flexDirection:"row",marginRight:20,alignItems:'stretch'}}>
+                  <AntDesign name="enter" size={35} color={'#6fffe9'} 
                         style={{alignSelf:'center'}} />
                 </TouchableOpacity>
-                <TouchableOpacity onPressIn={this.volumUp} onPressOut={this.stopTimer} style={{flexDirection:"row",marginRight:20,alignItems:'stretch'}}>
-                  <Feather name="volume-1" size={35} color={'#6fffe9'} 
+                <TouchableOpacity onPressIn={this.close} onPressOut={this.stopTimer} style={{flexDirection:"row",marginRight:20,alignItems:'stretch'}}>
+                  <MaterialCommunityIcons name="close-box" size={35} color={'#6fffe9'} 
                         style={{alignSelf:'center'}} />
                 </TouchableOpacity>
-                <TouchableOpacity onPressIn={this.volumDown} onPressOut={this.stopTimer} style={{flexDirection:"row",marginRight:20,alignItems:'stretch'}}>
-                  <Feather name="volume-2" size={35} color={'#6fffe9'} 
-                        style={{alignSelf:'center'}} />
-                </TouchableOpacity>
-                <TouchableOpacity onPressIn={this.brightnessUp} onPressOut={this.stopTimer} style={{flexDirection:"row",marginRight:20,alignItems:'stretch'}}>
-                  <MaterialCommunityIcons name="brightness-5" size={35} color={'#6fffe9'} 
-                        style={{alignSelf:'center'}} />
-                </TouchableOpacity>
-                <TouchableOpacity onPressIn={this.brightnessDown} onPressOut={this.stopTimer} style={{flexDirection:"row",marginRight:20,alignItems:'stretch'}}>
-                  <MaterialCommunityIcons name="brightness-7" size={35} color={'#6fffe9'} 
-                        style={{alignSelf:'center'}} />
-                </TouchableOpacity>
-
                 <TextInput style={{flexDirection:"row",marginRight:20,alignItems:'stretch',height: 40,backgroundColor: 'azure', fontSize: 20}}  
                     placeholder="Type here!"  
                     onChangeText={(inputtxt)=>this.setState({inputtxt})}  
@@ -397,14 +331,29 @@ export default class mouse extends Component
         );
     }
     /**
-     * 
+     * <TouchableOpacity onPressIn={this.volumDown} onPressOut={this.stopTimer} style={{flexDirection:"row",marginRight:20,alignItems:'stretch'}}>
+                  <Feather name="volume-1" size={35} color={'#6fffe9'} 
+                        style={{alignSelf:'center'}} />
+                </TouchableOpacity>
+                <TouchableOpacity onPressIn={this.volumUp} onPressOut={this.stopTimer} style={{flexDirection:"row",marginRight:20,alignItems:'stretch'}}>
+                  <Feather name="volume-2" size={35} color={'#6fffe9'} 
+                        style={{alignSelf:'center'}} />
+                </TouchableOpacity>
+                <TouchableOpacity onPressIn={this.brightnessUp} onPressOut={this.stopTimer} style={{flexDirection:"row",marginRight:20,alignItems:'stretch'}}>
+                  <MaterialCommunityIcons name="brightness-5" size={35} color={'#6fffe9'} 
+                        style={{alignSelf:'center'}} />
+                </TouchableOpacity>
+                <TouchableOpacity onPressIn={this.brightnessDown} onPressOut={this.stopTimer} style={{flexDirection:"row",marginRight:20,alignItems:'stretch'}}>
+                  <MaterialCommunityIcons name="brightness-7" size={35} color={'#6fffe9'} 
+                        style={{alignSelf:'center'}} />
+                </TouchableOpacity>
      */
     static navigationOptions = ({ navigation }) => {
         return {
-            title: 'Mouse',
+            title: 'Desktop Controller',
             headerStyle: {
               backgroundColor: '#6fffe9',
-              barStyle: "light-content", // or directly
+              barStyle: "light-content",
             },
             headerTintColor: '#0b132b',
             headerTitleStyle: {
@@ -427,13 +376,11 @@ export default class mouse extends Component
                       }} textStyle={{fontSize: 16}} disabled>Mouse</MenuItem>
                     <MenuItem onPress={() => {
                       this._menu.hide()
-                      //this.socket.emit("chat message" ,"close");
                       navigation.navigate('Home')
                       }} textStyle={{color: '#000', fontSize: 16}}>startPage</MenuItem>
                     
                     <MenuItem onPress={() =>{
                       this._menu.hide()
-                      //this.socket.emit("chat message" ,"close");
                       navigation.navigate('games')
                       }}  textStyle={{color: '#000', fontSize: 16}}>controller</MenuItem>
                 </Menu>
@@ -442,17 +389,7 @@ export default class mouse extends Component
           }
         }
 }
-/**<View style={{flexDirection:"row"}}>
-                <TouchableOpacity style={{height:100,width:150,backgroundColor: '#263238',justifyContent:"center",borderRadius:15,marginHorizontal:5,marginVertical:5}} 
-                        onPressIn={this.btnRightShift} onPressOut={this.stopTimer}>
-                        <Image source={require("./image/shift.png")} style={{height:100,width:150,resizeMode:"contain"}}></Image>
-                </TouchableOpacity>
-                <TouchableOpacity style={{height:100,width:150,backgroundColor: '#263238',justifyContent:"center",borderRadius:15,marginHorizontal:5,marginVertical:5}} 
-                        onPressIn={this.btnRightShift} onPressOut={this.stopTimer}>
-                        <Image source={require("./image/shift.png")} style={{height:100,width:150,resizeMode:"contain"}}></Image>
-                </TouchableOpacity>    
-                </View> */
- 
+
 const styles = StyleSheet.create(
 {
     MainContainer:
@@ -460,8 +397,6 @@ const styles = StyleSheet.create(
         flex: 15,
         paddingTop: ( Platform.OS === 'ios' ) ? 20 : 0,
         backgroundColor: '#0b132b',
-        //flexDirection:"column-reverse",
-        //flexDirection: "row",
     },
  
     childView:

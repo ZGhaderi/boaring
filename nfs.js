@@ -14,6 +14,11 @@ const responsiveWidth = Dimensions.get('screen').width;
 const responsiveHeight = Dimensions.get('screen').height;
 
 
+var firstLeft=true;
+var firstRight=true;
+var firstUp=true;
+var firstDown = true;
+var flag ;
 export default class App extends Component {
   constructor(){
     super();
@@ -29,26 +34,18 @@ export default class App extends Component {
       number:0,
     };
     this.timer = null;
-    
-    this.btnP = this.btnP.bind(this);
-    this.btnUp = this.btnUp.bind(this);
-    this.btnLeft = this.btnLeft.bind(this);
-    this.btnRight = this.btnRight.bind(this);
-    this.btnDown = this.btnDown.bind(this);
-    
-    this.stopTimer = this.stopTimer.bind(this);
  }
  
 
    async componentDidMount() {
+    console.disableYellowBox = true;
     Orientation.lockToLandscape();
     const ip = String(await AsyncStorage.getItem('@storage_Key'));
     var ipaddr = 'http://'+ ip + ':8000';
     this.setState({data_in : ipaddr});
-    //this.socket = io("http://192.168.43.136:8000");
-    this.socket = io(this.state.data_in);
-    var flag ;//= true;
-    //this.setState({element : String(await AsyncStorage.getItem('element'))});
+    this.socket = io("http://192.168.43.136:8000");
+    //this.socket = io(this.state.data_in);
+  
     if(String(await AsyncStorage.getItem('arrowKey')) == "true" && String(await AsyncStorage.getItem('accelerometer')) == "false"){
       this.socket.emit("here" ,"set flag to false");
       flag = false;
@@ -58,125 +55,142 @@ export default class App extends Component {
       flag = true;
     }
     
-   // this.socket.emit("rec" ,"common");
-    // if(this.state.element == 'accelerometer'){
-    //   this.socket.emit("rec" ,"accelerometer");
-    // }
-    // if(this.state.element == 'arrowKey'){
-    //   this.socket.emit("rec" ,"arrowkey");
-    // }
-    // this.socket.on("send",msg=>{
-    //   this.setState({rec:[...this.state.rec , msg]});
-    // });
-    
     setUpdateIntervalForType(SensorTypes.accelerometer, 50);
     accelerometer.subscribe(({ x, y, z }) => {
       this.setState({data : {x,y,z}})
     })
-  
+      
     accelerometer.subscribe(item => {
-      var vertical = '';
-      var horizontal = '';
       var msg = [];
 
       this.socket.emit("rec",flag);
       if(flag){
         var pos = "";
-      if(item.y < -2 && item.x > 2 ){//&& this.state.element === 'accelerometer'){
-        vertical = 'w';//'ver is w'; 57
-        msg = 'left';//87;up
-        this.socket.emit("chat message" ,msg);
-        msg = 'down';//87;up
-        this.socket.emit("chat message" ,msg);
-        
         pos = item.x.toFixed(2) + " " + item.y.toFixed(2);
         this.socket.emit("position" ,pos);
-      }
-      if(item.y > 2 && item.x < -2 ){//&& this.state.element === 'accelerometer'){
-        vertical = 's';//'ver is s'; 62
-        // msg = ['right', 'up'];//83;down
-        // this.socket.emit("chat message" ,msg);
-        msg = 'right';//87;up
-        this.socket.emit("chat message" ,msg);
-        msg = 'up';//87;up
-        this.socket.emit("chat message" ,msg);
-        
-        pos = item.x.toFixed(2) + " " + item.y.toFixed(2);
-        this.socket.emit("position" ,pos);
-      }
-      if(item.y > 2 && item.x > 2 ){//&& this.state.element === 'accelerometer'){
-        horizontal = 'a';//'hor is a'; 61
-        // msg = ['down','right'];//65;left
-        // this.socket.emit("chat message" ,msg);
-        msg = 'right';//87;up
-        this.socket.emit("chat message" ,msg);
-        msg = 'down';//87;up
-        this.socket.emit("chat message" ,msg);
-        
-        pos = item.x.toFixed(2) + " " + item.y.toFixed(2);
-        this.socket.emit("position" ,pos);
-      }
-      if(item.y < -2 && item.x < -2 ){//&& this.state.element === 'accelerometer'){
-        horizontal = 'd';//'hor is a'; 63
-        // msg = ['up','left'];//68;right
-        // this.socket.emit("chat message" ,msg);
-        msg = 'left';//87;up
-        this.socket.emit("chat message" ,msg);
-        msg = 'up';//87;up
-        this.socket.emit("chat message" ,msg);
-        
-        pos = item.x.toFixed(2) + " " + item.y.toFixed(2);
-        this.socket.emit("position" ,pos);
-      }
-      if(item.y < -2 ){//&& this.state.element === 'accelerometer'){
-        msg = 'left';//87;up
-        this.socket.emit("chat message" ,msg);
-        
-        pos = item.x.toFixed(2) + " " + item.y.toFixed(2);
-        this.socket.emit("position" ,pos);
-      }
-      if(item.y > 2 ){//&& this.state.element === 'accelerometer'){
-        msg = 'right';//87;up
-        this.socket.emit("chat message" ,msg);
-        
-        pos = item.x.toFixed(2) + " " + item.y.toFixed(2);
-        this.socket.emit("position" ,pos);
-      }
-      if(item.x < -2 ){//&& this.state.element === 'accelerometer'){
-        msg = 'up';//87;up
-        this.socket.emit("chat message" ,msg);
-        
-        pos = item.x.toFixed(2) + " " + item.y.toFixed(2);
-        this.socket.emit("position" ,pos);
-        //this.socket.emit("rec" ,this.state.element);
-      }
-      if(item.x > 2){// && this.state.element === 'accelerometer'){
-        msg = 'down';//87;up
-        this.socket.emit("chat message" ,msg);
-        
-        pos = item.x.toFixed(2) + " " + item.y.toFixed(2);
-        this.socket.emit("position" ,pos);
-       // this.socket.emit("rec" ,element);
-      }
-      // if(item.y < -0.2){
-      //   msg = 'left';//87;up
-      //   this.socket.emit("chat message" ,msg);
-      // }
-      // if(item.y > 0.2){
-      //   msg = 'right';//87;up
-      //   this.socket.emit("chat message" ,msg);
-      // }
-      // if(item.x < -0.2){
-      //   msg = 'up';//87;up
-      //   this.socket.emit("chat message" ,msg);
-      // }
-      // if(item.x > 0.2){
-      //   msg = 'down';//87;up
-      //   this.socket.emit("chat message" ,msg);
-      // }
+
+        if(item.y < -2 && item.x > 2 ){
+          if(firstDown){
+            firstDown = false;
+            msg = 'down';  
+            this.socket.emit("toggledown" ,msg);
+          }
+          if(firstRight){
+            firstRight = false;
+            msg = 'left';  
+            this.socket.emit("toggledown" ,msg);
+          }
+        }
+        if(item.y > 2 && item.x < -2 ){
+          msg = 'right';  
+          this.socket.emit("direction" ,msg);
+          msg = 'up';  
+          this.socket.emit("direction" ,msg);
+          if(firstUp){
+            firstUp = false;
+            msg = 'up';  
+            this.socket.emit("toggledown" ,msg);
+          }
+          if(firstLeft){
+            firstLeft = false;
+            msg = 'right';  
+            this.socket.emit("toggledown" ,msg);
+          }
+        }
+        if(item.y > 2 && item.x > 2 ){
+          msg = 'right';  
+          this.socket.emit("direction" ,msg);
+          msg = 'down';  
+          this.socket.emit("direction" ,msg);
+          if(firstDown){
+            firstDown = false;
+            msg = 'down';  
+            this.socket.emit("toggledown" ,msg);
+          }
+          if(firstLeft){
+            firstLeft = false;
+            msg = 'right';  
+            this.socket.emit("toggledown" ,msg);
+          }
+        }
+        if(item.y < -2 && item.x < -2 ){
+          msg = 'left';  
+          this.socket.emit("direction" ,msg);
+          msg = 'up';  
+          this.socket.emit("direction" ,msg);
+          if(firstUp){
+            firstUp = false;
+            msg = 'up';  
+            this.socket.emit("toggledown" ,msg);
+          }
+          if(firstRight){
+            firstRight = false;
+            msg = 'left';  
+            this.socket.emit("toggledown" ,msg);
+          }
+        }
+        if(item.y < -2 ){
+          msg = 'left';  
+          this.socket.emit("direction" ,msg);
+          if(firstRight){
+            firstRight = false;
+            msg = 'left';  
+            this.socket.emit("toggledown" ,msg);
+          }
+        }
+        if(item.y > 2 ){
+          msg = 'right';  
+          this.socket.emit("direction" ,msg);
+  
+          if(firstLeft){
+            firstLeft = false;
+            msg = 'right';  
+            this.socket.emit("toggledown" ,msg);
+          }
+        }
+        if(item.x < -2 ){
+          msg = 'up';  
+          this.socket.emit("direction" ,msg);
+          if(firstUp){
+            firstUp = false;
+            msg = 'up';  
+            this.socket.emit("toggledown" ,msg);
+          }
+        }
+        if(item.x > 2){
+          msg = 'down';  
+          this.socket.emit("direction" ,msg);
+  
+          if(firstDown){
+            firstDown = false;
+            msg = 'down';  
+            this.socket.emit("toggledown" ,msg);
+          }
+        }
+        if(item.y > -2 && item.y < 2 && item.x > -2 && item.x < 2){
+          if(!firstLeft){
+            firstLeft = true;
+            msg = 'right';
+            this.socket.emit("toggleup" ,msg);
+          }
+          if(!firstRight){
+          firstRight = true;
+          msg = 'left';
+          this.socket.emit("toggleup" ,msg);
+          }
+          if(!firstDown){
+            firstDown = true;
+            msg = 'down';
+            this.socket.emit("toggleup" ,msg);
+            }
+            if(!firstUp){
+            firstUp = true;
+            msg = 'up';
+            this.socket.emit("toggleup" ,msg);
+            }
+        }
     }
   });
-  // }
 
     
     this.backHandler = BackHandler.addEventListener('hardwareBackPress', this.backtoPrevScreen);  
@@ -198,120 +212,144 @@ export default class App extends Component {
       console.log(`Current Device Orientation: ${orientation}`);
     });
   
-    // Remember to remove listener
     Orientation.removeOrientationListener(this._orientationDidChange);
   }
 
-  // componentWillUnmount() {
-  //   this.backHandler
-  // }
-
   backtoPrevScreen=()=>{
-    //alert("back");
     this.socket.emit("chat message" ,"close");
     this.props.navigation.navigate('Home');
     return true;
   }
-  stopTimer() {
-    clearTimeout(this.timer);
-  }
 
-  btnP=()=>{                         
-    this.socket.emit("chat message" ,'p');//82
-    //this.setState({number: this.state.number+1});
-    //this.timer = setTimeout(this.btnR, 100);
-  }
-  btnQ=()=>{                         
-    this.socket.emit("chat message" ,'q');//82
-    //this.setState({number: this.state.number+1});
-    //this.timer = setTimeout(this.btnR, 100);
-  }
-  btnM=()=>{                         
-    this.socket.emit("chat message" ,'m');//82
-    //this.setState({number: this.state.number+1});
-    //this.timer = setTimeout(this.btnR, 100);
-  }
-  btnL=()=>{                         
-    this.socket.emit("chat message" ,'l');//82
-    //this.setState({number: this.state.number+1});
-    //this.timer = setTimeout(this.btnR, 100);
-  }
   btnUp=()=>{
-    this.socket.emit("chat message" ,'up');
-    this.timer = setTimeout(this.btnUp, 100);
+    this.socket.emit("toggledown" ,'up');
   }
   btnDown=()=>{
-    this.socket.emit("chat message" ,'down');
-    this.timer = setTimeout(this.btnDown, 100);
+    this.socket.emit("toggledown" ,'down');
   }
   btnLeft=()=>{ 
-    this.socket.emit("chat message" ,'left');
-    this.timer = setTimeout(this.btnLeft, 100);
+    this.socket.emit("toggledown" ,'left');
   }
   btnRight=()=>{
-    this.socket.emit("chat message" ,'right');
-    this.timer = setTimeout(this.btnRight, 100);
+    this.socket.emit("toggledown" ,'right');
+  }
+  btnSpace=()=>{
+    this.socket.emit("toggledown" ,'space');
+  }
+  btnLeftCtrl=()=>{
+    this.socket.emit("toggledown" ,'LCTRL');
+  }
+  btnRightCtrl=()=>{
+    this.socket.emit("toggledown" ,'RCTRL');
+  }
+  btnLeftShift=()=>{
+    this.socket.emit("toggledown" ,'LSHIFT');
+  }
+  btnX=()=>{
+    this.socket.emit("toggledown" ,'x');
+  }
+  btnRightShift=()=>{
+    this.socket.emit("toggledown" ,'right_shift');
+  }
+  btnR=()=>{
+    this.socket.emit("toggledown" ,'r');
+  }
+  btnRT=()=>{
+    this.socket.emit("toggleup" ,'r');
+  }
+  btnRightShiftT=()=>{
+    this.socket.emit("toggleup" ,'right_shift');
+  }
+  btnXT=()=>{
+    this.socket.emit("toggleup" ,'x');
+  }
+  btnLeftShiftT=()=>{
+    this.socket.emit("toggleup" ,'LSHIFT');
+  }
+  btnRightCtrlT=()=>{
+    this.socket.emit("toggleup" ,'RCTRL');
+  }
+  btnLeftCtrlT=()=>{
+    this.socket.emit("toggleup" ,'LCTRL');
+  }
+  btnSpaceT=()=>{
+    this.socket.emit("toggleup" ,'space');
+  }
+  btnUpT=()=>{
+    this.socket.emit("toggleup" ,'up');
+  }
+  btnDownT=()=>{
+    this.socket.emit("toggleup" ,'down');
+  }
+  btnLeftT=()=>{ 
+    this.socket.emit("toggleup" ,'left');
+  }
+  btnRightT=()=>{
+    this.socket.emit("toggleup" ,'right');
   }
 
   _menu = null;
 
-  SsetMenuRef = ref => {
+  setMenuRef = ref => {
     this._menu = ref;
   };
-  //        <ImageBackground source={require("./image/car4.jpeg")} style={{flex:1,width:null,height:null}}>
+  _gameMenu = null;
+
+  setMenuRef = ref => {
+    this._gameMenu = ref;
+  };
+  
 
   render() {  
     return (    
         <View style = {styles.mainContainer} >
     <View style={styles.cont2}>
     <View style={styles.firstFlex}>
-        <Text style={{color:'white'}}>{this.state.data_in}</Text>
         <View style={styles.btnXview}>
           <TouchableOpacity style={styles.btnXtouch} 
-          onPressIn={this.btnX} onPressOut={this.stopTimer}>
+          onPressIn={this.btnX} onPressOut={this.btnXT}>
             <Image source={require("./image/x.png")} style={styles.btnXimage}></Image>
           </TouchableOpacity>
         </View>
+        <View style={styles.btnUPview}>
+        <TouchableOpacity style={styles.btnUPtouch}
+        onPressIn={this.btnUp} onPressOut={this.btnUpT}>
+          <Image source={require("./image/up.png")} style={styles.btnUPimage}></Image>
+        </TouchableOpacity>
+      </View>
         <View style={styles.btnRview}>
         <TouchableOpacity 
           style={styles.btnRtouch} 
-          onPressIn={this.btnR} onPressOut={this.stopTimer}>
+          onPressIn={this.btnR} onPressOut={this.btnRT}>
             <Image source={require("./image/r.png")} style={styles.btnRimage}></Image>
           </TouchableOpacity>
         </View>
       </View>
-      <View style={styles.btnUPview}>
-        <TouchableOpacity style={styles.btnUPtouch}
-        onPressIn={this.btnUp} onPressOut={this.stopTimer}>
-          <Image source={require("./image/up.png")} style={styles.btnUPimage}></Image>
-        </TouchableOpacity>
-      </View>
-      
-      <View style={styles.arrowView}>
-          <TouchableOpacity style={styles.btnLEFTtouch}
-          onPressIn={this.btnLeft} onPressOut={this.stopTimer}>
-            <Image source={require("./image/left.png")} style={styles.btnLEFTimage}></Image>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.btnLEFTtouch} 
-          onPressIn={this.btnDown} onPressOut={this.stopTimer}>
-            <Image source={require("./image/down.png")} style={styles.btnLEFTimage}></Image>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.btnLEFTtouch} 
-          onPressIn={this.btnRight} onPressOut={this.stopTimer}>
-            <Image source={require("./image/right.png")} style={styles.btnLEFTimage}></Image>
-          </TouchableOpacity>
-      </View>
-
+    
       <View style={styles.btnSHIFTview}>
         <View style={styles.btnLeftShiftview}>
           <TouchableOpacity style={styles.btnSHIFTtouch} 
-          onPressIn={this.btnLeftShift} onPressOut={this.stopTimer}>
+          onPressIn={this.btnLeftShift} onPressOut={this.btnLeftShiftT}>
             <Image source={require("./image/shift.png")} style={styles.btnSHIFTimage}></Image>
           </TouchableOpacity>
         </View>
+        <View style={styles.arrowView}>
+          <TouchableOpacity style={styles.btnLEFTtouch}
+          onPressIn={this.btnLeft} onPressOut={this.btnLeftT}>
+            <Image source={require("./image/left.png")} style={styles.btnLEFTimage}></Image>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.btnLEFTtouch} 
+          onPressIn={this.btnDown} onPressOut={this.btnDownT}>
+            <Image source={require("./image/down.png")} style={styles.btnLEFTimage}></Image>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.btnLEFTtouch} 
+          onPressIn={this.btnRight} onPressOut={this.btnRightT}>
+            <Image source={require("./image/right.png")} style={styles.btnLEFTimage}></Image>
+          </TouchableOpacity>
+      </View>
         <View style={styles.btnRightShiftview}>
         <TouchableOpacity style={styles.btnSHIFTtouch} 
-        onPressIn={this.btnRightShift} onPressOut={this.stopTimer}>
+        onPressIn={this.btnRightShift} onPressOut={this.btnRightShiftT}>
             <Image source={require("./image/shift.png")} style={styles.btnSHIFTimage}></Image>
           </TouchableOpacity>
         </View>
@@ -320,19 +358,19 @@ export default class App extends Component {
       <View style={styles.lastView}>
         <View style={styles.btnCTRLview}>
           <TouchableOpacity style={styles.btnCTRLtouch} 
-          onPressIn={this.btnLeftCtrl} onPressOut={this.stopTimer}>
+          onPressIn={this.btnLeftCtrl} onPressOut={this.btnLeftCtrlT}>
             <Image source={require("./image/ctrl.png")} style={styles.btnCTRLimage}></Image>
           </TouchableOpacity>
         </View>
         <View style={styles.btnSPACEview}>
           <TouchableOpacity style={styles.btnSPACEtouch} 
-          onPressIn={this.btnSpace} onPressOut={this.stopTimer}>
+          onPressIn={this.btnSpace} onPressOut={this.btnSpaceT}>
             <Image source={require("./image/space.png")} style={styles.btnSPACEimage}></Image>
           </TouchableOpacity>
         </View>
         <View style={styles.btnCTRLview}>
           <TouchableOpacity style={styles.btnCTRLtouch} 
-          onPressIn={this.btnRightCtrl} onPressOut={this.stopTimer}>
+          onPressIn={this.btnRightCtrl} onPressOut={this.btnRightCtrlT}>
             <Image source={require("./image/ctrl.png")} style={styles.btnCTRLimage}></Image>
           </TouchableOpacity>
         </View>    
@@ -341,22 +379,14 @@ export default class App extends Component {
   </View>
     );
   }
-/**
- * <View style={styles.btnRview}>
-              
-              <TouchableOpacity style={styles.btnpacman}>
-                    <Image source={require("./image/pacman.png")} style={styles.btnPacmanimage}></Image>
-              </TouchableOpacity>
-            </View>
- */
-//</ImageBackground>
+
 static navigationOptions = ({ navigation }) => {
   return {
-      title: 'cotroller',
+      title: 'Need for Speed',
       headerStyle: {
         
         backgroundColor: '#6fffe9',
-        barStyle: "light-content", // or directly
+        barStyle: "light-content",
       },
       headerTintColor: '#0b132b',
       headerTitleStyle: {
@@ -373,18 +403,17 @@ static navigationOptions = ({ navigation }) => {
                 justifyContent: 'center'}}>
                   <Icon name={'ios-menu'} size={25} color={'white'} 
                   style={{alignSelf:'center'}} resizeMode='contain'/></TouchableOpacity>}
+                  
           >
               <MenuItem onPress={() => {
                 this._menu.hide()
                 }} textStyle={{fontSize: 16}} disabled>Controller</MenuItem>
               <MenuItem onPress={() => {
                 this._menu.hide()     
-                //this.socket.emit("chat message" ,"close");
                 navigation.navigate('Home')
                 }} textStyle={{color: '#000', fontSize: 16}}>startPage</MenuItem>
               <MenuItem  onPress={() =>{
                 this._menu.hide()
-                //this.socket.emit("chat message" ,"close");
                 navigation.navigate('mouse')
                 }} textStyle={{color: '#000',fontSize: 16}}>Mouse</MenuItem>
               
@@ -432,7 +461,8 @@ const styles=StyleSheet.create({
     flex:1,
     marginHorizontal:30,
     marginTop:50,
-    justifyContent:"space-around",
+    justifyContent:"flex-end",
+    alignItems:"flex-end"
     //alignItems:"center"
   },
   btnRtouch:{
@@ -448,9 +478,12 @@ const styles=StyleSheet.create({
   },
   btnUPview:{
     flex:1,
-    flexDirection:"column",
+    marginHorizontal:30,
+    marginTop:50,
+    //flexDirection:"column",
+    alignSelf:"center",
     alignItems:'center',
-    justifyContent:"flex-start"
+    justifyContent:"center"
   },
   btnUPtouch:{
     justifyContent:"center",
@@ -471,10 +504,6 @@ const styles=StyleSheet.create({
     resizeMode:"contain"
   },
   btnPacmanimage:{
-    // justifyContent:"flex-end",
-    // alignItems:"flex-end",
-    // marginHorizontal:15,
-    // marginVertical:15,
     height:150,
     width:150,
     resizeMode:"contain"
@@ -499,8 +528,10 @@ const styles=StyleSheet.create({
   },
   btnSHIFTview:{
     flex:1,
+    marginTop:50,
     flexDirection:"row",
-    justifyContent:"center"
+    justifyContent:"center",
+    alignSelf:"center"
   },
   btnLeftShiftview:{
     flex:1,
@@ -562,7 +593,6 @@ const styles=StyleSheet.create({
   },
   cont2:{
     flex: 1,
-  //backgroundColor: '#F5FCFF',//'#F5FCFF',
   },
   container: {
     flex: 1,
@@ -585,3 +615,32 @@ const styles=StyleSheet.create({
 })
 
 AppRegistry.registerComponent('App',()=> App)
+/*
+<Menu 
+          ref={(ref) => this._gameMenu = ref}
+          button={<TouchableOpacity onPress={() => this._gameMenu.show()} 
+            style={{paddingHorizontal:16, height: '100%', alignItems:'center', 
+            justifyContent: 'center'}}>
+              <Icon name={'dots-three-vertical'} size={25} color={'white'} 
+              style={{alignSelf:'center'}} resizeMode='contain'/></TouchableOpacity>}
+              
+      >
+          <MenuItem onPress={() => {
+            this._gameMenu.hide()
+            }} textStyle={{fontSize: 16}} disabled>Need for Speed</MenuItem>
+          <MenuItem onPress={{alert("kmdkmsad")}} textStyle={{color: '#000', fontSize: 16}}>Pac-Man</MenuItem>
+          <MenuItem  onPress={() =>{
+            this._gameMenu.hide()
+            navigation.navigate('motorace')
+            }} textStyle={{color: '#000',fontSize: 16}}>MotoRacing</MenuItem>
+             <MenuItem onPress={() => {
+            this._gameMenu.hide()     
+            navigation.navigate('hillcar')
+            }} textStyle={{color: '#000', fontSize: 16}}>Hill Climb Car</MenuItem>
+             <MenuItem onPress={() => {
+            this._gameMenu.hide()     
+            navigation.navigate('drag')
+            }} textStyle={{color: '#000', fontSize: 16}}>Another Game</MenuItem>
+          
+        </Menu>
+        */

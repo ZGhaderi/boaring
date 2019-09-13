@@ -6,6 +6,7 @@ import Icon from "react-native-vector-icons/Ionicons";
 import Menu, { MenuItem, MenuDivider } from 'react-native-material-menu';
 
 const {width: WIDTH} = Dimensions.get("window");
+var empty = true;
 export default class Home extends React.Component {
     constructor() {
         super();
@@ -46,24 +47,59 @@ export default class Home extends React.Component {
       this.props.navigation.navigate('Home');
       return true;
     }
+    isEmpty=()=>{
+      if(this.state.data_in != ''){
+        empty = false;
+      }
+      else{
+        empty = true;
+      }
+    }
+    submit=()=>{
+      this.isEmpty();
+      if(!empty){
+        AsyncStorage.setItem('@storage_Key', this.state.data_in);
+      }
+      else{
+        alert("Please Enter IP Address.")
+      }
+    }
+    controller=()=>{
+      if(!empty){
+        this.props.navigation.navigate('games');
+      }
+      else{
+        alert("Please Enter IP Address.")
+      }
+    }
+    mouse=()=>{
+      if(!empty){
+        this.props.navigation.navigate('mouse');
+      }
+      else{
+        alert("Please Enter IP Address.")
+      }
+    }
   render() {
     return (
       <View style={{flex:1,justifyContent:"center",alignItems:"center",backgroundColor:'#0b132b'}}>
         <View style={{flex:1,flexDirection:"column",justifyContent:"center",width:300}}>
           <Akira
             label={'IP ADDRESS'}
+            iconColor = 'white'
             borderColor={'#6fffe9'}
             inputPadding={16}
+            inputStyle = {{color:'#6fffe9'}}
             labelHeight={24}  
             labelStyle={{ color: '#6fffe9' }}
             onChangeText={(data_in)=>this.setState({data_in})} 
-            onSubmitEditing={() => AsyncStorage.setItem('@storage_Key', this.state.data_in)}
+            onSubmitEditing={this.submit}
             value={this.state.data_in}
           />
-          <TouchableOpacity style={styles.btn} onPress={() => this.props.navigation.navigate('games')}>
+          <TouchableOpacity style={styles.btn} onPress={this.controller}>
             <Text>Controller</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.btn} onPress={() => this.props.navigation.navigate('mouse')}>
+          <TouchableOpacity style={styles.btn} onPress={this.mouse}>
             <Text>Mouse</Text>
           </TouchableOpacity>
         </View>

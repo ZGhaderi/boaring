@@ -14,6 +14,10 @@ const responsiveWidth = Dimensions.get('screen').width;
 const responsiveHeight = Dimensions.get('screen').height;
 
 
+var firstLeft=true;
+var firstRight=true;
+var firstUp=true;
+var firstDown = true;
 export default class App extends Component {
   constructor(){
     super();
@@ -41,12 +45,13 @@ export default class App extends Component {
  
 
    async componentDidMount() {
+    console.disableYellowBox = true;
     Orientation.lockToLandscape();
     const ip = String(await AsyncStorage.getItem('@storage_Key'));
     var ipaddr = 'http://'+ ip + ':8000';
     this.setState({data_in : ipaddr});
-    //this.socket = io("http://192.168.43.136:8000");
-    this.socket = io(this.state.data_in);
+    this.socket = io("http://192.168.43.136:8000");
+    //this.socket = io(this.state.data_in);
     var flag ;//= true;
     //this.setState({element : String(await AsyncStorage.getItem('element'))});
     if(String(await AsyncStorage.getItem('arrowKey')) == "true" && String(await AsyncStorage.getItem('accelerometer')) == "false"){
@@ -58,122 +63,140 @@ export default class App extends Component {
       flag = true;
     }
     
-   // this.socket.emit("rec" ,"common");
-    // if(this.state.element == 'accelerometer'){
-    //   this.socket.emit("rec" ,"accelerometer");
-    // }
-    // if(this.state.element == 'arrowKey'){
-    //   this.socket.emit("rec" ,"arrowkey");
-    // }
-    // this.socket.on("send",msg=>{
-    //   this.setState({rec:[...this.state.rec , msg]});
-    // });
-    
     setUpdateIntervalForType(SensorTypes.accelerometer, 50);
     accelerometer.subscribe(({ x, y, z }) => {
       this.setState({data : {x,y,z}})
     })
   
     accelerometer.subscribe(item => {
-      var vertical = '';
-      var horizontal = '';
       var msg = [];
 
       this.socket.emit("rec",flag);
       if(flag){
         var pos = "";
-      if(item.y < -2 && item.x > 2 ){//&& this.state.element === 'accelerometer'){
-        vertical = 'w';//'ver is w'; 57
-        msg = 'left';//87;up
-        this.socket.emit("chat message" ,msg);
-        msg = 'down';//87;up
-        this.socket.emit("chat message" ,msg);
-        
         pos = item.x.toFixed(2) + " " + item.y.toFixed(2);
         this.socket.emit("position" ,pos);
-      }
-      if(item.y > 2 && item.x < -2 ){//&& this.state.element === 'accelerometer'){
-        vertical = 's';//'ver is s'; 62
-        // msg = ['right', 'up'];//83;down
-        // this.socket.emit("chat message" ,msg);
-        msg = 'right';//87;up
-        this.socket.emit("chat message" ,msg);
-        msg = 'up';//87;up
-        this.socket.emit("chat message" ,msg);
-        
-        pos = item.x.toFixed(2) + " " + item.y.toFixed(2);
-        this.socket.emit("position" ,pos);
-      }
-      if(item.y > 2 && item.x > 2 ){//&& this.state.element === 'accelerometer'){
-        horizontal = 'a';//'hor is a'; 61
-        // msg = ['down','right'];//65;left
-        // this.socket.emit("chat message" ,msg);
-        msg = 'right';//87;up
-        this.socket.emit("chat message" ,msg);
-        msg = 'down';//87;up
-        this.socket.emit("chat message" ,msg);
-        
-        pos = item.x.toFixed(2) + " " + item.y.toFixed(2);
-        this.socket.emit("position" ,pos);
-      }
-      if(item.y < -2 && item.x < -2 ){//&& this.state.element === 'accelerometer'){
-        horizontal = 'd';//'hor is a'; 63
-        // msg = ['up','left'];//68;right
-        // this.socket.emit("chat message" ,msg);
-        msg = 'left';//87;up
-        this.socket.emit("chat message" ,msg);
-        msg = 'up';//87;up
-        this.socket.emit("chat message" ,msg);
-        
-        pos = item.x.toFixed(2) + " " + item.y.toFixed(2);
-        this.socket.emit("position" ,pos);
-      }
-      if(item.y < -2 ){//&& this.state.element === 'accelerometer'){
-        msg = 'left';//87;up
-        this.socket.emit("chat message" ,msg);
-        
-        pos = item.x.toFixed(2) + " " + item.y.toFixed(2);
-        this.socket.emit("position" ,pos);
-      }
-      if(item.y > 2 ){//&& this.state.element === 'accelerometer'){
-        msg = 'right';//87;up
-        this.socket.emit("chat message" ,msg);
-        
-        pos = item.x.toFixed(2) + " " + item.y.toFixed(2);
-        this.socket.emit("position" ,pos);
-      }
-      if(item.x < -2 ){//&& this.state.element === 'accelerometer'){
-        msg = 'up';//87;up
-        this.socket.emit("chat message" ,msg);
-        
-        pos = item.x.toFixed(2) + " " + item.y.toFixed(2);
-        this.socket.emit("position" ,pos);
-        //this.socket.emit("rec" ,this.state.element);
-      }
-      if(item.x > 2){// && this.state.element === 'accelerometer'){
-        msg = 'down';//87;up
-        this.socket.emit("chat message" ,msg);
-        
-        pos = item.x.toFixed(2) + " " + item.y.toFixed(2);
-        this.socket.emit("position" ,pos);
-       // this.socket.emit("rec" ,element);
-      }
-      // if(item.y < -0.2){
-      //   msg = 'left';//87;up
-      //   this.socket.emit("chat message" ,msg);
-      // }
-      // if(item.y > 0.2){
-      //   msg = 'right';//87;up
-      //   this.socket.emit("chat message" ,msg);
-      // }
-      // if(item.x < -0.2){
-      //   msg = 'up';//87;up
-      //   this.socket.emit("chat message" ,msg);
-      // }
-      // if(item.x > 0.2){
-      //   msg = 'down';//87;up
-      //   this.socket.emit("chat message" ,msg);
-      // }
+
+        if(item.y < -2 && item.x > 2 ){
+          if(firstDown){
+            firstDown = false;
+            msg = 'down';  
+            this.socket.emit("toggledown" ,msg);
+          }
+          if(firstRight){
+            firstRight = false;
+            msg = 'left';  
+            this.socket.emit("toggledown" ,msg);
+          }
+        }
+        if(item.y > 2 && item.x < -2 ){
+          msg = 'right';  
+          this.socket.emit("direction" ,msg);
+          msg = 'up';  
+          this.socket.emit("direction" ,msg);
+          if(firstUp){
+            firstUp = false;
+            msg = 'up';  
+            this.socket.emit("toggledown" ,msg);
+          }
+          if(firstLeft){
+            firstLeft = false;
+            msg = 'right';  
+            this.socket.emit("toggledown" ,msg);
+          }
+        }
+        if(item.y > 2 && item.x > 2 ){
+          msg = 'right';  
+          this.socket.emit("direction" ,msg);
+          msg = 'down';  
+          this.socket.emit("direction" ,msg);
+          if(firstDown){
+            firstDown = false;
+            msg = 'down';  
+            this.socket.emit("toggledown" ,msg);
+          }
+          if(firstLeft){
+            firstLeft = false;
+            msg = 'right';  
+            this.socket.emit("toggledown" ,msg);
+          }
+        }
+        if(item.y < -2 && item.x < -2 ){
+          msg = 'left';  
+          this.socket.emit("direction" ,msg);
+          msg = 'up';  
+          this.socket.emit("direction" ,msg);
+          if(firstUp){
+            firstUp = false;
+            msg = 'up';  
+            this.socket.emit("toggledown" ,msg);
+          }
+          if(firstRight){
+            firstRight = false;
+            msg = 'left';  
+            this.socket.emit("toggledown" ,msg);
+          }
+        }
+        if(item.y < -2 ){
+          msg = 'left';  
+          this.socket.emit("direction" ,msg);
+          if(firstRight){
+            firstRight = false;
+            msg = 'left';  
+            this.socket.emit("toggledown" ,msg);
+          }
+        }
+        if(item.y > 2 ){
+          msg = 'right';  
+          this.socket.emit("direction" ,msg);
+  
+          if(firstLeft){
+            firstLeft = false;
+            msg = 'right';  
+            this.socket.emit("toggledown" ,msg);
+          }
+        }
+        if(item.x < -2 ){
+          msg = 'up';  
+          this.socket.emit("direction" ,msg);
+          if(firstUp){
+            firstUp = false;
+            msg = 'up';  
+            this.socket.emit("toggledown" ,msg);
+          }
+        }
+        if(item.x > 2){
+          msg = 'down';  
+          this.socket.emit("direction" ,msg);
+  
+          if(firstDown){
+            firstDown = false;
+            msg = 'down';  
+            this.socket.emit("toggledown" ,msg);
+          }
+        }
+        if(item.y > -2 && item.y < 2 && item.x > -2 && item.x < 2){
+          if(!firstLeft){
+            firstLeft = true;
+            msg = 'right';
+            this.socket.emit("toggleup" ,msg);
+          }
+          if(!firstRight){
+          firstRight = true;
+          msg = 'left';
+          this.socket.emit("toggleup" ,msg);
+          }
+          if(!firstDown){
+            firstDown = true;
+            msg = 'down';
+            this.socket.emit("toggleup" ,msg);
+            }
+            if(!firstUp){
+            firstUp = true;
+            msg = 'up';
+            this.socket.emit("toggleup" ,msg);
+            }
+        }
     }
   });
   // }
@@ -215,7 +238,30 @@ export default class App extends Component {
   stopTimer() {
     clearTimeout(this.timer);
   }
-
+  btnUp=()=>{
+    this.socket.emit("toggledown" ,'up');
+  }
+  btnDown=()=>{
+    this.socket.emit("toggledown" ,'down');
+  }
+  btnLeft=()=>{ 
+    this.socket.emit("toggledown" ,'left');
+  }
+  btnRight=()=>{
+    this.socket.emit("toggledown" ,'right');
+  }
+  btnUpT=()=>{
+    this.socket.emit("toggleup" ,'up');
+  }
+  btnDownT=()=>{
+    this.socket.emit("toggleup" ,'down');
+  }
+  btnLeftT=()=>{ 
+    this.socket.emit("toggleup" ,'left');
+  }
+  btnRightT=()=>{
+    this.socket.emit("toggleup" ,'right');
+  }
   btnP=()=>{                         
     this.socket.emit("chat message" ,'p');//82
     //this.setState({number: this.state.number+1});
@@ -236,23 +282,7 @@ export default class App extends Component {
     //this.setState({number: this.state.number+1});
     //this.timer = setTimeout(this.btnR, 100);
   }
-  btnUp=()=>{
-    this.socket.emit("chat message" ,'up');
-    this.timer = setTimeout(this.btnUp, 100);
-  }
-  btnDown=()=>{
-    this.socket.emit("chat message" ,'down');
-    this.timer = setTimeout(this.btnDown, 100);
-  }
-  btnLeft=()=>{ 
-    this.socket.emit("chat message" ,'left');
-    this.timer = setTimeout(this.btnLeft, 100);
-  }
-  btnRight=()=>{
-    this.socket.emit("chat message" ,'right');
-    this.timer = setTimeout(this.btnRight, 100);
-  }
-
+  
   _menu = null;
 
   SsetMenuRef = ref => {
@@ -267,7 +297,7 @@ export default class App extends Component {
           <View style={styles.btnUPview}>
           
             <TouchableOpacity style={styles.btnUPtouch}
-            onPressIn={this.btnUp} onPressOut={this.stopTimer}>
+            onPressIn={this.btnUp} onPressOut={this.btnUpT}>
               <Image source={require("./image/up.png")} style={styles.btnUPimage}></Image>
             </TouchableOpacity>
           </View>
@@ -279,7 +309,7 @@ export default class App extends Component {
                 <Image source={require("./image/p.png")} style={styles.btnRimage}></Image>
               </TouchableOpacity>
               <TouchableOpacity style={styles.btnLEFTtouch}
-              onPressIn={this.btnLeft} onPressOut={this.stopTimer}>
+              onPressIn={this.btnLeft} onPressOut={this.btnLeftT}>
                 <Image source={require("./image/left.png")} style={styles.btnLEFTimage}></Image>
               </TouchableOpacity>
               <TouchableOpacity 
@@ -293,12 +323,10 @@ export default class App extends Component {
                 <Image source={require("./image/m.png")} style={styles.btnRimage}></Image>
               </TouchableOpacity>
               <TouchableOpacity style={styles.btnLEFTtouch} 
-              onPressIn={this.btnRight} onPressOut={this.stopTimer}>
+              onPressIn={this.btnRight} onPressOut={this.btnRightT}>
                 <Image source={require("./image/right.png")} style={styles.btnLEFTimage}></Image>
               </TouchableOpacity>
-              <TouchableOpacity 
-              style={styles.btnRtouch} 
-              onPress={this.btnL}>
+              <TouchableOpacity style={styles.btnRtouch} onPress={this.btnL}>
                 <Image source={require("./image/l.png")} style={styles.btnRimage}></Image>
               </TouchableOpacity>
           </View>
@@ -306,7 +334,7 @@ export default class App extends Component {
         <View style={styles.btnSHIFTview}>
           <View style={styles.btnRview}>
               <TouchableOpacity style={styles.btnLEFTtouch} 
-              onPressIn={this.btnDown} onPressOut={this.stopTimer}>
+              onPressIn={this.btnDown} onPressOut={this.btnDownT}>
                 <Image source={require("./image/down.png")} style={styles.btnLEFTimage}></Image>
               </TouchableOpacity>
           </View>
@@ -328,7 +356,7 @@ export default class App extends Component {
 //</ImageBackground>
 static navigationOptions = ({ navigation }) => {
   return {
-      title: 'cotroller',
+      title: 'Pac-Man',
       headerStyle: {
         
         backgroundColor: '#6fffe9',

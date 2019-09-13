@@ -12,7 +12,7 @@ import Orientation from 'react-native-orientation';
 
 const responsiveWidth = Dimensions.get('screen').width;
 const responsiveHeight = Dimensions.get('screen').height;
-
+const {width: WIDTH} = Dimensions.get("window");
 
 export default class App extends Component {
   constructor(){
@@ -32,6 +32,7 @@ export default class App extends Component {
  
 
  componentDidMount() {
+  console.disableYellowBox = true;
     Orientation.lockToLandscape();
    
     this.backHandler = BackHandler.addEventListener('hardwareBackPress', this.backtoPrevScreen);  
@@ -48,7 +49,7 @@ export default class App extends Component {
 
   componentWillUnmount() {
     this.backHandler.remove();
-    this.socket.emit("chat message" ,"close");
+    //this.socket.emit("chat message" ,"close");
     Orientation.getOrientation((err, orientation) => {
       console.log(`Current Device Orientation: ${orientation}`);
     });
@@ -270,12 +271,18 @@ btnRightShift=()=>{
     this.setState({element: a});
 }
 btnPublish=()=>{
-    //this.props.navigation.navigate('Map',{refresh : this.state.phone_no, addRemove: "add"});
-    var a = [];
-    a.push(this.state.element);
     AsyncStorage.setItem('elements', JSON.stringify(this.state.element));
-    this.setState({element:[]});
-    this.props.navigation.navigate('Friends');
+    if(this.state.element.indexOf('up')>=0 || this.state.element.indexOf('down')>=0
+    || this.state.element.indexOf('left')>=0||this.state.element.indexOf('right')>=0){
+        this.setState({element:[]});
+        this.props.navigation.navigate('elements'); 
+    }
+    else{
+        this.setState({element:[]});
+        this.props.navigation.navigate('Friends');
+    }
+
+    
     //this.props.navigation.navigate('Friends',{elements : a,addRemove:"add"});
 }
 
@@ -477,7 +484,7 @@ btnPublish=()=>{
             </TouchableOpacity>
             </View>
             </View>
-            
+
             <View style={styles.firstFlex}>
             <View style={styles.btnXview}>
             <TouchableOpacity style={styles.btnRtouch} onPress={this.btnEsc} >
@@ -520,14 +527,9 @@ btnPublish=()=>{
             </View>
 
             <View style={styles.firstFlex}>
-                <View style={styles.btnPublishview}>
-                <Text>{JSON.stringify(this.state.element)}</Text>
-                </View>
-            <View style={styles.btnPublishview}>
-            <TouchableOpacity style={styles.btnPublish} onPress={this.btnPublish} >
-                <Text>Publish</Text>
+            <TouchableOpacity style={styles.btn} onPress={this.btnPublish}>
+              <Text>Select</Text>
             </TouchableOpacity>
-            </View>
             </View>
             </ScrollView>
           </View>
@@ -599,6 +601,16 @@ const styles=StyleSheet.create({
     flex:1,
     flexDirection:"row",
     justifyContent:"center"
+  },
+  btn :{
+    backgroundColor: '#5bc0be',//'#F7F9F9',
+    color: '#7F8C8D',
+    height : 45,
+    width:WIDTH*(0.4),
+    borderRadius: 8,
+    marginTop:10,
+    alignItems:"center",
+    justifyContent: "center",
   },
   btnXview:{
     flex:1,
