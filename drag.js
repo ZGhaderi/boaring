@@ -1,14 +1,9 @@
 import React, { Component } from "react";
 import {AppRegistry, BackHandler, View , StyleSheet, ScrollView,Image, Dimensions , Alert,TouchableOpacity, Text } from "react-native";
-import CheckBox from 'react-native-check-box'
-import {accelerometer} from "react-native-sensors";
-import { setUpdateIntervalForType, SensorTypes } from "react-native-sensors";
-import io from 'socket.io-client/dist/socket.io';//'socket.io-client';
 import Icon from "react-native-vector-icons/Ionicons";
 import AsyncStorage from "@react-native-community/async-storage";
-import Menu, { MenuItem, MenuDivider } from 'react-native-material-menu';
+import Menu, { MenuItem } from 'react-native-material-menu';
 import Orientation from 'react-native-orientation';
-//import { thisTypeAnnotation } from "@babel/types";
 
 const responsiveWidth = Dimensions.get('screen').width;
 const responsiveHeight = Dimensions.get('screen').height;
@@ -58,13 +53,8 @@ export default class App extends Component {
     Orientation.removeOrientationListener(this._orientationDidChange);
   }
 
-  // componentWillUnmount() {
-  //   this.backHandler
-  // }
-
   backtoPrevScreen=()=>{
-    //alert("back");
-    //this.socket.emit("chat message" ,"close");
+    this.socket.emit("chat message" ,"close");
     this.props.navigation.navigate('Home');
     return true;
   }
@@ -281,9 +271,6 @@ btnPublish=()=>{
         this.setState({element:[]});
         this.props.navigation.navigate('Friends');
     }
-
-    
-    //this.props.navigation.navigate('Friends',{elements : a,addRemove:"add"});
 }
 
 
@@ -292,17 +279,7 @@ btnPublish=()=>{
   SsetMenuRef = ref => {
     this._menu = ref;
   };
-  //        <ImageBackground source={require("./image/car4.jpeg")} style={{flex:1,width:null,height:null}}>
-/**
- * 
-            <Text style={{color:'white'}}>{this.state.data_in}</Text>
-            <View style={styles.btnXview}>
 
-            
-            
-            
-            
- */
   render() {  
     return (    
       <View style = {styles.mainContainer} >
@@ -540,14 +517,13 @@ btnPublish=()=>{
     );
   }
 
-//</ImageBackground>
 static navigationOptions = ({ navigation }) => {
   return {
       title: 'cotroller',
       headerStyle: {
         
         backgroundColor: '#6fffe9',
-        barStyle: "light-content", // or directly
+        barStyle: "light-content", 
       },
       headerTintColor: '#0b132b',
       headerTitleStyle: {
@@ -566,18 +542,16 @@ static navigationOptions = ({ navigation }) => {
                   style={{alignSelf:'center'}} resizeMode='contain'/></TouchableOpacity>}
           >
               <MenuItem onPress={() => {
-                this._menu.hide()
-                }} textStyle={{fontSize: 16}} disabled>Controller</MenuItem>
-              <MenuItem onPress={() => {
                 this._menu.hide()     
-                //this.socket.emit("chat message" ,"close");
                 navigation.navigate('Home')
-                }} textStyle={{color: '#000', fontSize: 16}}>startPage</MenuItem>
+                }} textStyle={{color: '#000', fontSize: 16}}>Home</MenuItem>
+              <MenuItem onPress={() => {
+                this._menu.hide()
+                }} textStyle={{fontSize: 16}} disabled>Game Controller</MenuItem>
               <MenuItem  onPress={() =>{
                 this._menu.hide()
-                //this.socket.emit("chat message" ,"close");
                 navigation.navigate('mouse')
-                }} textStyle={{color: '#000',fontSize: 16}}>Mouse</MenuItem>
+                }} textStyle={{color: '#000',fontSize: 16}}>Desktop Controller</MenuItem>
               
           </Menu>
         </View>
@@ -588,9 +562,6 @@ static navigationOptions = ({ navigation }) => {
 const styles=StyleSheet.create({
   cont1:{
     flex: 1,
-    // flexDirection:"row",
-    // justifyContent:"space-between"
-   // backgroundColor: '#F5FCFF',//'#F5FCFF',
   },
   mainContainer:{
     flex : 1,
@@ -603,7 +574,7 @@ const styles=StyleSheet.create({
     justifyContent:"center"
   },
   btn :{
-    backgroundColor: '#5bc0be',//'#F7F9F9',
+    backgroundColor: '#5bc0be',
     color: '#7F8C8D',
     height : 45,
     width:WIDTH*(0.4),
@@ -763,7 +734,6 @@ const styles=StyleSheet.create({
   },
   cont2:{
     flex: 1,
-  //backgroundColor: '#F5FCFF',//'#F5FCFF',
   },
   container: {
     flex: 1,

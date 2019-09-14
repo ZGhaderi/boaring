@@ -3,12 +3,11 @@ import {AppRegistry, BackHandler, View , StyleSheet, ImageBackground,Image, Dime
 
 import {accelerometer} from "react-native-sensors";
 import { setUpdateIntervalForType, SensorTypes } from "react-native-sensors";
-import io from 'socket.io-client/dist/socket.io';//'socket.io-client';
+import io from 'socket.io-client/dist/socket.io';
 import Icon from "react-native-vector-icons/Ionicons";
 import AsyncStorage from "@react-native-community/async-storage";
 import Menu, { MenuItem, MenuDivider } from 'react-native-material-menu';
 import Orientation from 'react-native-orientation';
-//import { thisTypeAnnotation } from "@babel/types";
 
 const responsiveWidth = Dimensions.get('screen').width;
 const responsiveHeight = Dimensions.get('screen').height;
@@ -41,8 +40,8 @@ export default class App extends Component {
     const ip = String(await AsyncStorage.getItem('@storage_Key'));
     var ipaddr = 'http://'+ ip + ':8000';
     this.setState({data_in : ipaddr});
-    this.socket = io("http://192.168.43.136:8000");
-    //this.socket = io(this.state.data_in);
+    //this.socket = io("http://192.168.43.136:8000");
+    this.socket = io(this.state.data_in);
     var flag ;//= true;
     if(String(await AsyncStorage.getItem('arrowKey')) == "true" && String(await AsyncStorage.getItem('accelerometer')) == "false"){
       this.socket.emit("here" ,"set flag to false");
@@ -203,12 +202,7 @@ export default class App extends Component {
     Orientation.removeOrientationListener(this._orientationDidChange);
   }
 
-  // componentWillUnmount() {
-  //   this.backHandler
-  // }
-
   backtoPrevScreen=()=>{
-    //alert("back");
     this.socket.emit("chat message" ,"close");
     this.props.navigation.navigate('Home');
     return true;
@@ -255,7 +249,6 @@ export default class App extends Component {
   SsetMenuRef = ref => {
     this._menu = ref;
   };
-  //        <ImageBackground source={require("./image/car4.jpeg")} style={{flex:1,width:null,height:null}}>
 
   render() {  
     return (    
@@ -306,22 +299,14 @@ export default class App extends Component {
       </View>
     );
   }
-/**
- * <View style={styles.btnRview}>
-              
-              <TouchableOpacity style={styles.btnpacman}>
-                    <Image source={require("./image/pacman.png")} style={styles.btnPacmanimage}></Image>
-              </TouchableOpacity>
-            </View>
- */
-//</ImageBackground>
+
 static navigationOptions = ({ navigation }) => {
   return {
       title: 'MotoRacing',
       headerStyle: {
         
         backgroundColor: '#6fffe9',
-        barStyle: "light-content", // or directly
+        barStyle: "light-content",
       },
       headerTintColor: '#0b132b',
       headerTitleStyle: {
@@ -340,18 +325,16 @@ static navigationOptions = ({ navigation }) => {
                   style={{alignSelf:'center'}} resizeMode='contain'/></TouchableOpacity>}
           >
               <MenuItem onPress={() => {
-                this._menu.hide()
-                }} textStyle={{fontSize: 16}} disabled>Controller</MenuItem>
-              <MenuItem onPress={() => {
                 this._menu.hide()     
-                //this.socket.emit("chat message" ,"close");
                 navigation.navigate('Home')
-                }} textStyle={{color: '#000', fontSize: 16}}>startPage</MenuItem>
+                }} textStyle={{color: '#000', fontSize: 16}}>Home</MenuItem>
+              <MenuItem onPress={() => {
+                this._menu.hide()
+                }} textStyle={{fontSize: 16}} disabled>Game Controller</MenuItem>
               <MenuItem  onPress={() =>{
                 this._menu.hide()
-                //this.socket.emit("chat message" ,"close");
                 navigation.navigate('mouse')
-                }} textStyle={{color: '#000',fontSize: 16}}>Mouse</MenuItem>
+                }} textStyle={{color: '#000',fontSize: 16}}>Desktop Controller</MenuItem>
               
           </Menu>
         </View>
@@ -362,7 +345,6 @@ static navigationOptions = ({ navigation }) => {
 const styles=StyleSheet.create({
   cont1:{
     flex: 1,
-   // backgroundColor: '#F5FCFF',//'#F5FCFF',
   },
   mainContainer:{
     flex : 1,
@@ -436,10 +418,6 @@ const styles=StyleSheet.create({
     resizeMode:"contain"
   },
   btnPacmanimage:{
-    // justifyContent:"flex-end",
-    // alignItems:"flex-end",
-    // marginHorizontal:15,
-    // marginVertical:15,
     height:150,
     width:150,
     resizeMode:"contain"
@@ -527,7 +505,6 @@ const styles=StyleSheet.create({
   },
   cont2:{
     flex: 1,
-  //backgroundColor: '#F5FCFF',//'#F5FCFF',
   },
   container: {
     flex: 1,

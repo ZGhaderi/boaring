@@ -3,12 +3,11 @@ import {AppRegistry, BackHandler, View , StyleSheet, ImageBackground,Image, Dime
 
 import {accelerometer} from "react-native-sensors";
 import { setUpdateIntervalForType, SensorTypes } from "react-native-sensors";
-import io from 'socket.io-client/dist/socket.io';//'socket.io-client';
+import io from 'socket.io-client/dist/socket.io';
 import Icon from "react-native-vector-icons/Ionicons";
 import AsyncStorage from "@react-native-community/async-storage";
 import Menu, { MenuItem, MenuDivider } from 'react-native-material-menu';
 import Orientation from 'react-native-orientation';
-//import { thisTypeAnnotation } from "@babel/types";
 
 const responsiveWidth = Dimensions.get('screen').width;
 const responsiveHeight = Dimensions.get('screen').height;
@@ -39,10 +38,9 @@ export default class App extends Component {
     const ip = String(await AsyncStorage.getItem('@storage_Key'));
     var ipaddr = 'http://'+ ip + ':8000';
     this.setState({data_in : ipaddr});
-    this.socket = io("http://192.168.43.136:8000");
-    //this.socket = io(this.state.data_in);
-    var flag ;//= true;
-    //this.setState({element : String(await AsyncStorage.getItem('element'))});
+    //this.socket = io("http://192.168.43.136:8000");
+    this.socket = io(this.state.data_in);
+    var flag ;
     if(String(await AsyncStorage.getItem('arrowKey')) == "true" && String(await AsyncStorage.getItem('accelerometer')) == "false"){
       this.socket.emit("here" ,"set flag to false");
       flag = false;
@@ -117,12 +115,7 @@ export default class App extends Component {
     Orientation.removeOrientationListener(this._orientationDidChange);
   }
 
-  // componentWillUnmount() {
-  //   this.backHandler
-  // }
-
   backtoPrevScreen=()=>{
-    //alert("back");
     this.socket.emit("chat message" ,"close");
     this.props.navigation.navigate('games');
     return true;
@@ -151,7 +144,6 @@ export default class App extends Component {
   SsetMenuRef = ref => {
     this._menu = ref;
   };
-  //        <ImageBackground source={require("./image/car4.jpeg")} style={{flex:1,width:null,height:null}}>
 
   render() {  
     return (    
@@ -193,7 +185,7 @@ static navigationOptions = ({ navigation }) => {
       headerStyle: {
         
         backgroundColor: '#6fffe9',
-        barStyle: "light-content", // or directly
+        barStyle: "light-content",
       },
       headerTintColor: '#0b132b',
       headerTitleStyle: {
@@ -212,21 +204,17 @@ static navigationOptions = ({ navigation }) => {
                   style={{alignSelf:'center'}} resizeMode='contain'/></TouchableOpacity>}
           >
               
-                <MenuItem onPress={() => {
-                this._menu.hide()     
-                //this.socket.emit("chat message" ,"close");
-                navigation.navigate('games')
-                }} textStyle={{color: '#000', fontSize: 16}}>Games</MenuItem>
               <MenuItem onPress={() => {
                 this._menu.hide()     
-                //this.socket.emit("chat message" ,"close");
                 navigation.navigate('Home')
                 }} textStyle={{color: '#000', fontSize: 16}}>Home</MenuItem>
+              <MenuItem onPress={() => {
+                this._menu.hide()
+                }} textStyle={{fontSize: 16}} disabled>Game Controller</MenuItem>
               <MenuItem  onPress={() =>{
                 this._menu.hide()
-                //this.socket.emit("chat message" ,"close");
                 navigation.navigate('mouse')
-                }} textStyle={{color: '#000',fontSize: 16}}>Mouse</MenuItem>
+                }} textStyle={{color: '#000',fontSize: 16}}>Desktop Controller</MenuItem>
               
           </Menu>
         </View>
@@ -237,7 +225,6 @@ static navigationOptions = ({ navigation }) => {
 const styles=StyleSheet.create({
   cont1:{
     flex: 1,
-   // backgroundColor: '#F5FCFF',//'#F5FCFF',
   },
   mainContainer:{
     flex : 1,
@@ -275,7 +262,6 @@ const styles=StyleSheet.create({
     marginHorizontal:30,
     marginTop:50,
     justifyContent:"space-around",
-    //alignItems:"center"
   },
   btnRtouch:{
     justifyContent:"center",
@@ -313,10 +299,6 @@ const styles=StyleSheet.create({
     resizeMode:"contain"
   },
   btnPacmanimage:{
-    // justifyContent:"flex-end",
-    // alignItems:"flex-end",
-    // marginHorizontal:15,
-    // marginVertical:15,
     height:150,
     width:150,
     resizeMode:"contain"
@@ -404,7 +386,6 @@ const styles=StyleSheet.create({
   },
   cont2:{
     flex: 1,
-  //backgroundColor: '#F5FCFF',//'#F5FCFF',
   },
   container: {
     flex: 1,

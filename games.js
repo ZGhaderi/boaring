@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 import {AppRegistry, Button, View , StyleSheet, ImageBackground,Image, Dimensions , Alert,TouchableOpacity, Text } from "react-native";
 import AsyncStorage from '@react-native-community/async-storage';
+import Icon from "react-native-vector-icons/Ionicons";
+import Menu, { MenuItem, MenuDivider } from 'react-native-material-menu';
 const {width: WIDTH} = Dimensions.get("window");
 export default class App extends Component {
     constructor(){
@@ -29,6 +31,11 @@ export default class App extends Component {
         AsyncStorage.setItem('game', "another");
         this.props.navigation.navigate('drag');
     }
+    _menu = null;
+
+  SsetMenuRef = ref => {
+    this._menu = ref;
+  };
     render() {  
         return (   
           <View style={{flex:1,justifyContent:"center",alignItems:"center",backgroundColor:'#0b132b'}}>
@@ -54,71 +61,45 @@ export default class App extends Component {
            
         )
     }
-    /**
-     * <View style = {styles.mainContainer} >
-            <View style={styles.cont2}>
-                <View style={styles.firstFlex}>
-                <Text style={{color: '#5bc0be',fontSize:25}}>Select game you want to play.</Text>
-                <TouchableOpacity style={styles.btn} onPress={this.another}>
-                <Text style={{color: '#5bc0be',fontSize:25}}>Another game</Text>
-                </TouchableOpacity>
-                </View>
-                <View style={styles.firstFlex}>
-                    <View style={styles.colFlex}>
-                    <View style={styles.btnCTRLview}>
-                        <TouchableOpacity style={styles.btn} onPress={this.hillCar}>
-                        <Image source={require("./image/hillcar.png")} style={styles.btnCTRLimage}></Image>
-                        </TouchableOpacity>
-                    </View>
-                    </View>
-                    <View style={styles.colFlex}>
-                    <View style={styles.btnCTRLview}>
-                        <TouchableOpacity style={styles.btn} onPress={this.motorace}>
-                        <Image source={require("./image/motorace.jpg")} style={styles.btnCTRLimage}></Image>
-                        </TouchableOpacity>
-                    </View>
-                    </View>
-                </View>
-                <View style={styles.firstFlex}>
-                <View style={styles.colFlex}>
-                    <View style={styles.btnCTRLview}>
-                        <TouchableOpacity style={styles.btn} onPress={this.pacman}>
-                        <Image source={require("./image/pac-man.jpg")} style={styles.btnCTRLimage}></Image>
-                        </TouchableOpacity>
-                    </View>
-                    </View>
-                <View style={styles.colFlex}>
-                    <View style={styles.btnCTRLview}>
-                        <TouchableOpacity style={styles.btn} onPress={this.nfs}>
-                        <Image source={require("./image/nfs.jpg")} style={styles.btnCTRLimage}></Image>
-                        </TouchableOpacity>
-                    </View>
-                    </View>
-                    </View>
-                    
-            </View>   
-      </View>
-     */
-    /* <View style={{flex:1,justifyContent:"center",alignItems:"center",backgroundColor:'#0b132b'}}>
-                <View style={{flex:1,flexDirection:"column",justifyContent:"center",width:300}}>
-                    <Text style={{color: '#5bc0be',fontSize:25}}>Select game you want to play.</Text>
-                <TouchableOpacity style={styles.btn} onPress={this.pacman}>
-                    <Image source={require("./image/pac-man.jpg")} style={styles.btnCTRLimage}></Image>
-                </TouchableOpacity>
-                
-                </View>
-            </View>*/
+
   static navigationOptions = ({ navigation }) => {
     return {
-        title: 'startPage',
+        title: 'Choose Game',
         headerStyle: {
           backgroundColor: '#6fffe9',
-          barStyle: "light-content", // or directly
+          barStyle: "light-content", 
         },
         headerTintColor: '#0b132b',
         headerTitleStyle: {
           fontWeight: 'bold',
         },
+        headerRight: (
+          <View style={{
+            flexDirection: "row-reverse",
+            }}>
+            <Menu
+                ref={(ref) => this._menu = ref}
+                button={<TouchableOpacity onPress={() => this._menu.show()} 
+                  style={{paddingHorizontal:16, height: '100%', alignItems:'center', 
+                  justifyContent: 'center'}}>
+                    <Icon name={'ios-menu'} size={25} color={'white'} 
+                    style={{alignSelf:'center'}} resizeMode='contain'/></TouchableOpacity>}
+            >
+                <MenuItem onPress={() => {
+                  this._menu.hide()     
+                  navigation.navigate('Home')
+                  }} textStyle={{color: '#000', fontSize: 16}}>Home</MenuItem>
+                <MenuItem onPress={() => {
+                  this._menu.hide()
+                  }} textStyle={{fontSize: 16}} disabled>Game Controller</MenuItem>
+                <MenuItem  onPress={() =>{
+                  this._menu.hide()
+                  navigation.navigate('mouse')
+                  }} textStyle={{color: '#000',fontSize: 16}}>Desktop Controller</MenuItem>
+                
+            </Menu>
+          </View>
+        ),
       }
     }
 }
@@ -126,10 +107,9 @@ export default class App extends Component {
 const styles=StyleSheet.create({
     cont1:{
       flex: 1,
-     // backgroundColor: '#F5FCFF',//'#F5FCFF',
     },
     btn :{
-      backgroundColor: '#5bc0be',//'#F7F9F9',
+      backgroundColor: '#5bc0be',
       color: '#7F8C8D',
       height : 45,
       width:WIDTH*(0.4),
@@ -162,7 +142,6 @@ const styles=StyleSheet.create({
       },
       cont2:{
         flex: 1,
-      //backgroundColor: '#F5FCFF',//'#F5FCFF',
       },
       
   btnCTRLview:{

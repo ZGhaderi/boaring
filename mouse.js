@@ -2,7 +2,7 @@ import React, { Component } from 'react';
  
 import { StyleSheet, View, BackHandler,TouchableOpacity, Image,Dimensions, TextInput} from 'react-native';
 import {createResponder} from 'react-native-gesture-responder'
-import io from 'socket.io-client/dist/socket.io';//'socket.io-client';
+import io from 'socket.io-client/dist/socket.io';
 import Icon from "react-native-vector-icons/Ionicons";
 import EntypoIcon from 'react-native-vector-icons/Fontisto';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -10,14 +10,9 @@ import AntDesign from 'react-native-vector-icons/AntDesign'
 import Feather from 'react-native-vector-icons/Feather'
 import AsyncStorage from "@react-native-community/async-storage";
 import Menu, { MenuItem, MenuDivider } from 'react-native-material-menu';
-import { Akira } from 'react-native-textinput-effects';
 
-//import { TextInput } from 'react-native-gesture-handler';
 
 const {height,width}=Dimensions.get('window');
-
-//const height = Dimensions.get(window).height;
-//const width =  Dimensions.get(window).width;
 export default class mouse extends Component
 {
     constructor()
@@ -55,8 +50,8 @@ export default class mouse extends Component
       const ip = String(await AsyncStorage.getItem('@storage_Key'));
       var ipaddr = 'http://'+ ip + ':8000';
       this.setState({data_in : ipaddr});
-      //this.socket = io(this.state.data_in);
-      this.socket = io("http://192.168.43.136:8000");
+      this.socket = io(this.state.data_in);
+      //this.socket = io("http://192.168.43.136:8000");
       msg = height +  ' ' + width;
       this.socket.emit("width and hight" , msg);
       this.backHandler = BackHandler.addEventListener('hardwareBackPress', this.backtoPrevScreen);  
@@ -373,16 +368,16 @@ export default class mouse extends Component
                 >
                     <MenuItem onPress={() => {
                       this._menu.hide()
-                      }} textStyle={{fontSize: 16}} disabled>Mouse</MenuItem>
+                      }} textStyle={{fontSize: 16}} disabled>Desktop Controller</MenuItem>
                     <MenuItem onPress={() => {
                       this._menu.hide()
                       navigation.navigate('Home')
-                      }} textStyle={{color: '#000', fontSize: 16}}>startPage</MenuItem>
+                      }} textStyle={{color: '#000', fontSize: 16}}>Home</MenuItem>
                     
                     <MenuItem onPress={() =>{
                       this._menu.hide()
                       navigation.navigate('games')
-                      }}  textStyle={{color: '#000', fontSize: 16}}>controller</MenuItem>
+                      }}  textStyle={{color: '#000', fontSize: 16}}>Game Controller</MenuItem>
                 </Menu>
               </View>
             ),

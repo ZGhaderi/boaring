@@ -3,7 +3,7 @@ import {AppRegistry, BackHandler, View , StyleSheet, ScrollView,Image, Animated,
 
 import {accelerometer} from "react-native-sensors";
 import { setUpdateIntervalForType, SensorTypes } from "react-native-sensors";
-import io from 'socket.io-client/dist/socket.io';//'socket.io-client';
+import io from 'socket.io-client/dist/socket.io';
 import Icon from "react-native-vector-icons/Ionicons";
 import AsyncStorage from "@react-native-community/async-storage";
 import Menu, { MenuItem, MenuDivider } from 'react-native-material-menu';
@@ -44,8 +44,8 @@ export default class App extends Component {
     const ip = String(await AsyncStorage.getItem('@storage_Key'));
     var ipaddr = 'http://'+ ip + ':8000';
     this.setState({data_in : ipaddr});
-    this.socket = io("http://192.168.43.136:8000");
-    //this.socket = io(this.state.data_in);
+    //this.socket = io("http://192.168.43.136:8000");
+    this.socket = io(this.state.data_in);
 
     this.setState({element:String(await AsyncStorage.getItem('elements'))});
     if(this.state.element.length){
@@ -506,7 +506,6 @@ export default class App extends Component {
 
   componentWillUnmount() {
     this.backHandler.remove();
-    a = [];
     this.socket.emit("chat message" ,"close");
     //AsyncStorage.setItem('@storage_Key', " ")
     Orientation.getOrientation((err, orientation) => {
@@ -517,16 +516,7 @@ export default class App extends Component {
     Orientation.removeOrientationListener(this._orientationDidChange);
   }
 
-  // componentWillUnmount() {
-  //   this.backHandler
-  // }
-
 backtoPrevScreen=()=>{
-  //alert("back");
-  a = [];
-  // for(i=0;i< a.length;++i){
-  //   a.pop();
-  // }
   this.socket.emit("chat message" ,"close");
   //AsyncStorage.setItem('@storage_Key'," ");
   this.props.navigation.navigate('Home');
@@ -680,7 +670,6 @@ btnDeleteT=()=>{
 btnBackspaceT=()=>{
   this.socket.emit("toggleup" ,'backspace'); 
 }
-
 btnAT=()=>{
   this.socket.emit("toggleup" ,'a'); 
 }
@@ -826,7 +815,7 @@ static navigationOptions = ({ navigation }) => {
       headerStyle: {
         
         backgroundColor: '#6fffe9',
-        barStyle: "light-content", // or directly
+        barStyle: "light-content",
       },
       headerTintColor: '#0b132b',
       headerTitleStyle: {
@@ -845,16 +834,16 @@ static navigationOptions = ({ navigation }) => {
                   style={{alignSelf:'center'}} resizeMode='contain'/></TouchableOpacity>}
           >
               <MenuItem onPress={() => {
-                this._menu.hide()
-                }} textStyle={{fontSize: 16}} disabled>Controller</MenuItem>
-              <MenuItem onPress={() => {
                 this._menu.hide()     
                 navigation.navigate('Home')
-                }} textStyle={{color: '#000', fontSize: 16}}>startPage</MenuItem>
+                }} textStyle={{color: '#000', fontSize: 16}}>Home</MenuItem>
+              <MenuItem onPress={() => {
+                this._menu.hide()
+                }} textStyle={{fontSize: 16}} disabled>Game Controller</MenuItem>
               <MenuItem  onPress={() =>{
                 this._menu.hide()
                 navigation.navigate('mouse')
-                }} textStyle={{color: '#000',fontSize: 16}}>Mouse</MenuItem>
+                }} textStyle={{color: '#000',fontSize: 16}}>Desktop Controller</MenuItem>
               
           </Menu>
         </View>
@@ -1010,7 +999,6 @@ const styles=StyleSheet.create({
   },
   cont2:{
     flex: 2,
-  //backgroundColor: '#F5FCFF',//'#F5FCFF',
   },
   container: {
     flex: 1,
@@ -1033,81 +1021,3 @@ const styles=StyleSheet.create({
 })
 
 AppRegistry.registerComponent('App',()=> App)
-
-
-
-/**
- * <View style={styles.firstFlex}>
-            <Text style={{color:'white'}}>{this.state.data_in}</Text>
-            <View style={styles.btnXview}>
-              <TouchableOpacity style={styles.btnXtouch} 
-              onPressIn={this.btnX} onPressOut={this.stopTimer}>
-                <Image source={require("./image/x.png")} style={styles.btnXimage}></Image>
-              </TouchableOpacity>
-            </View>
-            <View style={styles.btnRview}>
-            <TouchableOpacity 
-              style={styles.btnRtouch} 
-              onPressIn={this.btnR} onPressOut={this.stopTimer}>
-                <Image source={require("./image/r.png")} style={styles.btnRimage}></Image>
-              </TouchableOpacity>
-            </View>
-          </View>
-          <View style={styles.btnUPview}>
-            <TouchableOpacity style={styles.btnUPtouch}
-            onPressIn={this.btnUp} onPressOut={this.stopTimer}>
-              <Image source={require("./image/up.png")} style={styles.btnUPimage}></Image>
-            </TouchableOpacity>
-          </View>
-          
-          <View style={styles.arrowView}>
-              <TouchableOpacity style={styles.btnLEFTtouch}
-              onPressIn={this.btnLeft} onPressOut={this.stopTimer}>
-                <Image source={require("./image/left.png")} style={styles.btnLEFTimage}></Image>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.btnLEFTtouch} 
-              onPressIn={this.btnDown} onPressOut={this.stopTimer}>
-                <Image source={require("./image/down.png")} style={styles.btnLEFTimage}></Image>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.btnLEFTtouch} 
-              onPressIn={this.btnRight} onPressOut={this.stopTimer}>
-                <Image source={require("./image/right.png")} style={styles.btnLEFTimage}></Image>
-              </TouchableOpacity>
-          </View>
-
-          <View style={styles.btnSHIFTview}>
-            <View style={styles.btnLeftShiftview}>
-              <TouchableOpacity style={styles.btnSHIFTtouch} 
-              onPressIn={this.btnLeftShift} onPressOut={this.stopTimer}>
-                <Image source={require("./image/shift.png")} style={styles.btnSHIFTimage}></Image>
-              </TouchableOpacity>
-            </View>
-            <View style={styles.btnRightShiftview}>
-            <TouchableOpacity style={styles.btnSHIFTtouch} 
-            onPressIn={this.btnRightShift} onPressOut={this.stopTimer}>
-                <Image source={require("./image/shift.png")} style={styles.btnSHIFTimage}></Image>
-              </TouchableOpacity>
-            </View>
-          </View>
-
-          <View style={styles.lastView}>
-            <View style={styles.btnCTRLview}>
-              <TouchableOpacity style={styles.btnCTRLtouch} 
-              onPressIn={this.btnLeftCtrl} onPressOut={this.stopTimer}>
-                <Image source={require("./image/ctrl.png")} style={styles.btnCTRLimage}></Image>
-              </TouchableOpacity>
-            </View>
-            <View style={styles.btnSPACEview}>
-              <TouchableOpacity style={styles.btnSPACEtouch} 
-              onPressIn={this.btnSpace} onPressOut={this.stopTimer}>
-                <Image source={require("./image/space.png")} style={styles.btnSPACEimage}></Image>
-              </TouchableOpacity>
-            </View>
-            <View style={styles.btnCTRLview}>
-              <TouchableOpacity style={styles.btnCTRLtouch} 
-              onPressIn={this.btnRightCtrl} onPressOut={this.stopTimer}>
-                <Image source={require("./image/ctrl.png")} style={styles.btnCTRLimage}></Image>
-              </TouchableOpacity>
-            </View>
-          </View>
- */

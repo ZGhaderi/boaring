@@ -51,11 +51,6 @@ import {
            
       },
     
-      // {
-      //   navigationOptions: {
-      //     headerVisible: false,
-      //   }
-      //  }
   )
   
 const AppNavigator = createAppContainer(rootstack);

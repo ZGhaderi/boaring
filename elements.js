@@ -33,9 +33,6 @@ export default class App extends Component {
         else if(this.state.game == "another"){
             this.props.navigation.navigate('Friends');
         }
-        // else{   
-        //     this.props.navigation.navigate('packman');
-        // }
     }
     accelerometer=()=>{
         this.setState({elements: "accelerometer"});
@@ -75,10 +72,10 @@ export default class App extends Component {
     
   static navigationOptions = ({ navigation }) => {
     return {
-        title: 'startPage',
+        title: 'Setting',
         headerStyle: {
           backgroundColor: '#6fffe9',
-          barStyle: "light-content", // or directly
+          barStyle: "light-content", 
         },
         headerTintColor: '#0b132b',
         headerTitleStyle: {
@@ -91,10 +88,9 @@ export default class App extends Component {
 const styles=StyleSheet.create({
     cont1:{
       flex: 1,
-     // backgroundColor: '#F5FCFF',//'#F5FCFF',
     },
     btn :{
-        backgroundColor: '#5bc0be',//'#F7F9F9',
+        backgroundColor: '#5bc0be',
         color: '#7F8C8D',
         height : 45,
         width:WIDTH*(0.4),
